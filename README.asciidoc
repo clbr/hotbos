@@ -1,0 +1,11 @@
+Hot bo trainer, data
+====================
+
+This repo contains the functional parts of my thesis.
+
+The data files under data/ have been recorded using the stats patches,
+with "R600_DEBUG=bostats myapp", and subsequently converted to binary
+using the raw2bin app here for faster replay.
+
+The trainer app will train the neural network using the collected data,
+spitting out the best values when quitting.
