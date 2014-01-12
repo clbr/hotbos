@@ -1,0 +1,8 @@
+This package as a whole is licensed under the AGPLv3.
+
+The collected data files under data/ are under public domain, and may
+be freely used for any kind of research or work.
+
+Parts of the trainer application (those that will be reused in Mesa)
+are under the MIT license. The remaining source is AGPLv3. See the file
+header if in doubt.
