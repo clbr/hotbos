@@ -52,6 +52,7 @@ int main(int argc, char **argv) {
 		dup2(fileno(p), STDOUT_FILENO);
 
 	printf("%u buffers found\n", buffers);
+	fflush(stdout);
 
 	go(f, st.st_size);
 
