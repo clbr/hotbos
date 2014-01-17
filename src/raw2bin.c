@@ -51,11 +51,27 @@ static u16 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize]
 	die("Asked for a non-existent buffer %s\n", ptr);
 }
 
-static void output(entry e, FILE * const out) {
+static void output(const entry * const e, FILE * const out) {
 
-	switch(e.id) {
+	u32 tmp;
+
+	switch(e->id) {
 		case ID_CREATE:
+		case ID_READ:
+		case ID_WRITE:
+		case ID_DESTROY:
+		case ID_CPUOP:
+			tmp = e->id << 21 | (e->time & 0x1fffff);
+			swrite(&tmp, 3, out);
+			swrite(&e->buffer, 2, out);
 		break;
+		default:
+			die("Unknown entry id %u\n", e->id);
+	}
+
+	if (e->id == ID_CREATE) {
+		tmp = e->high_prio << 31 | e->size;
+		swrite(&tmp, 4, out);
 	}
 }
 
@@ -131,7 +147,7 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount) {
 			die("Unrecognized line: %s\n", buf);
 		}
 
-		output(e, out);
+		output(&e, out);
 	}
 }
 
