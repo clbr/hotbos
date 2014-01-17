@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdarg.h>
 #include "macros.h"
 
-static inline NORETURN_FUNC void die(const char fmt[], ...) {
+static inline NORETURN_FUNC PRINTF_FUNC(1, 2) void die(const char fmt[], ...) {
 
 	va_list ap;
 
@@ -33,7 +33,7 @@ static inline NORETURN_FUNC void die(const char fmt[], ...) {
 	exit(1);
 }
 
-static inline void *xcalloc(unsigned bytes) {
+static inline MALLOC_FUNC void *xcalloc(unsigned bytes) {
 
 	void *ptr = calloc(1, bytes);
 	if (!ptr) die("OOM\n");
