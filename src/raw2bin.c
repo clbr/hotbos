@@ -78,6 +78,13 @@ static void output(const entry * const e, FILE * const out) {
 	}
 }
 
+static void nukenewline(char buf[]) {
+
+	char *ptr = strchr(buf, '\n');
+	if (ptr)
+		*ptr = '\0';
+}
+
 static void handle(FILE * const in, FILE * const out, const u16 bufcount) {
 
 	printf("Total %u buffers created in the trace.\n", bufcount);
@@ -103,6 +110,7 @@ static void handle(FILE * const in, FILE * const out, const u16 bufcount) {
 	#define malformed die("Malformed line: %s\n", buf)
 
 	while (fgets(buf, bufsize, in)) {
+		nukenewline(buf);
 		memset(&e, 0, sizeof(entry));
 
 		const char * const stamp = strchr(buf, '@');
