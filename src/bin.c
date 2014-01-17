@@ -14,44 +14,34 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BIN_H
-#define BIN_H
-
 #include "lrtypes.h"
-#include <stdio.h>
+#include "bin.h"
+#include "helpers.h"
+#include <string.h>
 
-/* One entry takes five bytes, as follows:
+void readentry(entry * const e, FILE * const in) {
 
-	struct {
-		u8 id: 3;
-		u32 time: 21;
-		u16 buffer;
+	u32 tmp = 0;
+	memset(e, 0, sizeof(entry));
+
+	sread(&tmp, 3, in);
+	e->id = (tmp >> 21) & 7;
+	e->time = tmp & 0x1fffff;
+
+	sread(&e->buffer, 2, in);
+
+	switch(e->id) {
+		case ID_CREATE:
+			sread(&tmp, 4, in);
+			e->high_prio = tmp >> 31;
+			e->size = tmp & 0x7fffffff;
+		break;
+		case ID_READ:
+		case ID_WRITE:
+		case ID_DESTROY:
+		case ID_CPUOP:
+		break;
+		default:
+			die("Unknown entry id %u\n", e->id);
 	}
-
-   Create entries are followed by four bytes:
-
-	struct {
-		u8 high_prio: 1;
-		u32 size: 31;
-	}
-*/
-
-enum id_t {
-	ID_CREATE = 0,
-	ID_READ = 1,
-	ID_WRITE = 2,
-	ID_DESTROY = 3,
-	ID_CPUOP = 4
-};
-
-typedef struct {
-	u32 time;
-	u32 size;
-	enum id_t id;
-	u16 buffer;
-	u8 high_prio;
-} entry;
-
-void readentry(entry * const e, FILE * const in);
-
-#endif
+}
