@@ -41,4 +41,26 @@ static inline MALLOC_FUNC void *xcalloc(unsigned bytes) {
 	return ptr;
 }
 
+static inline void sread(void *ptr, size_t size, FILE *f) {
+
+	size_t ret = 0;
+	while (size) {
+		ret = fread(ptr, 1, size, f);
+		size -= ret;
+
+		if (!ret) die("Failed reading\n");
+	}
+}
+
+static inline void swrite(const void *ptr, size_t size, FILE *f) {
+
+	size_t ret = 0;
+	while (size) {
+		ret = fwrite(ptr, 1, size, f);
+		size -= ret;
+
+		if (!ret) die("Failed writing\n");
+	}
+}
+
 #endif
