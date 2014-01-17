@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 
 	FILE *p = NULL;
 	if (isatty(STDOUT_FILENO)) {
-		p = popen("less -RFX", "w");
+		p = popen("less -R", "w");
 		if (!p)
 			p = popen("less", "w");
 
@@ -60,6 +60,9 @@ int main(int argc, char **argv) {
 
 	go(f, st.st_size);
 
+	fclose(stdout);
+	if (p)
+		pclose(p);
 	fclose(f);
 	return 0;
 }
