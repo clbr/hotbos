@@ -15,8 +15,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "bin.h"
+#include "helpers.h"
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <string.h>
+
+static void go(FILE * const f, const u32 size) {
+
+}
 
 int main(int argc, char **argv) {
 
+	if (argc < 2)
+		die("Usage: %s file.bin\n", argv[0]);
+
+	FILE *f = fopen(argv[1], "r");
+	if (!f) die("Failed to open file\n");
+
+	struct stat st;
+	fstat(fileno(f), &st);
+
+	char magic[MAGICLEN];
+	sread(magic, MAGICLEN, f);
+
+	if (memcmp(magic, MAGIC, MAGICLEN))
+		die("This is not a bostats binary file.\n");
+
+	u16 buffers;
+	sread(&buffers, 2, f);
+
+	printf("%u buffers found\n", buffers);
+
+	go(f, st.st_size);
+
+	fclose(f);
 	return 0;
 }
