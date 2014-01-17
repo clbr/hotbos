@@ -74,7 +74,7 @@ static void go(FILE * const f, const u32 size) {
 				NUMBER_HL, e.buffer, ANSI_RESET, NUMBER_HL,
 				e.time, ANSI_RESET,
 				e.size,
-				e.high_prio ? ANSI_YELLOW ", high priority" ANSI_RESET : "");
+				e.high_prio ? ", " ANSI_YELLOW "high priority" ANSI_RESET : "");
 		} else {
 			printf("%s buffer %s%u%s at %s%u%s ms\n", ANSI_RESET,
 				NUMBER_HL, e.buffer, ANSI_RESET, NUMBER_HL,
