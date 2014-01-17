@@ -46,10 +46,14 @@ int main(int argc, char **argv) {
 	sread(&buffers, 2, f);
 
 	FILE *p = NULL;
-	if (isatty(STDOUT_FILENO))
-		p = popen("less", "w");
-	if (p)
-		dup2(fileno(p), STDOUT_FILENO);
+	if (isatty(STDOUT_FILENO)) {
+		p = popen("less -RF", "w");
+		if (!p)
+			p = popen("less", "w");
+
+		if (p)
+			dup2(fileno(p), STDOUT_FILENO);
+	}
 
 	printf("%u buffers found\n", buffers);
 	fflush(stdout);
