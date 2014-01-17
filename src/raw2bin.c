@@ -43,6 +43,8 @@ static u16 buffers(FILE * const in) {
 	return total;
 }
 
+static u16 firstprio = USHRT_MAX;
+
 static u16 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize]) {
 
 	u16 i;
@@ -51,7 +53,10 @@ static u16 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize]
 			return i;
 	}
 
-	die("Asked for a non-existent buffer %s\n", ptr);
+	printf("Buffer not found, assuming from_handle creation, missing in pre-jan-17 traces\n");
+	return firstprio;
+
+	//die("Asked for a non-existent buffer %s\n", ptr);
 }
 
 static void output(const entry * const e, FILE * const out) {
@@ -143,6 +148,9 @@ static void handle(FILE * const in, FILE * const out, const u16 bufcount) {
 
 			if (sscanf(start, ", size %u, prio %hhu,", &e.size, &e.high_prio) != 2)
 				malformed;
+
+			if (e.high_prio && firstprio == USHRT_MAX)
+				firstprio = curbuf;
 
 			curbuf++;
 		} else if (strstr(buf, "cpu mapped")) {
