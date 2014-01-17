@@ -45,10 +45,18 @@ int main(int argc, char **argv) {
 	u16 buffers;
 	sread(&buffers, 2, f);
 
+	FILE *p = NULL;
+	if (isatty(STDOUT_FILENO))
+		p = popen("less", "w");
+	if (p)
+		dup2(STDOUT_FILENO, fileno(p));
+
 	printf("%u buffers found\n", buffers);
 
 	go(f, st.st_size);
 
+	if (p)
+		pclose(p);
 	fclose(f);
 	return 0;
 }
