@@ -52,6 +52,9 @@ typedef struct {
 	u8 high_prio;
 } entry;
 
+#define MAGIC "bostats1"
+#define MAGICLEN sizeof(MAGIC) - 1
+
 void readentry(entry * const e, FILE * const in);
 
 #endif

@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "lrtypes.h"
 #include "bin.h"
 #include "helpers.h"
+#include <limits.h>
 #include <string.h>
 
 enum {
@@ -24,7 +25,7 @@ enum {
 	ptrsize = 14
 };
 
-static u32 buffers(FILE * const in) {
+static u16 buffers(FILE * const in) {
 
 	char buf[bufsize];
 	u32 total = 0;
@@ -36,6 +37,8 @@ static u32 buffers(FILE * const in) {
 	}
 
 	rewind(in);
+
+	if (total > USHRT_MAX) die("Too many buffers (%u)\n", total);
 
 	return total;
 }
@@ -75,9 +78,12 @@ static void output(const entry * const e, FILE * const out) {
 	}
 }
 
-static void handle(FILE * const in, FILE * const out, const u32 bufcount) {
+static void handle(FILE * const in, FILE * const out, const u16 bufcount) {
 
 	printf("Total %u buffers created in the trace.\n", bufcount);
+
+	swrite(MAGIC, MAGICLEN, out);
+	swrite(&bufcount, 2, out);
 
 	char buf[bufsize];
 	entry e;
