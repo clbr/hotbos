@@ -40,6 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ANSI_WHITE         "\033[37m"
 #define ANSI_BOLD_WHITE    ANSI_BOLD ANSI_WHITE
 
+#define NUMBER_HL ANSI_YELLOW
+
 static void go(FILE * const f, const u32 size) {
 
 	long pos;
@@ -59,7 +61,7 @@ static void go(FILE * const f, const u32 size) {
 				printf("%swrite", ANSI_YELLOW);
 			break;
 			case ID_DESTROY:
-				printf("%sdestroy", ANSI_WHITE);
+				printf("%sdestroy", ANSI_RED);
 			break;
 			case ID_CPUOP:
 				printf("%scpu op", ANSI_GREEN);
@@ -67,14 +69,15 @@ static void go(FILE * const f, const u32 size) {
 		}
 
 		if (e.id == ID_CREATE) {
-			printf("%s buffer %s%u%s at %s%u%sms (%u bytes%s)\n",
+			printf("%s buffer %s%u%s at %s%u%s ms (%u bytes%s)\n",
 				ANSI_RESET,
-				ANSI_BOLD_WHITE, e.buffer, ANSI_RESET, ANSI_BOLD_WHITE,
+				NUMBER_HL, e.buffer, ANSI_RESET, NUMBER_HL,
 				e.time, ANSI_RESET,
-				e.size, e.high_prio ? ", high priority" : "");
+				e.size,
+				e.high_prio ? ANSI_YELLOW ", high priority" ANSI_RESET : "");
 		} else {
-			printf("%s buffer %s%u%s at %s%u%sms\n", ANSI_RESET,
-				ANSI_BOLD_WHITE, e.buffer, ANSI_RESET, ANSI_BOLD_WHITE,
+			printf("%s buffer %s%u%s at %s%u%s ms\n", ANSI_RESET,
+				NUMBER_HL, e.buffer, ANSI_RESET, NUMBER_HL,
 				e.time, ANSI_RESET);
 		}
 	}
