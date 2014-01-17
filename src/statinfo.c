@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 	if (isatty(STDOUT_FILENO))
 		p = popen("less", "w");
 	if (p)
-		dup2(STDOUT_FILENO, fileno(p));
+		dup2(fileno(p), STDOUT_FILENO);
 
 	printf("%u buffers found\n", buffers);
 
