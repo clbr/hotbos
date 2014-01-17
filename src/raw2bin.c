@@ -147,16 +147,16 @@ static void handle(FILE * const in, FILE * const out, const u16 bufcount) {
 			curbuf++;
 		} else if (strstr(buf, "cpu mapped")) {
 			e.id = ID_CPUOP;
-			e.buffer = findbuf(ptr, bufcount, ptr2id);
+			e.buffer = findbuf(ptr, curbuf, ptr2id);
 		} else if (strstr(buf, "read")) {
 			e.id = ID_READ;
-			e.buffer = findbuf(ptr, bufcount, ptr2id);
+			e.buffer = findbuf(ptr, curbuf, ptr2id);
 		} else if (strstr(buf, "write")) {
 			e.id = ID_WRITE;
-			e.buffer = findbuf(ptr, bufcount, ptr2id);
+			e.buffer = findbuf(ptr, curbuf, ptr2id);
 		} else if (strstr(buf, "destroyed")) {
 			e.id = ID_DESTROY;
-			e.buffer = findbuf(ptr, bufcount, ptr2id);
+			e.buffer = findbuf(ptr, curbuf, ptr2id);
 		} else {
 			die("Unrecognized line: %s\n", buf);
 		}
