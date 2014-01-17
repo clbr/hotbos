@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	#define CONST_FUNC __attribute__ ((const))
 	#define WUR_FUNC __attribute__ ((warn_unused_result))
 	#define MALLOC_FUNC __attribute__ ((malloc))
+	#define PRINTF_FUNC(a, b) __attribute__ ((format (printf, a, b)))
 
 #if __GNUC_MINOR__ >= 3 // GCC 4.3
 	#define ALLOC_SIZE1(a) __attribute__ ((alloc_size(a)))
@@ -42,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	#define MALLOC_FUNC
 	#define ALLOC_SIZE1(a)
 	#define ALLOC_SIZE2(a, b)
+	#define PRINTF_FUNC(a, b)
 
 #endif // GNUC
 
