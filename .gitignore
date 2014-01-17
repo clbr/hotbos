@@ -1,4 +1,5 @@
 raw2bin
 trainer
+statinfo
 bostats.*
 *.o
