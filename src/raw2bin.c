@@ -107,7 +107,7 @@ static void handle(FILE * const in, FILE * const out, const u16 bufcount) {
    0x93cd320 destroyed @4207338
 */
 
-	#define malformed die("Malformed line: %s\n", buf)
+	#define malformed die("Malformed line: %s (line %u)\n", buf, __LINE__)
 
 	while (fgets(buf, bufsize, in)) {
 		nukenewline(buf);
