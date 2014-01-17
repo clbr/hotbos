@@ -169,10 +169,12 @@ int main(int argc, char **argv) {
 	}
 
 	FILE *in = fopen(src, "r");
-	FILE *out = fopen(dest, "w");
+	if (!in)
+		die("Failed to open input file\n");
 
-	if (!in || !out)
-		die("Failed to open file(s)\n");
+	FILE *out = fopen(dest, "w");
+	if (!out)
+		die("Failed to open output file\n");
 
 	handle(in, out, buffers(in));
 
