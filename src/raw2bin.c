@@ -49,6 +49,9 @@ static u16 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize]
 
 	u16 i;
 	for (i = 0; i < bufcount; i++) {
+		if (ptr[3] != ptr2id[i][3])
+			continue;
+
 		if (!strcmp(ptr2id[i], ptr))
 			return i;
 	}
