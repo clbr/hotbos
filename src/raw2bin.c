@@ -134,6 +134,8 @@ static void handle(FILE * const in, FILE * const out, const u16 bufcount) {
 			ptr[len] = '\0';
 		}
 
+		u8 getbuf = 1;
+
 		// Handling
 		if (strstr(buf, "started")) {
 			starttime = now;
@@ -153,21 +155,21 @@ static void handle(FILE * const in, FILE * const out, const u16 bufcount) {
 				firstprio = curbuf;
 
 			curbuf++;
+			getbuf = 0;
 		} else if (strstr(buf, "cpu mapped")) {
 			e.id = ID_CPUOP;
-			e.buffer = findbuf(ptr, curbuf, ptr2id);
 		} else if (strstr(buf, "read")) {
 			e.id = ID_READ;
-			e.buffer = findbuf(ptr, curbuf, ptr2id);
 		} else if (strstr(buf, "write")) {
 			e.id = ID_WRITE;
-			e.buffer = findbuf(ptr, curbuf, ptr2id);
 		} else if (strstr(buf, "destroyed")) {
 			e.id = ID_DESTROY;
-			e.buffer = findbuf(ptr, curbuf, ptr2id);
 		} else {
 			die("Unrecognized line: %s\n", buf);
 		}
+
+		if (getbuf)
+			e.buffer = findbuf(ptr, curbuf, ptr2id);
 
 		output(&e, out);
 	}
