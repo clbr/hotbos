@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <sys/types.h>
 #include <unistd.h>
 #include <string.h>
+#include <limits.h>
 
 /* ANSI Colors */
 #define ANSI_RESET "\033[0m"
@@ -42,13 +43,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define NUMBER_HL ANSI_YELLOW
 
-static void go(FILE * const f, const u32 size) {
+static void go(FILE * const f, const u32 size, const u8 charbufs) {
 
 	long pos;
 	entry e;
 
 	for (pos = ftell(f); pos < size; pos = ftell(f)) {
-		readentry(&e, f);
+		readentry(&e, f, charbufs);
 
 		switch (e.id) {
 			case ID_CREATE:
@@ -118,7 +119,7 @@ int main(int argc, char **argv) {
 	printf("%u buffers found\n", buffers);
 	fflush(stdout);
 
-	go(f, st.st_size);
+	go(f, st.st_size, buffers < UCHAR_MAX);
 
 	fclose(stdout);
 	if (p)

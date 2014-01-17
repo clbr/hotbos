@@ -20,12 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "lrtypes.h"
 #include <stdio.h>
 
-/* One entry takes five bytes, as follows:
+/* One entry takes four to five bytes, as follows:
 
 	struct {
 		u8 id: 3;
 		u32 time: 21;
-		u16 buffer;
+		u8/u16 buffer;
 	}
 
    Create entries are followed by four bytes:
@@ -55,6 +55,6 @@ typedef struct {
 #define MAGIC "bostats1"
 #define MAGICLEN sizeof(MAGIC) - 1
 
-void readentry(entry * const e, FILE * const in);
+void readentry(entry * const e, FILE * const in, const u8 charbufs);
 
 #endif

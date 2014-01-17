@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "helpers.h"
 #include <string.h>
 
-void readentry(entry * const e, FILE * const in) {
+void readentry(entry * const e, FILE * const in, const u8 charbufs) {
 
 	u32 tmp = 0;
 	memset(e, 0, sizeof(entry));
@@ -28,7 +28,10 @@ void readentry(entry * const e, FILE * const in) {
 	e->id = (tmp >> 21) & 7;
 	e->time = tmp & 0x1fffff;
 
-	sread(&e->buffer, 2, in);
+	if (charbufs)
+		sread(&e->buffer, 1, in);
+	else
+		sread(&e->buffer, 2, in);
 
 	switch(e->id) {
 		case ID_CREATE:

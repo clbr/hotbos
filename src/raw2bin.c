@@ -25,6 +25,8 @@ enum {
 	ptrsize = 14
 };
 
+static u8 charbufs = 0;
+
 static u16 buffers(FILE * const in) {
 
 	char buf[bufsize];
@@ -39,6 +41,7 @@ static u16 buffers(FILE * const in) {
 	rewind(in);
 
 	if (total > USHRT_MAX) die("Too many buffers (%u)\n", total);
+	if (total < UCHAR_MAX) charbufs = 1;
 
 	return total;
 }
@@ -74,7 +77,11 @@ static void output(const entry * const e, FILE * const out) {
 		case ID_CPUOP:
 			tmp = e->id << 21 | (e->time & 0x1fffff);
 			swrite(&tmp, 3, out);
-			swrite(&e->buffer, 2, out);
+
+			if (charbufs)
+				swrite(&e->buffer, 1, out);
+			else
+				swrite(&e->buffer, 2, out);
 		break;
 		default:
 			die("Unknown entry id %u\n", e->id);
