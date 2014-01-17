@@ -20,8 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include "macros.h"
 
-static inline void die(const char fmt[], ...) {
+static inline NORETURN_FUNC void die(const char fmt[], ...) {
 
 	va_list ap;
 
