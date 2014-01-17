@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef HELPERS_H
 #define HELPERS_H
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 
@@ -29,6 +30,14 @@ static inline void die(const char fmt[], ...) {
 	va_end(ap);
 
 	exit(1);
+}
+
+static inline void *xcalloc(unsigned bytes) {
+
+	void *ptr = calloc(1, bytes);
+	if (!ptr) die("OOM\n");
+
+	return ptr;
 }
 
 #endif

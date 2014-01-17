@@ -1,4 +1,4 @@
-CXXFLAGS += -Wall -Wextra
+CFLAGS += -Wall -Wextra
 LDFLAGS += -Wl,-O1
 
 TARGETS = raw2bin
