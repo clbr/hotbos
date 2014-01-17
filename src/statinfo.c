@@ -69,11 +69,11 @@ static void go(FILE * const f, const u32 size) {
 		}
 
 		if (e.id == ID_CREATE) {
-			printf("%s buffer %s%u%s at %s%u%s ms (%u bytes%s)\n",
+			printf("%s buffer %s%u%s at %s%u%s ms (%s%u%s bytes%s)\n",
 				ANSI_RESET,
-				NUMBER_HL, e.buffer, ANSI_RESET, NUMBER_HL,
-				e.time, ANSI_RESET,
-				e.size,
+				NUMBER_HL, e.buffer, ANSI_RESET,
+				NUMBER_HL, e.time, ANSI_RESET,
+				NUMBER_HL, e.size, ANSI_RESET,
 				e.high_prio ? ", " ANSI_YELLOW "high priority" ANSI_RESET : "");
 		} else {
 			printf("%s buffer %s%u%s at %s%u%s ms\n", ANSI_RESET,
