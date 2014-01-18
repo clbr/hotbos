@@ -206,8 +206,8 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount, const 
 		e.time = now - starttime;
 
 		char ptr[ptrsize];
+		const char * const space = strchr(buf, ' ');
 		if (buf[0] == '0') {
-			char *space = strchr(buf, ' ');
 			if (!space) malformed;
 			u32 len = space - buf - 2;
 			memcpy(ptr, buf + 2, len);
@@ -220,7 +220,7 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount, const 
 		if (strstr(buf, "started")) {
 			starttime = now;
 			continue;
-		} else if (strstr(buf, "created")) {
+		} else if (!strncmp(space + 1, "created", 7)) {
 			memcpy(ptr2id[curbuf], ptr, ptrsize);
 			addhash(ptr2id[curbuf], curbuf);
 			e.buffer = curbuf;
@@ -237,13 +237,13 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount, const 
 
 			curbuf++;
 			getbuf = 0;
-		} else if (strstr(buf, "cpu mapped")) {
+		} else if (!strncmp(space + 1, "cpu mapped", 10)) {
 			e.id = ID_CPUOP;
-		} else if (strstr(buf, "read")) {
+		} else if (!strncmp(space + 1, "read", 4)) {
 			e.id = ID_READ;
-		} else if (strstr(buf, "write")) {
+		} else if (!strncmp(space + 1, "write", 5)) {
 			e.id = ID_WRITE;
-		} else if (strstr(buf, "destroyed")) {
+		} else if (!strncmp(space + 1, "destroyed", 9)) {
 			e.id = ID_DESTROY;
 		} else {
 			die("Unrecognized line: %s\n", buf);
