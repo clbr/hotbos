@@ -76,7 +76,7 @@ static void addhash(const char * const ptr, const u32 idx) {
 	hashmap.count[hash]++;
 }
 
-static u32 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize]) {
+static u32 findbuf(const char ptr[]) {
 
 	u32 i;
 /*	for (i = 0; i < bufcount; i++) {
@@ -106,6 +106,8 @@ static void output(const entry * const e, FILE * const out) {
 	static u32 lasttime = 0;
 
 	const u32 reltime = e->time - lasttime;
+	if (reltime & ~0x1f)
+		printf("Relative time %u out of bounds!\n", reltime);
 
 	switch(e->id) {
 		case ID_CREATE:
@@ -228,7 +230,7 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount) {
 		}
 
 		if (getbuf)
-			e.buffer = findbuf(ptr, curbuf, ptr2id);
+			e.buffer = findbuf(ptr);
 
 		output(&e, out);
 	}
