@@ -147,7 +147,7 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount) {
 	printf("Total %u buffers created in the trace.\n", bufcount);
 
 	swrite(MAGIC, MAGICLEN, out);
-	swrite(&bufcount, 2, out);
+	swrite(&bufcount, 4, out);
 
 	char buf[bufsize];
 	entry e;

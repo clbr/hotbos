@@ -109,8 +109,8 @@ int main(int argc, char **argv) {
 	if (memcmp(magic, MAGIC, MAGICLEN))
 		die("This is not a bostats binary file.\n");
 
-	u16 buffers;
-	sgzread(&buffers, 2, f);
+	u32 buffers;
+	sgzread(&buffers, 4, f);
 
 	FILE *p = NULL;
 	if (isatty(STDOUT_FILENO)) {
