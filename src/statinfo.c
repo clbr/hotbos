@@ -14,6 +14,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#define _GNU_SOURCE
+
 #include "bin.h"
 #include "helpers.h"
 #include <sys/stat.h>
@@ -59,30 +61,30 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 
 		switch (e.id) {
 			case ID_CREATE:
-				printf(ANSI_CYAN "create");
+				fputs_unlocked(ANSI_CYAN "create", stdout);
 			break;
 			case ID_READ:
-				printf(ANSI_MAGENTA "read");
+				fputs_unlocked(ANSI_MAGENTA "read", stdout);
 			break;
 			case ID_WRITE:
-				printf(ANSI_YELLOW "write");
+				fputs_unlocked(ANSI_YELLOW "write", stdout);
 			break;
 			case ID_DESTROY:
-				printf(ANSI_RED "destroy");
+				fputs_unlocked(ANSI_RED "destroy", stdout);
 			break;
 			case ID_CPUOP:
-				printf(ANSI_GREEN "cpu op");
+				fputs_unlocked(ANSI_GREEN "cpu op", stdout);
 			break;
 		}
 
 		if (e.id == ID_CREATE) {
-			printf(ANSI_RESET "buffer %s%u%s at %s%u%s ms (%s%u%s bytes%s)\n",
+			printf(ANSI_RESET " buffer %s%u%s at %s%u%s ms (%s%u%s bytes%s)\n",
 				NUMBER_HL, e.buffer, ANSI_RESET,
 				NUMBER_HL, e.time, ANSI_RESET,
 				NUMBER_HL, e.size, ANSI_RESET,
 				e.high_prio ? ", " ANSI_YELLOW "high priority" ANSI_RESET : "");
 		} else {
-			printf(ANSI_RESET "buffer %s%u%s at %s%u%s ms\n",
+			printf(ANSI_RESET " buffer %s%u%s at %s%u%s ms\n",
 				NUMBER_HL, e.buffer, ANSI_RESET, NUMBER_HL,
 				e.time, ANSI_RESET);
 		}
