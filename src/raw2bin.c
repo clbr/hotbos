@@ -60,11 +60,14 @@ static u8 hashptr(const char ptr[]) {
 	return first | (penultimate << 4);
 }
 
-static u16 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize]) {
+static u16 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize],
+			const u8 hashes[]) {
+
+	const u8 myhash = hashptr(ptr);
 
 	u16 i;
 	for (i = 0; i < bufcount; i++) {
-		if (ptr[3] != ptr2id[i][3])
+		if (myhash != hashes[i])
 			continue;
 
 		if (!strcmp(ptr2id[i], ptr))
@@ -125,6 +128,7 @@ static void handle(FILE * const in, FILE * const out, const u16 bufcount) {
 	u16 curbuf = 0;
 
 	char ptr2id[bufcount][ptrsize];
+	u8 hashes[bufcount];
 
 /* started @4207333
    0x93cc630 created, size 65536, prio 0, @4207333
@@ -164,6 +168,7 @@ static void handle(FILE * const in, FILE * const out, const u16 bufcount) {
 			continue;
 		} else if (strstr(buf, "created")) {
 			memcpy(ptr2id[curbuf], ptr, ptrsize);
+			hashes[curbuf] = hashptr(ptr);
 			e.buffer = curbuf;
 			e.id = ID_CREATE;
 
@@ -191,7 +196,7 @@ static void handle(FILE * const in, FILE * const out, const u16 bufcount) {
 		}
 
 		if (getbuf)
-			e.buffer = findbuf(ptr, curbuf, ptr2id);
+			e.buffer = findbuf(ptr, curbuf, ptr2id, hashes);
 
 		output(&e, out);
 	}
