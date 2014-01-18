@@ -253,6 +253,8 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount, const 
 
 		output(&e, out);
 	}
+
+	puts("");
 }
 
 int main(int argc, char **argv) {
