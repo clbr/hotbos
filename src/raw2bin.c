@@ -47,6 +47,19 @@ static u16 buffers(FILE * const in) {
 	return total;
 }
 
+static u8 hashptr(const char ptr[]) {
+
+	// Get the first and second-to-last char, convert, combine
+	const u8 first = hex2u8(ptr[0]);
+
+	u8 i;
+	for (i = 2; ptr[i + 2]; i++);
+
+	const u8 penultimate = hex2u8(ptr[i]);
+
+	return first | (penultimate << 4);
+}
+
 static u16 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize]) {
 
 	u16 i;
