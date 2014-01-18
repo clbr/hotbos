@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "lrtypes.h"
 #include <stdio.h>
+#include <zlib.h>
 
 /* One entry takes four to five bytes, as follows:
 

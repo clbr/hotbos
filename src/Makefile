@@ -1,5 +1,6 @@
 CFLAGS += -Wall -Wextra
 LDFLAGS += -Wl,-O1
+LDFLAGS += -lz
 LDFLAGS += $(CFLAGS)
 
 TARGETS = raw2bin statinfo trainer
