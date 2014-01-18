@@ -57,15 +57,14 @@ static struct {
 
 static u8 hashptr(const char ptr[]) {
 
-	// Get the first and second-to-last char, convert, combine
-	const u8 first = hex2u8(ptr[0]);
-
+	// Get the third- and second-to-last char, convert, combine
 	u8 i;
 	for (i = 2; ptr[i + 2]; i++);
 
-	const u8 penultimate = hex2u8(ptr[i]);
+	const u8 one = hex2u8(ptr[i]);
+	const u8 two = hex2u8(ptr[i-1]);
 
-	return first | (penultimate << 4);
+	return one | (two << 4);
 }
 
 static void addhash(const char * const ptr, const u32 idx) {
