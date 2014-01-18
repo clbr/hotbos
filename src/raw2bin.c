@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 enum {
 	bufsize = 256,
-	ptrsize = 14
+	ptrsize = 11
 };
 
 static u8 charbufs = 0;
@@ -138,8 +138,8 @@ static void handle(FILE * const in, FILE * const out, const u16 bufcount) {
 		if (buf[0] == '0') {
 			char *space = strchr(buf, ' ');
 			if (!space) malformed;
-			u32 len = space - buf;
-			memcpy(ptr, buf, len);
+			u32 len = space - buf - 2;
+			memcpy(ptr, buf + 2, len);
 			ptr[len] = '\0';
 		}
 
