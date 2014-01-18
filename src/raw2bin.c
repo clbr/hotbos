@@ -48,6 +48,12 @@ static u32 buffers(FILE * const in) {
 	return total;
 }
 
+static struct {
+	const char **ptrs[256];
+	u32 *idx[256];
+	u32 count[256];
+} hashmap;
+
 static u8 hashptr(const char ptr[]) {
 
 	// Get the first and second-to-last char, convert, combine
@@ -61,18 +67,27 @@ static u8 hashptr(const char ptr[]) {
 	return first | (penultimate << 4);
 }
 
-static u32 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize],
-			const u8 hashes[]) {
+static void addhash(const char * const ptr, const u32 idx) {
 
-	const u8 myhash = hashptr(ptr);
+	const u8 hash = hashptr(ptr);
+
+	hashmap.ptrs[hash][hashmap.count[hash]] = ptr;
+	hashmap.idx[hash][hashmap.count[hash]] = idx;
+	hashmap.count[hash]++;
+}
+
+static u32 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize]) {
 
 	u32 i;
-	for (i = 0; i < bufcount; i++) {
-		if (myhash != hashes[i])
-			continue;
-
+/*	for (i = 0; i < bufcount; i++) {
 		if (!strcmp(ptr2id[i], ptr))
 			return i;
+	}
+*/
+	const u8 hash = hashptr(ptr);
+	for (i = 0; i < hashmap.count[hash]; i++) {
+		if (!strcmp(hashmap.ptrs[hash][i], ptr))
+			return hashmap.idx[hash][i];
 	}
 
 	static u8 printed = 0;
@@ -140,7 +155,12 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount) {
 	u32 curbuf = 0;
 
 	char ptr2id[bufcount][ptrsize];
-	u8 hashes[bufcount];
+	memset(&hashmap.count, 0, 4 * 256);
+	u32 i;
+	for (i = 0; i < 256; i++) {
+		hashmap.ptrs[i] = xcalloc(sizeof(void *) * bufcount);
+		hashmap.idx[i] = xcalloc(4 * bufcount);
+	}
 
 /* started @4207333
    0x93cc630 created, size 65536, prio 0, @4207333
@@ -180,7 +200,7 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount) {
 			continue;
 		} else if (strstr(buf, "created")) {
 			memcpy(ptr2id[curbuf], ptr, ptrsize);
-			hashes[curbuf] = hashptr(ptr);
+			addhash(ptr2id[curbuf], curbuf);
 			e.buffer = curbuf;
 			e.id = ID_CREATE;
 
@@ -208,7 +228,7 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount) {
 		}
 
 		if (getbuf)
-			e.buffer = findbuf(ptr, curbuf, ptr2id, hashes);
+			e.buffer = findbuf(ptr, curbuf, ptr2id);
 
 		output(&e, out);
 	}
