@@ -26,6 +26,7 @@ enum {
 };
 
 static u8 charbufs = 0;
+static u16 firstprio = USHRT_MAX;
 
 static u16 buffers(FILE * const in) {
 
@@ -45,8 +46,6 @@ static u16 buffers(FILE * const in) {
 
 	return total;
 }
-
-static u16 firstprio = USHRT_MAX;
 
 static u16 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize]) {
 
