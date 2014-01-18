@@ -125,7 +125,13 @@ int main(int argc, char **argv) {
 	printf("%u buffers found\n", buffers);
 	fflush(stdout);
 
-	go(f, st.st_size, buffers < UCHAR_MAX);
+	u8 charbuf = 0;
+	if (buffers < UCHAR_MAX)
+		charbuf = 1;
+	else if (buffers < USHRT_MAX)
+		charbuf = 2;
+
+	go(f, st.st_size, charbuf);
 
 	fclose(stdout);
 	if (p)
