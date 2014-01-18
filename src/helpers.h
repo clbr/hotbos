@@ -63,4 +63,12 @@ static inline void swrite(const void *ptr, size_t size, FILE *f) {
 	}
 }
 
+static inline CONST_FUNC u8 hex2u8(const char in) {
+
+	if (in <= '9')
+		return in - '0';
+
+	return in - 'a' + 10;
+}
+
 #endif
