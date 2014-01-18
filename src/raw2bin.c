@@ -28,7 +28,7 @@ enum {
 static u8 charbufs = 0;
 static u32 firstprio = USHRT_MAX;
 
-static u32 buffers(FILE * const in, u64 *lines) {
+static u32 buffers(FILE * const in, u64 * const lines) {
 
 	char buf[bufsize];
 	u32 total = 0;
