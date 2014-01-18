@@ -76,14 +76,13 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 		}
 
 		if (e.id == ID_CREATE) {
-			printf("%s buffer %s%u%s at %s%u%s ms (%s%u%s bytes%s)\n",
-				ANSI_RESET,
+			printf(ANSI_RESET "buffer %s%u%s at %s%u%s ms (%s%u%s bytes%s)\n",
 				NUMBER_HL, e.buffer, ANSI_RESET,
 				NUMBER_HL, e.time, ANSI_RESET,
 				NUMBER_HL, e.size, ANSI_RESET,
 				e.high_prio ? ", " ANSI_YELLOW "high priority" ANSI_RESET : "");
 		} else {
-			printf("%s buffer %s%u%s at %s%u%s ms\n", ANSI_RESET,
+			printf(ANSI_RESET "buffer %s%u%s at %s%u%s ms\n",
 				NUMBER_HL, e.buffer, ANSI_RESET, NUMBER_HL,
 				e.time, ANSI_RESET);
 		}
