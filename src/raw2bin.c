@@ -217,7 +217,7 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount, const 
 		u8 getbuf = 1;
 
 		// Handling
-		if (strstr(buf, "started")) {
+		if (!strncmp(buf, "started", 7)) {
 			starttime = now;
 			continue;
 		} else if (!strncmp(space + 1, "created", 7)) {
