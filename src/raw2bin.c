@@ -113,7 +113,7 @@ static void output(const entry * const e, FILE * const out) {
 
 	u32 reltime = e->time - lasttime;
 	if (reltime & ~0x1f) {
-		printf("Relative time %u out of bounds! (@%u - %u)\n",
+		printf("\nRelative time %u out of bounds! (@%u - %u)\n",
 			reltime, e->time, lasttime);
 
 		reltime = 0x1f;
