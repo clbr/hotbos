@@ -107,7 +107,7 @@ static void output(const entry * const e, FILE * const out) {
 
 	const u32 reltime = e->time - lasttime;
 	if (reltime & ~0x1f)
-		printf("Relative time %u out of bounds! (%u - %u)\n",
+		printf("Relative time %u out of bounds! (@%u - %u)\n",
 			reltime, e->time, lasttime);
 
 	switch(e->id) {
