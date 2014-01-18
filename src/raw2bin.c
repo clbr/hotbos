@@ -201,8 +201,7 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount, const 
 		const char * const stamp = strchr(buf, '@');
 		if (!stamp) die("No time stamp on line: %s\n", buf);
 
-		u32 now;
-		if (sscanf(stamp + 1, "%u", &now) != 1) malformed;
+		u32 now = strtoul(stamp + 1, NULL, 10);
 		e.time = now - starttime;
 
 		char ptr[ptrsize];
