@@ -28,7 +28,7 @@ enum {
 static u8 charbufs = 0;
 static u32 firstprio = USHRT_MAX;
 
-static u32 buffers(FILE * const in) {
+static u32 buffers(FILE * const in, u64 *lines) {
 
 	char buf[bufsize];
 	u32 total = 0;
@@ -37,6 +37,7 @@ static u32 buffers(FILE * const in) {
 		if (strstr(buf, "created")) {
 			total++;
 		}
+		(*lines)++;
 	}
 
 	rewind(in);
@@ -152,7 +153,7 @@ static void nukenewline(char buf[]) {
 		*ptr = '\0';
 }
 
-static void handle(FILE * const in, FILE * const out, const u32 bufcount) {
+static void handle(FILE * const in, FILE * const out, const u32 bufcount, const u64 lines) {
 
 	printf("Total %u buffers created in the trace.\n", bufcount);
 
@@ -163,6 +164,7 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount) {
 	entry e;
 	u32 starttime = 0;
 	u32 curbuf = 0;
+	u64 curline = 0;
 
 	char ptr2id[bufcount][ptrsize];
 	memset(&hashmap.count, 0, 4 * 256);
@@ -269,7 +271,9 @@ int main(int argc, char **argv) {
 	if (!out)
 		die("Failed to open output file\n");
 
-	handle(in, out, buffers(in));
+	u64 lines = 0;
+	const u32 bufs = buffers(in, &lines);
+	handle(in, out, bufs, lines);
 
 	fclose(in);
 	fclose(out);
