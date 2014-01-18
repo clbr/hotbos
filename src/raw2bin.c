@@ -217,7 +217,7 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount) {
 			char *start = strchr(buf, ',');
 			if (!start) malformed;
 
-			if (sscanf(start, ", size %u, prio %hhu,", &e.size, &e.high_prio) != 2)
+			if (sscanf(start + 7, "%u, prio %hhu,", &e.size, &e.high_prio) != 2)
 				malformed;
 
 			if (e.high_prio && firstprio == USHRT_MAX)
