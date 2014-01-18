@@ -1,4 +1,4 @@
-CFLAGS += -Wall -Wextra
+CFLAGS += -Wall -Wextra -g
 LDFLAGS += -Wl,-O1
 LDFLAGS += -lz
 LDFLAGS += $(CFLAGS)
