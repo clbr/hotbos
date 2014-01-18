@@ -43,12 +43,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define NUMBER_HL ANSI_YELLOW
 
-static void go(FILE * const f, const u32 size, const u8 charbufs) {
+static void go(void * const f, const u32 size, const u8 charbufs) {
 
 	long pos;
 	entry e;
 
-	for (pos = ftell(f); pos < size; pos = ftell(f)) {
+	for (pos = gztell(f); pos < size; pos = gztell(f)) {
 		readentry(&e, f, charbufs);
 
 		switch (e.id) {
@@ -91,20 +91,20 @@ int main(int argc, char **argv) {
 	if (argc < 2)
 		die("Usage: %s file.bin\n", argv[0]);
 
-	FILE *f = fopen(argv[1], "r");
+	void * const f = gzopen(argv[1], "rb");
 	if (!f) die("Failed to open file\n");
 
 	struct stat st;
-	fstat(fileno(f), &st);
+	stat(argv[1], &st);
 
 	char magic[MAGICLEN];
-	sread(magic, MAGICLEN, f);
+	sgzread(magic, MAGICLEN, f);
 
 	if (memcmp(magic, MAGIC, MAGICLEN))
 		die("This is not a bostats binary file.\n");
 
 	u16 buffers;
-	sread(&buffers, 2, f);
+	sgzread(&buffers, 2, f);
 
 	FILE *p = NULL;
 	if (isatty(STDOUT_FILENO)) {
@@ -124,6 +124,6 @@ int main(int argc, char **argv) {
 	fclose(stdout);
 	if (p)
 		pclose(p);
-	fclose(f);
+	gzclose(f);
 	return 0;
 }

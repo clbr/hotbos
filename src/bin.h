@@ -56,6 +56,6 @@ typedef struct {
 #define MAGIC "bostats1"
 #define MAGICLEN sizeof(MAGIC) - 1
 
-void readentry(entry * const e, FILE * const in, const u8 charbufs);
+void readentry(entry * const e, void * const in, const u8 charbufs);
 
 #endif
