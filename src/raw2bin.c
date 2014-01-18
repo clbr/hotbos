@@ -165,6 +165,7 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount, const 
 	u32 starttime = 0;
 	u32 curbuf = 0;
 	u64 curline = 0;
+	u8 lastpercent = 0;
 
 	char ptr2id[bufcount][ptrsize];
 	memset(&hashmap.count, 0, 4 * 256);
@@ -186,7 +187,15 @@ static void handle(FILE * const in, FILE * const out, const u32 bufcount, const 
 
 	while (fgets(buf, bufsize, in)) {
 		nukenewline(buf);
+		curline++;
 		memset(&e, 0, sizeof(entry));
+
+		const u8 percent = curline * 100 / lines;
+		if (percent != lastpercent) {
+			printf("\r%u%%", percent);
+			lastpercent = percent;
+			fflush(stdout);
+		}
 
 		const char * const stamp = strchr(buf, '@');
 		if (!stamp) die("No time stamp on line: %s\n", buf);
