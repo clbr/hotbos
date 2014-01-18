@@ -34,7 +34,9 @@ static u32 buffers(FILE * const in, u64 *lines) {
 	u32 total = 0;
 
 	while (fgets(buf, bufsize, in)) {
-		if (strstr(buf, "created")) {
+
+		char *ptr = strchr(buf, ' ');
+		if (*ptr && strncmp(ptr + 1, "created", 7) == 0) {
 			total++;
 		}
 		(*lines)++;
