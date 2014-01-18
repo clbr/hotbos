@@ -105,10 +105,17 @@ static void output(const entry * const e, FILE * const out) {
 	u32 tmp;
 	static u32 lasttime = 0;
 
-	const u32 reltime = e->time - lasttime;
-	if (reltime & ~0x1f)
+	// Due to threading, the trace may have out of order timing
+	if (lasttime > e->time)
+		lasttime = e->time;
+
+	u32 reltime = e->time - lasttime;
+	if (reltime & ~0x1f) {
 		printf("Relative time %u out of bounds! (@%u - %u)\n",
 			reltime, e->time, lasttime);
+
+		reltime = 0x1f;
+	}
 
 	switch(e->id) {
 		case ID_CREATE:
