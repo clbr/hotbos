@@ -75,7 +75,11 @@ static u32 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize]
 			return i;
 	}
 
-	printf("Buffer not found, assuming from_handle creation, missing in pre-jan-17 traces\n");
+	static u8 printed = 0;
+	if (!printed)
+		printf("Buffer not found, assuming from_handle creation, missing in pre-jan-17 traces\n");
+	printed = 1;
+
 	return firstprio;
 
 	//die("Asked for a non-existent buffer %s\n", ptr);
