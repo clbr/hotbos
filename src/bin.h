@@ -21,12 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <zlib.h>
 
-/* One entry takes two to three bytes, as follows:
+/* One entry takes two to four bytes, as follows:
 
 	struct {
 		u8 id: 3;
 		u8 time: 5;
-		u8/u16 buffer;
+		u8/u16/u24 buffer;
 	}
 
    Create entries are followed by four bytes:
@@ -49,7 +49,7 @@ typedef struct {
 	u32 time;
 	u32 size;
 	enum id_t id;
-	u16 buffer;
+	u32 buffer;
 	u8 high_prio;
 } entry;
 

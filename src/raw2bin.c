@@ -26,9 +26,9 @@ enum {
 };
 
 static u8 charbufs = 0;
-static u16 firstprio = USHRT_MAX;
+static u32 firstprio = USHRT_MAX;
 
-static u16 buffers(FILE * const in) {
+static u32 buffers(FILE * const in) {
 
 	char buf[bufsize];
 	u32 total = 0;
@@ -41,8 +41,9 @@ static u16 buffers(FILE * const in) {
 
 	rewind(in);
 
-	if (total > USHRT_MAX) die("Too many buffers (%u)\n", total);
+	if (total > 16777215) die("Too many buffers (%u)\n", total);
 	if (total < UCHAR_MAX) charbufs = 1;
+	else if (total < USHRT_MAX) charbufs = 2;
 
 	return total;
 }
@@ -60,12 +61,12 @@ static u8 hashptr(const char ptr[]) {
 	return first | (penultimate << 4);
 }
 
-static u16 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize],
+static u32 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize],
 			const u8 hashes[]) {
 
 	const u8 myhash = hashptr(ptr);
 
-	u16 i;
+	u32 i;
 	for (i = 0; i < bufcount; i++) {
 		if (myhash != hashes[i])
 			continue;
@@ -96,10 +97,12 @@ static void output(const entry * const e, FILE * const out) {
 			tmp = e->id << 5 | (reltime & 0x1f);
 			swrite(&tmp, 1, out);
 
-			if (charbufs)
+			if (charbufs == 1)
 				swrite(&e->buffer, 1, out);
-			else
+			else if (charbufs == 2)
 				swrite(&e->buffer, 2, out);
+			else
+				swrite(&e->buffer, 3, out);
 		break;
 		default:
 			die("Unknown entry id %u\n", e->id);
@@ -120,7 +123,7 @@ static void nukenewline(char buf[]) {
 		*ptr = '\0';
 }
 
-static void handle(FILE * const in, FILE * const out, const u16 bufcount) {
+static void handle(FILE * const in, FILE * const out, const u32 bufcount) {
 
 	printf("Total %u buffers created in the trace.\n", bufcount);
 
@@ -130,7 +133,7 @@ static void handle(FILE * const in, FILE * const out, const u16 bufcount) {
 	char buf[bufsize];
 	entry e;
 	u32 starttime = 0;
-	u16 curbuf = 0;
+	u32 curbuf = 0;
 
 	char ptr2id[bufcount][ptrsize];
 	u8 hashes[bufcount];
