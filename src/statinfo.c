@@ -59,19 +59,19 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 
 		switch (e.id) {
 			case ID_CREATE:
-				printf("%screate", ANSI_CYAN);
+				printf(ANSI_CYAN "create");
 			break;
 			case ID_READ:
-				printf("%sread", ANSI_MAGENTA);
+				printf(ANSI_MAGENTA "read");
 			break;
 			case ID_WRITE:
-				printf("%swrite", ANSI_YELLOW);
+				printf(ANSI_YELLOW "write");
 			break;
 			case ID_DESTROY:
-				printf("%sdestroy", ANSI_RED);
+				printf(ANSI_RED "destroy");
 			break;
 			case ID_CPUOP:
-				printf("%scpu op", ANSI_GREEN);
+				printf(ANSI_GREEN "cpu op");
 			break;
 		}
 
