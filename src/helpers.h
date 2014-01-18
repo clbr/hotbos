@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <zlib.h>
 #include "macros.h"
 
 static inline NORETURN_FUNC PRINTF_FUNC(1, 2) void die(const char fmt[], ...) {
@@ -46,6 +47,17 @@ static inline void sread(void *ptr, size_t size, FILE *f) {
 	size_t ret = 0;
 	while (size) {
 		ret = fread(ptr, 1, size, f);
+		size -= ret;
+
+		if (!ret) die("Failed reading\n");
+	}
+}
+
+static inline void sgzread(void *ptr, size_t size, void *f) {
+
+	size_t ret = 0;
+	while (size) {
+		ret = gzread(f, ptr, size);
 		size -= ret;
 
 		if (!ret) die("Failed reading\n");
