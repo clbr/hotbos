@@ -45,10 +45,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 static void go(void * const f, const u32 size, const u8 charbufs) {
 
-	long pos;
 	entry e;
+	const u8 direct = gzdirect(f);
 
-	for (pos = gztell(f); pos < size; pos = gztell(f)) {
+	while (!gzeof(f)) {
+
+		if (direct) {
+			long pos = gztell(f);
+			if (pos >= size) break;
+		}
+
 		readentry(&e, f, charbufs);
 
 		switch (e.id) {
