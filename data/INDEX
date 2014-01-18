@@ -1,0 +1,29 @@
+heaven1.bin: heaven 3.0 1920x1080, AF16x, shaders high, no AA
+heaven2.bin: heaven 3.0 1920x1080, AF16x, shaders high, no AA
+etqw1.bin: 1680*1050 all max
+left4dead2_1.bin: 2.1.3.5 Dec 2013, 1920x1080, AA off, AF off, others med-low
+pa1.bin: Planetary Annihilation v58772, 1920x1200, AA off, others max
+skyrim1.bin: Wine git, AA off, others max
+assassin1.bin: No AA, shadows low, others max
+xonotic1.bin: git, Solarium map, 1680x1050, all max, no TC
+css1.bin: Counter-Strike Source 1680x1050
+left4dead2_2.bin: 1680x1050
+hl2ep2_1.bin: 1680x1050
+cim_1.bin: AA on
+cim2_1.bin: AA on
+lightsmark1.bin: 2008 1600x900
+xonotic2.bin: 1680x1050
+smokingguns1.bin: 1680x1050
+openarena1.bin: 1680x1050
+worldofpadman1.bin: 1680x1050
+urbanterror1.bin: 1680x1050
+lugaru1.bin: 1680x1050
+nexuiz1.bin: 1680x1050
+tf2_1.bin: 1680x1050
+trine2_1.bin: 1680x1050
+bastion1.bin: 1680x1050
+awesomenauts1.bin: 1680x1050
+tremulous1.bin: 1680x1050
+sam3_1.bin:
+glxgears1.bin: default res 300x300
+glxgears2.bin: 1024x1024
