@@ -21,11 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <zlib.h>
 
-/* One entry takes four to five bytes, as follows:
+/* One entry takes two to three bytes, as follows:
 
 	struct {
 		u8 id: 3;
-		u32 time: 21;
+		u8 time: 5;
 		u8/u16 buffer;
 	}
 

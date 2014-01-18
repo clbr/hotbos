@@ -83,6 +83,9 @@ static u16 findbuf(const char ptr[], const u32 bufcount, char (*ptr2id)[ptrsize]
 static void output(const entry * const e, FILE * const out) {
 
 	u32 tmp;
+	static u32 lasttime = 0;
+
+	const u32 reltime = e->time - lasttime;
 
 	switch(e->id) {
 		case ID_CREATE:
@@ -90,8 +93,8 @@ static void output(const entry * const e, FILE * const out) {
 		case ID_WRITE:
 		case ID_DESTROY:
 		case ID_CPUOP:
-			tmp = e->id << 21 | (e->time & 0x1fffff);
-			swrite(&tmp, 3, out);
+			tmp = e->id << 5 | (reltime & 0x1f);
+			swrite(&tmp, 1, out);
 
 			if (charbufs)
 				swrite(&e->buffer, 1, out);
@@ -106,6 +109,8 @@ static void output(const entry * const e, FILE * const out) {
 		tmp = e->high_prio << 31 | e->size;
 		swrite(&tmp, 4, out);
 	}
+
+	lasttime = e->time;
 }
 
 static void nukenewline(char buf[]) {
