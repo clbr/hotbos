@@ -21,11 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <zlib.h>
 
-/* One entry takes two to four bytes, as follows:
+/*
+
+   All data is little-endian. No BE support.
+
+   One entry takes two to four bytes, as follows:
 
 	struct {
-		u8 id: 3;
 		u8 time: 5;
+		u8 id: 3;
 		u8/u16/u24 buffer;
 	}
 
