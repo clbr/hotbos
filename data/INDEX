@@ -28,3 +28,4 @@ sam3_1.bin:
 glxgears1.bin: default res 300x300
 glxgears2.bin: 1024x1024
 minecraft1.bin: 1.7.4
+dota2_1.bin: 1366x768 all max
