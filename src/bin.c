@@ -19,9 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "helpers.h"
 #include <string.h>
 
+static u32 lasttime = 0;
+
 void readentry(entry * const e, void * const in, const u8 charbufs) {
 
-	static u32 lasttime = 0;
 	u32 tmp = 0;
 
 	memset(e, 0, sizeof(entry));
@@ -53,4 +54,8 @@ void readentry(entry * const e, void * const in, const u8 charbufs) {
 		default:
 			die("Unknown entry id %u\n", e->id);
 	}
+}
+
+void resetreading() {
+	lasttime = 0;
 }

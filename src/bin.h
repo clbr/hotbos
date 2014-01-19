@@ -57,5 +57,6 @@ typedef struct {
 #define MAGICLEN sizeof(MAGIC) - 1
 
 void readentry(entry * const e, void * const in, const u8 charbufs);
+void resetreading();
 
 #endif
