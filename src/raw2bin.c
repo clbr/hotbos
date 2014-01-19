@@ -97,6 +97,8 @@ static u32 findbuf(const char ptr[]) {
 		printf("Buffer not found, assuming from_handle creation, missing in pre-jan-17 traces\n");
 	printed = 1;
 
+	if (firstprio == USHRT_MAX) die("Tried to fall back to a non-existent buffer\n");
+
 	return firstprio;
 
 	//die("Asked for a non-existent buffer %s\n", ptr);
