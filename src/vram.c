@@ -33,6 +33,8 @@ static struct {
 
 	struct buf *vram;
 	struct buf *ram;
+
+	struct buf **shortcut;
 } ctx;
 
 void initvram(const u64 size, const u32 edge, const u32 buffers) {
@@ -44,6 +46,8 @@ void initvram(const u64 size, const u32 edge, const u32 buffers) {
 	ctx.vram = xcalloc(sizeof(struct buf));
 	ctx.vram->size = size;
 	ctx.vram->hole = 1;
+
+	ctx.shortcut = xcalloc(buffers * sizeof(void *));
 }
 
 void freevram() {
@@ -65,6 +69,9 @@ void freevram() {
 	}
 
 	ctx.vram = ctx.ram = NULL;
+
+	free(ctx.shortcut);
+	ctx.shortcut = NULL;
 }
 
 static void dropvrambuf(struct buf * const oldest) {
@@ -210,6 +217,7 @@ void destroybuf(const u32 id) {
 				ctx.ram = cur->next;
 
 			free(cur);
+			ctx.shortcut[id] = NULL;
 
 			return;
 		}
@@ -233,6 +241,7 @@ void destroybuf(const u32 id) {
 
 	dropvrambuf(cur);
 	free(cur);
+	ctx.shortcut[id] = NULL;
 }
 
 static void internaltouch(const u32 id) {
@@ -302,6 +311,8 @@ void allocbuf(const u32 id, const u32 size) {
 	cur->size = size;
 	cur->id = id;
 	cur->tick = ctx.tick;
+
+	ctx.shortcut[id] = cur;
 
 	// Allocate a new buffer, put it to RAM, internaltouch moves it to vram
 	cur->next = ctx.ram;
