@@ -61,6 +61,53 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 
 		switch (e.id) {
 			case ID_CREATE:
+				fputs_unlocked("create", stdout);
+			break;
+			case ID_READ:
+				fputs_unlocked("read", stdout);
+			break;
+			case ID_WRITE:
+				fputs_unlocked("write", stdout);
+			break;
+			case ID_DESTROY:
+				fputs_unlocked("destroy", stdout);
+			break;
+			case ID_CPUOP:
+				fputs_unlocked("cpu op", stdout);
+			break;
+		}
+
+		if (e.id == ID_CREATE) {
+			printf(" buffer %u at %u ms (%u bytes%s)\n",
+				e.buffer,
+				e.time,
+				e.size,
+				e.high_prio ? ", high priority" : "");
+		} else {
+			printf(" buffer %u at %u ms\n",
+				e.buffer, e.time);
+		}
+	}
+
+	fflush(stdout);
+}
+
+static void gocol(void * const f, const u32 size, const u8 charbufs) {
+
+	entry e;
+	const u8 direct = gzdirect(f);
+
+	while (!gzeof(f)) {
+
+		if (direct) {
+			long pos = gztell(f);
+			if (pos >= size) break;
+		}
+
+		readentry(&e, f, charbufs);
+
+		switch (e.id) {
+			case ID_CREATE:
 				fputs_unlocked(ANSI_CYAN "create", stdout);
 			break;
 			case ID_READ:
@@ -124,7 +171,10 @@ int main(int argc, char **argv) {
 
 	u8 charbuf = getcharbuf(buffers);
 
-	go(f, size, charbuf);
+	if (argc == 3)
+		go(f, size, charbuf);
+	else
+		gocol(f, size, charbuf);
 
 	fclose(stdout);
 	if (p)
