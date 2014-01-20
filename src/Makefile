@@ -3,7 +3,7 @@ LDFLAGS += -Wl,-O1
 LDFLAGS += -lz
 LDFLAGS += $(CFLAGS)
 
-TARGETS = raw2bin statinfo trainer
+TARGETS = raw2bin statinfo trainer fragbench
 
 .PHONY: all clean
 
@@ -14,6 +14,7 @@ all: $(TARGETS)
 raw2bin: raw2bin.o
 statinfo: bin.o statinfo.o
 trainer: trainer.o
+fragbench: fragbench.o bin.o
 
 clean:
 	rm -f *.o $(TARGETS)

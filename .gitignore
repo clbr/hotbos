@@ -1,6 +1,7 @@
 raw2bin
 trainer
 statinfo
+fragbench
 bostats.*
 *.o
 *.d
