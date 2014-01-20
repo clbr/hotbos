@@ -35,6 +35,8 @@ static int filterdata(const struct dirent * const d) {
 	return 0;
 }
 
+static u8 *destroyed;
+
 static void go(void * const f, const u32 size, const u8 charbufs) {
 
 	entry e;
@@ -51,10 +53,17 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 		if (e.id == ID_CPUOP)
 			continue;
 
+		// Some traces have use-after-free.
+		// Filter those so we don't trip up.
+		if (destroyed[e.buffer])
+			continue;
+
 		if (e.id == ID_CREATE) {
 			allocbuf(e.buffer, e.size);
 		} else if (e.id == ID_DESTROY) {
 			destroybuf(e.buffer);
+
+			destroyed[e.buffer] = 1;
 		} else {
 			touchbuf(e.buffer);
 		}
@@ -124,7 +133,11 @@ int main(int argc, char **argv) {
 
 			u8 charbuf = getcharbuf(buffers);
 
+			destroyed = xcalloc(buffers);
+
 			go(f, size, charbuf);
+
+			free(destroyed);
 
 			gzclose(f);
 			freevram();
