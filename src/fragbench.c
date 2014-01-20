@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
 		initvram(vramsizes[v], edge);
 
 		for (i = 0; i < (u32) datafiles; i++) {
-			fprintf(stderr, "\tChecking file %u/%u: %s\n", i, datafiles,
+			fprintf(stderr, "\tChecking file %u/%u: %s\n", i + 1, datafiles,
 				namelist[i]->d_name);
 
 			resetreading();
