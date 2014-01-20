@@ -333,23 +333,9 @@ void touchbuf(const u32 id) {
 
 	ctx.tick++;
 
-	struct buf *cur;
-
 	// Is the buffer in VRAM? If so, update its timestamp and quit
-	cur = ctx.vram;
-	while (cur) {
-		if (cur->hole) {
-			cur = cur->next;
-			continue;
-		}
-
-		if (cur->id == id) {
-			cur->tick = ctx.tick;
-			return;
-		}
-
-		cur = cur->next;
-	}
+	if (ctx.shortcut[id]->vram)
+		ctx.shortcut[id]->tick = ctx.tick;
 
 	// It's not. Touch it from RAM.
 	internaltouch(id);
