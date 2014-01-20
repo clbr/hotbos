@@ -152,6 +152,10 @@ static struct buf *fits(const u32 size) {
 	return NULL;
 }
 
+void destroybuf(const u32 id) {
+
+}
+
 static void internaltouch(const u32 id) {
 
 	// The meat.

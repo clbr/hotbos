@@ -53,6 +53,8 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 
 		if (e.id == ID_CREATE) {
 			allocbuf(e.id, e.size);
+		} else if (e.id == ID_DESTROY) {
+			destroybuf(e.id);
 		} else {
 			touchbuf(e.id);
 		}

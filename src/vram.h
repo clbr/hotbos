@@ -25,6 +25,7 @@ static const u32 vramelements = sizeof(vramsizes) / sizeof(u32);
 void initvram(const u64 size, const u32 edge);
 void allocbuf(const u32 id, const u32 size);
 void touchbuf(const u32 id);
+void destroybuf(const u32 id);
 void freevram();
 
 void checkfragmentation();
