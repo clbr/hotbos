@@ -109,9 +109,9 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "VRAM size %u\n", vramsizes[v]);
 		printf("------------------------ VRAM size %u\n", vramsizes[v]);
 
-		initvram((u64) vramsizes[v] * 1024 * 1024, edge * 1024 * 1024);
-
 		for (i = 0; i < (u32) datafiles; i++) {
+			initvram((u64) vramsizes[v] * 1024 * 1024, edge * 1024 * 1024);
+
 			fprintf(stderr, "\tChecking file %u/%u: %s\n", i + 1, datafiles,
 				namelist[i]->d_name);
 
@@ -127,9 +127,8 @@ int main(int argc, char **argv) {
 			go(f, size, charbuf);
 
 			gzclose(f);
+			freevram();
 		}
-
-		freevram();
 	}
 
 	for (i = 0; i < (u32) datafiles; i++) {
