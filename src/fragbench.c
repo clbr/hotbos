@@ -50,6 +50,12 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 
 		if (e.id == ID_CPUOP)
 			continue;
+
+		if (e.id == ID_CREATE) {
+			allocbuf(e.id, e.size);
+		} else {
+			touchbuf(e.id);
+		}
 	}
 
 	fflush(stdout);
