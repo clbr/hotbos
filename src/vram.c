@@ -187,10 +187,10 @@ void destroybuf(const u32 id) {
 				cur->prev->next = cur->next;
 			if (cur->next)
 				cur->next->prev = cur->prev;
-			free(cur);
-
 			if (cur == ctx.ram)
 				ctx.ram = cur->next;
+
+			free(cur);
 
 			return;
 		}
