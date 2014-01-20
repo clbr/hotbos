@@ -130,5 +130,10 @@ int main(int argc, char **argv) {
 		freevram();
 	}
 
+	for (i = 0; i < (u32) datafiles; i++) {
+		free(namelist[i]);
+	}
+	free(namelist);
+
 	return 0;
 }
