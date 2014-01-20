@@ -125,6 +125,8 @@ static void dropvrambuf(struct buf * const oldest) {
 
 static void dropoldest() {
 
+	printf("Fragmentation caused a swap\n");
+
 	struct buf *cur, *oldest;
 
 	oldest = cur = ctx.vram;
