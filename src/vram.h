@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "lrtypes.h"
 
 static const u64 vramsizes[] = { 64, 128, 256, 384, 512, 1024, 1536, 2048, 4096 };
-static const u32 vramelements = sizeof(vramsizes) / sizeof(u32);
+static const u32 vramelements = sizeof(vramsizes) / sizeof(u64);
 
 void initvram(const u64 size, const u32 edge, const u32 buffers);
 void allocbuf(const u32 id, const u32 size);
