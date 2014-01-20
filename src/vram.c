@@ -262,6 +262,8 @@ static void internaltouch(const u32 id) {
 
 	if (!found) die("Asked to find a buffer not in RAM %u\n", id);
 
+	cur->tick = ctx.tick;
+
 	// Check if there's space for it
 	struct buf *const mine = cur;
 	struct buf *fit = fits(mine->size);
