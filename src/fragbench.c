@@ -15,8 +15,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "bin.h"
+#include "helpers.h"
+#include <unistd.h>
 
 int main(int argc, char **argv) {
+
+	if (argc > 1 && argv[1][0] == '-') {
+		die("Usage: %s [optional strategy]\n\n"
+			"Strategies: default, minmax (number)\n",
+			argv[0]);
+	}
 
 	return 0;
 }
