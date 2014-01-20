@@ -67,6 +67,49 @@ void freevram() {
 
 static void dropoldest() {
 
+	struct buf *cur, *oldest;
+
+	oldest = cur = ctx.vram;
+	while (cur) {
+		if (cur->hole) {
+			cur = cur->next;
+			continue;
+		}
+
+		if (cur->tick < oldest->tick)
+			oldest = cur;
+
+		cur = cur->next;
+	}
+
+	if (oldest->hole) die("Tried to drop a hole");
+
+	// Is the buffer on either side a hole? If so, merge
+	if (oldest->prev && oldest->next && oldest->prev->hole && oldest->next->hole) {
+		// Merge two holes
+		struct buf *hole1 = oldest->prev;
+		struct buf *hole2 = oldest->next;
+
+		hole1->size += oldest->size + hole2->size;
+		hole1->next = hole2->next;
+
+		free(hole2);
+
+	} else if (oldest->prev && oldest->prev->hole) {
+		struct buf *hole = oldest->prev;
+		hole->size += oldest->size;
+		hole->next = oldest->next;
+
+	} else if (oldest->next && oldest->next->hole) {
+		struct buf *hole = oldest->next;
+		hole->size += oldest->size;
+		hole->prev = oldest->prev;
+	}
+
+	// Drop oldest
+	oldest->prev = NULL;
+	oldest->next = ctx.ram;
+	ctx.ram = oldest;
 }
 
 static struct buf *fits(const u32 size) {
