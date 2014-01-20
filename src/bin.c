@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "bin.h"
 #include "helpers.h"
 #include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 static u32 lasttime = 0;
 
@@ -58,4 +60,22 @@ void readentry(entry * const e, void * const in, const u8 charbufs) {
 
 void resetreading() {
 	lasttime = 0;
+}
+
+void *gzbinopen(const char in[], u32 * const size) {
+
+	void * const f = gzopen(in, "rb");
+	if (!f) die("Failed to open file\n");
+
+	struct stat st;
+	if (stat(in, &st))
+		die("Failed in stat\n");
+	*size = st.st_size;
+
+	char magic[MAGICLEN];
+	sgzread(magic, MAGICLEN, f);
+	if (memcmp(magic, MAGIC, MAGICLEN))
+		die("This is not a bostats binary file.\n");
+
+	return f;
 }

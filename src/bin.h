@@ -63,4 +63,6 @@ typedef struct {
 void readentry(entry * const e, void * const in, const u8 charbufs);
 void resetreading();
 
+void *gzbinopen(const char in[], u32 *size);
+
 #endif
