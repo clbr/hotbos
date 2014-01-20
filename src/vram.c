@@ -189,6 +189,9 @@ void destroybuf(const u32 id) {
 				cur->next->prev = cur->prev;
 			free(cur);
 
+			if (cur == ctx.ram)
+				ctx.ram = cur->next;
+
 			return;
 		}
 
@@ -246,6 +249,8 @@ static void internaltouch(const u32 id) {
 		mine->next->prev = mine->prev;
 	if (mine->prev)
 		mine->prev->next = mine->next;
+	if (mine == ctx.ram)
+		ctx.ram = mine->next;
 
 	// Do we add it to its start or end?
 	if (!ctx.edge || mine->size < ctx.edge) {
