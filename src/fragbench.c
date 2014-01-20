@@ -41,6 +41,7 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 
 	entry e;
 	const u8 direct = gzdirect(f);
+	u8 ctr = 0;
 
 	while (!gzeof(f)) {
 		if (direct) {
@@ -68,7 +69,11 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 			touchbuf(e.buffer);
 		}
 
-		checkfragmentation();
+		if (!ctr)
+			checkfragmentation();
+
+		ctr++;
+		ctr %= 10;
 	}
 
 	fflush(stdout);
