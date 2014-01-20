@@ -119,8 +119,6 @@ int main(int argc, char **argv) {
 		printf("------------------------ VRAM size %u\n", vramsizes[v]);
 
 		for (i = 0; i < (u32) datafiles; i++) {
-			initvram((u64) vramsizes[v] * 1024 * 1024, edge * 1024 * 1024);
-
 			fprintf(stderr, "\tChecking file %u/%u: %s\n", i + 1, datafiles,
 				namelist[i]->d_name);
 
@@ -132,6 +130,8 @@ int main(int argc, char **argv) {
 			sgzread(&buffers, 4, f);
 
 			u8 charbuf = getcharbuf(buffers);
+			initvram((u64) vramsizes[v] * 1024 * 1024, edge * 1024 * 1024,
+					buffers);
 
 			destroyed = xcalloc(buffers);
 

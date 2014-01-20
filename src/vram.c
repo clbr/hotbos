@@ -35,7 +35,7 @@ static struct {
 	struct buf *ram;
 } ctx;
 
-void initvram(const u64 size, const u32 edge) {
+void initvram(const u64 size, const u32 edge, const u32 buffers) {
 
 	ctx.size = size;
 	ctx.edge = edge;
