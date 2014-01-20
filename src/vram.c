@@ -77,6 +77,8 @@ static void dropvrambuf(struct buf * const oldest) {
 
 		hole1->size += oldest->size + hole2->size;
 		hole1->next = hole2->next;
+		if (hole1->next)
+			hole1->next->prev = hole1;
 
 		free(hole2);
 
