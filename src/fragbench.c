@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "bin.h"
 #include "helpers.h"
 #include <unistd.h>
+#include <string.h>
 
 int main(int argc, char **argv) {
 
@@ -37,6 +38,18 @@ int main(int argc, char **argv) {
 		datadir = "../data";
 
 	if (!datadir) die("Cannot find data\n");
+
+	// Determine strategy
+	u32 amount = 0;
+	if (!argv[1] || !strcmp(argv[1], "default")) {
+		fprintf(stderr, "Measuring default strategy.\n");
+	} else if (argc > 2 && !strcmp(argv[1], "minmax")) {
+		amount = atoi(argv[2]);
+		fprintf(stderr, "Measuring minmax strategy, with edge %u mb.\n",
+			amount);
+	} else {
+		die("Unknown strategy\n");
+	}
 
 	return 0;
 }
