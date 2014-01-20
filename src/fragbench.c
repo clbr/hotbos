@@ -37,7 +37,7 @@ static int filterdata(const struct dirent * const d) {
 
 static u8 *destroyed;
 
-static void go(void * const f, const u32 size, const u8 charbufs) {
+static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram) {
 
 	entry e;
 	const u8 direct = gzdirect(f);
@@ -60,6 +60,10 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 			continue;
 
 		if (e.id == ID_CREATE) {
+			// Abort the trace if it tries to create a buffer bigger than vram
+			if (e.size >= vram)
+				return;
+
 			allocbuf(e.buffer, e.size);
 		} else if (e.id == ID_DESTROY) {
 			destroybuf(e.buffer);
@@ -120,8 +124,8 @@ int main(int argc, char **argv) {
 
 	u32 i, v;
 	for (v = 0; v < vramelements; v++) {
-		fprintf(stderr, "VRAM size %u\n", vramsizes[v]);
-		printf("------------------------ VRAM size %u\n", vramsizes[v]);
+		fprintf(stderr, "VRAM size %lu\n", vramsizes[v]);
+		printf("------------------------ VRAM size %lu\n", vramsizes[v]);
 
 		for (i = 0; i < (u32) datafiles; i++) {
 			fprintf(stderr, "\tChecking file %u/%u: %s\n", i + 1, datafiles,
@@ -140,7 +144,7 @@ int main(int argc, char **argv) {
 
 			destroyed = xcalloc(buffers);
 
-			go(f, size, charbuf);
+			go(f, size, charbuf, vramsizes[v] * 1024 * 1024);
 
 			free(destroyed);
 
