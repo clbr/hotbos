@@ -211,38 +211,21 @@ static struct buf *fits(const u32 size) {
 void destroybuf(const u32 id) {
 
 	// Is it in ram? Easy drop then
-	struct buf *cur = ctx.ram;
-	while (cur) {
-		if (cur->id == id) {
-			if (cur->prev)
-				cur->prev->next = cur->next;
-			if (cur->next)
-				cur->next->prev = cur->prev;
-			if (cur == ctx.ram)
-				ctx.ram = cur->next;
+	struct buf * const cur = &ctx.storage[id];
+	if (!cur->vram) {
+		if (cur->prev)
+			cur->prev->next = cur->next;
+		if (cur->next)
+			cur->next->prev = cur->prev;
+		if (cur == ctx.ram)
+			ctx.ram = cur->next;
 
-			if (cur->hole)
-				free(cur);
-			return;
-		}
-
-		cur = cur->next;
+		if (cur->hole)
+			free(cur);
+		return;
 	}
 
 	// Nope, it's in vram then
-	cur = ctx.vram;
-	u8 found = 0;
-	while (cur) {
-		if (cur->id == id) {
-			found = 1;
-			break;
-		}
-
-		cur = cur->next;
-	}
-
-	if (!found) die("Tried to drop a buffer that doesn't exist\n");
-
 	dropvrambuf(cur);
 	if (cur->hole)
 		free(cur);
