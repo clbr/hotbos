@@ -52,11 +52,11 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 			continue;
 
 		if (e.id == ID_CREATE) {
-			allocbuf(e.id, e.size);
+			allocbuf(e.buffer, e.size);
 		} else if (e.id == ID_DESTROY) {
-			destroybuf(e.id);
+			destroybuf(e.buffer);
 		} else {
-			touchbuf(e.id);
+			touchbuf(e.buffer);
 		}
 
 		checkfragmentation();

@@ -21,8 +21,8 @@ struct buf {
 	struct buf *next;
 	struct buf *prev;
 	u64 tick;
+	u64 size;
 	u32 id;
-	u32 size;
 	u8 hole;
 };
 
@@ -63,6 +63,8 @@ void freevram() {
 		free(cur);
 		cur = next;
 	}
+
+	ctx.vram = ctx.ram = NULL;
 }
 
 static void dropvrambuf(struct buf * const oldest) {
@@ -83,11 +85,25 @@ static void dropvrambuf(struct buf * const oldest) {
 		hole->size += oldest->size;
 		hole->next = oldest->next;
 
+		if (hole->next)
+			hole->next->prev = hole;
+
 	} else if (oldest->next && oldest->next->hole) {
 		struct buf *hole = oldest->next;
 		hole->size += oldest->size;
 		hole->prev = oldest->prev;
+
+		if (hole->prev)
+			hole->prev->next = hole;
+	} else {
+		if (oldest->prev)
+			oldest->prev->next = oldest->next;
+		if (oldest->next)
+			oldest->next->prev = oldest->prev;
 	}
+
+	if (oldest == ctx.vram)
+		ctx.vram = oldest->next;
 }
 
 static void dropoldest() {
@@ -114,6 +130,7 @@ static void dropoldest() {
 	// Drop oldest
 	oldest->prev = NULL;
 	oldest->next = ctx.ram;
+	ctx.ram->prev = oldest;
 	ctx.ram = oldest;
 }
 
