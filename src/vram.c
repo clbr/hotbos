@@ -140,7 +140,7 @@ static void dropoldest() {
 		cur = cur->next;
 	}
 
-	if (oldest->hole) die("Tried to drop a hole");
+	if (oldest->hole) die("Tried to drop a hole\n");
 
 	dropvrambuf(oldest);
 
