@@ -20,7 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
+#include <limits.h>
 
 static int filterdata(const struct dirent * const d) {
 
@@ -31,6 +33,10 @@ static int filterdata(const struct dirent * const d) {
 		return 1;
 
 	return 0;
+}
+
+static void go(void * const f, const u32 size, const u8 charbufs) {
+
 }
 
 int main(int argc, char **argv) {
@@ -70,8 +76,37 @@ int main(int argc, char **argv) {
 	int datafiles = scandir(datadir, &namelist, filterdata, alphasort);
 	if (datafiles < 0) die("Failed in scandir\n");
 
+	chdir(datadir);
+
 	u32 i;
 	for (i = 0; i < (u32) datafiles; i++) {
+		fprintf(stderr, "Checking file %u/%u: %s\n", i, datafiles,
+			namelist[i]->d_name);
+
+		resetreading();
+		void * const f = gzopen(namelist[i]->d_name, "rb");
+		if (!f) die("Failed to open file\n");
+
+		struct stat st;
+		stat(namelist[i]->d_name, &st);
+
+		char magic[MAGICLEN];
+		sgzread(magic, MAGICLEN, f);
+		if (memcmp(magic, MAGIC, MAGICLEN))
+			die("This is not a bostats binary file.\n");
+
+		u32 buffers;
+		sgzread(&buffers, 4, f);
+
+		u8 charbuf = 0;
+		if (buffers < UCHAR_MAX)
+			charbuf = 1;
+		else if (buffers < USHRT_MAX)
+			charbuf = 2;
+
+		go(f, st.st_size, charbuf);
+
+		gzclose(f);
 	}
 
 	return 0;
