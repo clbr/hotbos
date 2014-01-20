@@ -35,6 +35,8 @@ static int filterdata(const struct dirent * const d) {
 	return 0;
 }
 
+static u32 edge = 0;
+
 static void go(void * const f, const u32 size, const u8 charbufs) {
 
 }
@@ -60,13 +62,12 @@ int main(int argc, char **argv) {
 	if (!datadir) die("Cannot find data\n");
 
 	// Determine strategy
-	u32 amount = 0;
 	if (!argv[1] || !strcmp(argv[1], "default")) {
 		fprintf(stderr, "Measuring default strategy.\n");
 	} else if (argc > 2 && !strcmp(argv[1], "minmax")) {
-		amount = atoi(argv[2]);
+		edge = atoi(argv[2]);
 		fprintf(stderr, "Measuring minmax strategy, with edge %u mb.\n",
-			amount);
+			edge);
 	} else {
 		die("Unknown strategy\n");
 	}
