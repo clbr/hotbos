@@ -305,5 +305,7 @@ void checkfragmentation() {
 	printf("Fragments: %u\n", total);
 
 	if (totalsize != ctx.size)
-		die("VRAM got corrupted, size doesn't match\n");
+		die("VRAM got corrupted, size doesn't match (%llu s/b %llu)\n",
+			(unsigned long long) totalsize,
+			(unsigned long long) ctx.size);
 }
