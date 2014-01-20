@@ -35,8 +35,6 @@ static int filterdata(const struct dirent * const d) {
 	return 0;
 }
 
-static u32 edge = 0;
-
 static void go(void * const f, const u32 size, const u8 charbufs) {
 
 	entry e;
@@ -78,6 +76,7 @@ int main(int argc, char **argv) {
 	if (!datadir) die("Cannot find data\n");
 
 	// Determine strategy
+	u32 edge = 0;
 	if (!argv[1] || !strcmp(argv[1], "default")) {
 		fprintf(stderr, "Measuring default strategy.\n");
 	} else if (argc > 2 && !strcmp(argv[1], "minmax")) {
@@ -100,7 +99,7 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "VRAM size %u\n", vramsizes[v]);
 		printf("------------------------ VRAM size %u\n", vramsizes[v]);
 
-		initvram(vramsizes[v]);
+		initvram(vramsizes[v], edge);
 
 		for (i = 0; i < (u32) datafiles; i++) {
 			fprintf(stderr, "\tChecking file %u/%u: %s\n", i, datafiles,

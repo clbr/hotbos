@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "vram.h"
 
-void initvram(const u32 size) {
+void initvram(const u32 size, const u32 edge) {
 
 }
 
