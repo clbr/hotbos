@@ -35,7 +35,7 @@ static struct {
 	struct buf *vram;
 	struct buf *ram;
 
-	struct buf **shortcut;
+	struct buf *storage;
 } ctx;
 
 void initvram(const u64 size, const u32 edge, const u32 buffers) {
@@ -48,7 +48,7 @@ void initvram(const u64 size, const u32 edge, const u32 buffers) {
 	ctx.vram->size = size;
 	ctx.vram->hole = 1;
 
-	ctx.shortcut = xcalloc(buffers * sizeof(void *));
+	ctx.storage = xcalloc(buffers * sizeof(struct buf));
 }
 
 void freevram() {
@@ -58,21 +58,23 @@ void freevram() {
 	struct buf *cur = ctx.vram;
 	while (cur) {
 		struct buf *next = cur->next;
-		free(cur);
+		if (cur->hole)
+			free(cur);
 		cur = next;
 	}
 
 	cur = ctx.ram;
 	while (cur) {
 		struct buf *next = cur->next;
-		free(cur);
+		if (cur->hole)
+			free(cur);
 		cur = next;
 	}
 
 	ctx.vram = ctx.ram = NULL;
 
-	free(ctx.shortcut);
-	ctx.shortcut = NULL;
+	free(ctx.storage);
+	ctx.storage = NULL;
 }
 
 static void dropvrambuf(struct buf * const oldest) {
@@ -219,9 +221,8 @@ void destroybuf(const u32 id) {
 			if (cur == ctx.ram)
 				ctx.ram = cur->next;
 
-			free(cur);
-			ctx.shortcut[id] = NULL;
-
+			if (cur->hole)
+				free(cur);
 			return;
 		}
 
@@ -243,8 +244,8 @@ void destroybuf(const u32 id) {
 	if (!found) die("Tried to drop a buffer that doesn't exist\n");
 
 	dropvrambuf(cur);
-	free(cur);
-	ctx.shortcut[id] = NULL;
+	if (cur->hole)
+		free(cur);
 }
 
 static void internaltouch(const u32 id) {
@@ -313,12 +314,10 @@ void allocbuf(const u32 id, const u32 size) {
 
 	ctx.tick++;
 
-	struct buf *cur = xcalloc(sizeof(struct buf));
+	struct buf *cur = &ctx.storage[id];
 	cur->size = size;
 	cur->id = id;
 	cur->tick = ctx.tick;
-
-	ctx.shortcut[id] = cur;
 
 	// Allocate a new buffer, put it to RAM, internaltouch moves it to vram
 	cur->next = ctx.ram;
@@ -334,8 +333,8 @@ void touchbuf(const u32 id) {
 	ctx.tick++;
 
 	// Is the buffer in VRAM? If so, update its timestamp and quit
-	if (ctx.shortcut[id]->vram) {
-		ctx.shortcut[id]->tick = ctx.tick;
+	if (ctx.storage[id].vram) {
+		ctx.storage[id].tick = ctx.tick;
 		return;
 	}
 
