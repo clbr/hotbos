@@ -78,23 +78,26 @@ int main(int argc, char **argv) {
 
 	chdir(datadir);
 
-	u32 i;
-	for (i = 0; i < (u32) datafiles; i++) {
-		fprintf(stderr, "Checking file %u/%u: %s\n", i, datafiles,
-			namelist[i]->d_name);
+	u32 i, v;
+	for (v = 0; v < vramelements; v++) {
+		fprintf(stderr, "VRAM size %u\n", vramsizes[v]);
+		for (i = 0; i < (u32) datafiles; i++) {
+			fprintf(stderr, "\tChecking file %u/%u: %s\n", i, datafiles,
+				namelist[i]->d_name);
 
-		resetreading();
-		u32 size;
-		void * const f = gzbinopen(namelist[i]->d_name, &size);
+			resetreading();
+			u32 size;
+			void * const f = gzbinopen(namelist[i]->d_name, &size);
 
-		u32 buffers;
-		sgzread(&buffers, 4, f);
+			u32 buffers;
+			sgzread(&buffers, 4, f);
 
-		u8 charbuf = getcharbuf(buffers);
+			u8 charbuf = getcharbuf(buffers);
 
-		go(f, size, charbuf);
+			go(f, size, charbuf);
 
-		gzclose(f);
+			gzclose(f);
+		}
 	}
 
 	return 0;
