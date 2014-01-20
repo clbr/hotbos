@@ -65,24 +65,7 @@ void freevram() {
 	}
 }
 
-static void dropoldest() {
-
-	struct buf *cur, *oldest;
-
-	oldest = cur = ctx.vram;
-	while (cur) {
-		if (cur->hole) {
-			cur = cur->next;
-			continue;
-		}
-
-		if (cur->tick < oldest->tick)
-			oldest = cur;
-
-		cur = cur->next;
-	}
-
-	if (oldest->hole) die("Tried to drop a hole");
+static void dropvrambuf(struct buf * const oldest) {
 
 	// Is the buffer on either side a hole? If so, merge
 	if (oldest->prev && oldest->next && oldest->prev->hole && oldest->next->hole) {
@@ -105,6 +88,28 @@ static void dropoldest() {
 		hole->size += oldest->size;
 		hole->prev = oldest->prev;
 	}
+}
+
+static void dropoldest() {
+
+	struct buf *cur, *oldest;
+
+	oldest = cur = ctx.vram;
+	while (cur) {
+		if (cur->hole) {
+			cur = cur->next;
+			continue;
+		}
+
+		if (cur->tick < oldest->tick)
+			oldest = cur;
+
+		cur = cur->next;
+	}
+
+	if (oldest->hole) die("Tried to drop a hole");
+
+	dropvrambuf(oldest);
 
 	// Drop oldest
 	oldest->prev = NULL;
@@ -183,6 +188,9 @@ void destroybuf(const u32 id) {
 	}
 
 	if (!found) die("Tried to drop a buffer that doesn't exist\n");
+
+	dropvrambuf(cur);
+	free(cur);
 }
 
 static void internaltouch(const u32 id) {
