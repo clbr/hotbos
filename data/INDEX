@@ -29,6 +29,7 @@ glxgears1.bin: default res 300x300
 glxgears2.bin: 1024x1024
 minecraft1.bin: 1.7.4
 dota2_1.bin: 1366x768 all max
+dota2_2.bin: 1366x768 low shadows, others max
 minecraft2.bin: Sonic Ether GLSL deferred mod
 supertuxkart1.bin: STK cand git, mid settings, Hacienda level
 supertuxkart2.bin: STK cand git, mid settings, Jungle level
