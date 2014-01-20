@@ -103,17 +103,8 @@ int main(int argc, char **argv) {
 	if (argc < 2)
 		die("Usage: %s file.bin\n", argv[0]);
 
-	void * const f = gzopen(argv[1], "rb");
-	if (!f) die("Failed to open file\n");
-
-	struct stat st;
-	stat(argv[1], &st);
-
-	char magic[MAGICLEN];
-	sgzread(magic, MAGICLEN, f);
-
-	if (memcmp(magic, MAGIC, MAGICLEN))
-		die("This is not a bostats binary file.\n");
+	u32 size;
+	void * const f = gzbinopen(argv[1], &size);
 
 	u32 buffers;
 	sgzread(&buffers, 4, f);
@@ -137,7 +128,7 @@ int main(int argc, char **argv) {
 	else if (buffers < USHRT_MAX)
 		charbuf = 2;
 
-	go(f, st.st_size, charbuf);
+	go(f, size, charbuf);
 
 	fclose(stdout);
 	if (p)

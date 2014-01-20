@@ -84,16 +84,8 @@ int main(int argc, char **argv) {
 			namelist[i]->d_name);
 
 		resetreading();
-		void * const f = gzopen(namelist[i]->d_name, "rb");
-		if (!f) die("Failed to open file\n");
-
-		struct stat st;
-		stat(namelist[i]->d_name, &st);
-
-		char magic[MAGICLEN];
-		sgzread(magic, MAGICLEN, f);
-		if (memcmp(magic, MAGIC, MAGICLEN))
-			die("This is not a bostats binary file.\n");
+		u32 size;
+		void * const f = gzbinopen(namelist[i]->d_name, &size);
 
 		u32 buffers;
 		sgzread(&buffers, 4, f);
@@ -104,7 +96,7 @@ int main(int argc, char **argv) {
 		else if (buffers < USHRT_MAX)
 			charbuf = 2;
 
-		go(f, st.st_size, charbuf);
+		go(f, size, charbuf);
 
 		gzclose(f);
 	}
