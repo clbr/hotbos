@@ -56,6 +56,8 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 		} else {
 			touchbuf(e.id);
 		}
+
+		checkfragmentation();
 	}
 
 	fflush(stdout);

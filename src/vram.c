@@ -31,3 +31,7 @@ void allocbuf(const u32 id, const u32 size) {
 void touchbuf(const u32 id) {
 
 }
+
+void checkfragmentation() {
+
+}
