@@ -252,7 +252,8 @@ void allocbuf(const u32 id, const u32 size) {
 
 	// Allocate a new buffer, put it to RAM, internaltouch moves it to vram
 	cur->next = ctx.ram;
-	ctx.ram->prev = cur;
+	if (ctx.ram)
+		ctx.ram->prev = cur;
 	ctx.ram = cur;
 
 	internaltouch(id);
