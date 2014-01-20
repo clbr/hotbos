@@ -135,7 +135,7 @@ int main(int argc, char **argv) {
 			sgzread(&buffers, 4, f);
 
 			u8 charbuf = getcharbuf(buffers);
-			initvram((u64) vramsizes[v] * 1024 * 1024, edge * 1024,
+			initvram(vramsizes[v] * 1024 * 1024, edge * 1024,
 					buffers);
 
 			destroyed = xcalloc(buffers);
