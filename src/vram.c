@@ -134,6 +134,9 @@ static void dropoldest() {
 			continue;
 		}
 
+		if (oldest->hole)
+			oldest = cur;
+
 		if (cur->tick < oldest->tick)
 			oldest = cur;
 
