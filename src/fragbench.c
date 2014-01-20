@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "Measuring default strategy.\n");
 	} else if (argc > 2 && !strcmp(argv[1], "minmax")) {
 		edge = atoi(argv[2]);
-		fprintf(stderr, "Measuring minmax strategy, with edge %u mb.\n",
+		fprintf(stderr, "Measuring minmax strategy, with edge %u kb.\n",
 			edge);
 	} else {
 		die("Unknown strategy\n");
@@ -135,7 +135,7 @@ int main(int argc, char **argv) {
 			sgzread(&buffers, 4, f);
 
 			u8 charbuf = getcharbuf(buffers);
-			initvram((u64) vramsizes[v] * 1024 * 1024, edge * 1024 * 1024,
+			initvram((u64) vramsizes[v] * 1024 * 1024, edge * 1024,
 					buffers);
 
 			destroyed = xcalloc(buffers);
