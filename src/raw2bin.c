@@ -45,8 +45,8 @@ static u32 buffers(FILE * const in, u64 * const lines) {
 	rewind(in);
 
 	if (total > 16777215) die("Too many buffers (%u)\n", total);
-	if (total < UCHAR_MAX) charbufs = 1;
-	else if (total < USHRT_MAX) charbufs = 2;
+
+	charbufs = getcharbuf(total);
 
 	return total;
 }

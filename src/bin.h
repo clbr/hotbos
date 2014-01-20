@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "lrtypes.h"
 #include <stdio.h>
 #include <zlib.h>
+#include <limits.h>
 
 /*
 
@@ -64,5 +65,15 @@ void readentry(entry * const e, void * const in, const u8 charbufs);
 void resetreading();
 
 void *gzbinopen(const char in[], u32 *size);
+
+static inline u8 getcharbuf(const u32 bufs) {
+
+	if (bufs < UCHAR_MAX)
+		return 1;
+	if (bufs < USHRT_MAX)
+		return 2;
+
+	return 0;
+}
 
 #endif

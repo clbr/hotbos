@@ -122,11 +122,7 @@ int main(int argc, char **argv) {
 	printf("%u buffers found\n", buffers);
 	fflush(stdout);
 
-	u8 charbuf = 0;
-	if (buffers < UCHAR_MAX)
-		charbuf = 1;
-	else if (buffers < USHRT_MAX)
-		charbuf = 2;
+	u8 charbuf = getcharbuf(buffers);
 
 	go(f, size, charbuf);
 
