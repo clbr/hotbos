@@ -18,6 +18,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "helpers.h"
 #include <unistd.h>
 #include <string.h>
+#include <sys/types.h>
+#include <dirent.h>
+
+static int filterdata(const struct dirent * const d) {
+
+	if (d->d_type != DT_REG && d->d_type != DT_UNKNOWN)
+		return 0;
+
+	if (strstr(d->d_name, ".bin"))
+		return 1;
+
+	return 0;
+}
 
 int main(int argc, char **argv) {
 
@@ -49,6 +62,15 @@ int main(int argc, char **argv) {
 			amount);
 	} else {
 		die("Unknown strategy\n");
+	}
+
+	// Loop over the data files
+	struct dirent **namelist;
+	int datafiles = scandir(datadir, &namelist, filterdata, alphasort);
+	if (datafiles < 0) die("Failed in scandir\n");
+
+	u32 i;
+	for (i = 0; i < (u32) datafiles; i++) {
 	}
 
 	return 0;
