@@ -244,7 +244,7 @@ static void internaltouch(const u32 id) {
 		cur = cur->next;
 	}
 
-	if (!found) die("Asked to find a buffer not in RAM?\n");
+	if (!found) die("Asked to find a buffer not in RAM %u\n", id);
 
 	// Check if there's space for it
 	struct buf *const mine = cur;
