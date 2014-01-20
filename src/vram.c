@@ -233,6 +233,9 @@ static void internaltouch(const u32 id) {
 		mine->prev = fit->prev;
 		mine->next = fit;
 		fit->prev = mine;
+
+		if (ctx.vram == fit)
+			ctx.vram = mine;
 	} else {
 		// end
 		mine->prev = fit;
