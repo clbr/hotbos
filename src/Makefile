@@ -13,8 +13,8 @@ all: $(TARGETS)
 
 raw2bin: raw2bin.o
 statinfo: bin.o statinfo.o
-trainer: trainer.o
-fragbench: fragbench.o bin.o
+trainer: trainer.o vram.o
+fragbench: fragbench.o bin.o vram.o
 
 clean:
 	rm -f *.o $(TARGETS)

@@ -14,17 +14,20 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef VRAM_H
-#define VRAM_H
+#include "vram.h"
 
-#include "lrtypes.h"
+void initvram(const u32 size) {
 
-static const u32 vramsizes[] = { 64, 128, 256, 384, 512, 1024, 1536, 2048, 4096 };
-static const u32 vramelements = sizeof(vramsizes) / sizeof(u32);
+}
 
-void initvram(const u32 size);
-int allocbuf(const u32 id, const u32 size);
-int touchbuf(const u32 id);
-void freevram();
+void freevram() {
 
-#endif
+}
+
+int allocbuf(const u32 id, const u32 size) {
+
+}
+
+int touchbuf(const u32 id) {
+
+}
