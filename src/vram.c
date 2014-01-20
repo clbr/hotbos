@@ -24,6 +24,7 @@ struct buf {
 	u64 size;
 	u32 id;
 	u8 hole;
+	u8 vram;
 };
 
 static struct {
@@ -75,6 +76,8 @@ void freevram() {
 }
 
 static void dropvrambuf(struct buf * const oldest) {
+
+	oldest->vram = 0;
 
 	// Is the buffer on either side a hole? If so, merge
 	if (oldest->prev && oldest->next && oldest->prev->hole && oldest->next->hole) {
@@ -263,6 +266,7 @@ static void internaltouch(const u32 id) {
 	if (!found) die("Asked to find a buffer not in RAM %u\n", id);
 
 	cur->tick = ctx.tick;
+	cur->vram = 1;
 
 	// Check if there's space for it
 	struct buf *const mine = cur;
