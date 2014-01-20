@@ -24,10 +24,10 @@ void freevram() {
 
 }
 
-int allocbuf(const u32 id, const u32 size) {
+void allocbuf(const u32 id, const u32 size) {
 
 }
 
-int touchbuf(const u32 id) {
+void touchbuf(const u32 id) {
 
 }
