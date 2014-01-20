@@ -81,6 +81,7 @@ int main(int argc, char **argv) {
 	u32 i, v;
 	for (v = 0; v < vramelements; v++) {
 		fprintf(stderr, "VRAM size %u\n", vramsizes[v]);
+		printf("------------------------ VRAM size %u\n", vramsizes[v]);
 		for (i = 0; i < (u32) datafiles; i++) {
 			fprintf(stderr, "\tChecking file %u/%u: %s\n", i, datafiles,
 				namelist[i]->d_name);
