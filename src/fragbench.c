@@ -39,6 +39,22 @@ static u32 edge = 0;
 
 static void go(void * const f, const u32 size, const u8 charbufs) {
 
+	entry e;
+	const u8 direct = gzdirect(f);
+
+	while (!gzeof(f)) {
+		if (direct) {
+			long pos = gztell(f);
+			if (pos >= size) break;
+		}
+
+		readentry(&e, f, charbufs);
+
+		if (e.id == ID_CPUOP)
+			continue;
+	}
+
+	fflush(stdout);
 }
 
 int main(int argc, char **argv) {
