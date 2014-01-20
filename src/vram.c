@@ -98,6 +98,9 @@ static void dropvrambuf(struct buf * const oldest) {
 	} else {
 		if (oldest->prev)
 			oldest->prev->next = oldest->next;
+		else if (oldest != ctx.vram)
+			die("%p had no prev, but is not vram\n", oldest);
+
 		if (oldest->next)
 			oldest->next->prev = oldest->prev;
 	}
