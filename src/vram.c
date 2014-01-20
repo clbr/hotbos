@@ -96,13 +96,25 @@ static void dropvrambuf(struct buf * const oldest) {
 		if (hole->prev)
 			hole->prev->next = hole;
 	} else {
-		if (oldest->prev)
-			oldest->prev->next = oldest->next;
+		// No hole on either side, we need to allocate a new hole
+		struct buf * const hole = xcalloc(sizeof(struct buf));
+		hole->hole = 1;
+		hole->size = oldest->size;
+
+		hole->prev = oldest->prev;
+		hole->next = oldest->next;
+
+		if (hole->prev)
+			hole->prev->next = hole;
 		else if (oldest != ctx.vram)
 			die("%p had no prev, but is not vram\n", oldest);
 
-		if (oldest->next)
-			oldest->next->prev = oldest->prev;
+		if (hole->next)
+			hole->next->prev = hole;
+
+		if (oldest == ctx.vram)
+			ctx.vram = hole;
+		return;
 	}
 
 	if (oldest == ctx.vram)
