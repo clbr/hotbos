@@ -26,5 +26,17 @@ int main(int argc, char **argv) {
 			argv[0]);
 	}
 
+	const char *datadir = NULL;
+
+	// Locate the data files
+	if (!access("INDEX", R_OK))
+		datadir = ".";
+	else if (!access("data/INDEX", R_OK))
+		datadir = "data";
+	else if (!access("../data/INDEX", R_OK))
+		datadir = "../data";
+
+	if (!datadir) die("Cannot find data\n");
+
 	return 0;
 }
