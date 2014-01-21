@@ -31,6 +31,7 @@ static struct {
 	u64 size;
 	u64 tick;
 	u32 edge;
+	u32 holes;
 
 	struct buf *vram;
 	struct buf *ram;
@@ -43,6 +44,7 @@ void initvram(const u64 size, const u32 edge, const u32 buffers) {
 	ctx.size = size;
 	ctx.edge = edge;
 	ctx.tick = 0;
+	ctx.holes = 1;
 
 	ctx.vram = xcalloc(sizeof(struct buf));
 	ctx.vram->size = size;
@@ -94,6 +96,8 @@ static void dropvrambuf(struct buf * const oldest) {
 
 		free(hole2);
 
+		ctx.holes--;
+
 	} else if (oldest->prev && oldest->prev->hole) {
 		struct buf *hole = oldest->prev;
 		hole->size += oldest->size;
@@ -117,6 +121,8 @@ static void dropvrambuf(struct buf * const oldest) {
 
 		hole->prev = oldest->prev;
 		hole->next = oldest->next;
+
+		ctx.holes++;
 
 		if (hole->prev)
 			hole->prev->next = hole;
@@ -328,9 +334,11 @@ void touchbuf(const u32 id) {
 void checkfragmentation() {
 
 	u32 total = 0;
+	total = ctx.holes;
+
+	/*
 	u64 totalsize = 0;
 	struct buf *cur = ctx.vram;
-
 	while (cur) {
 		if (cur->hole)
 			total++;
@@ -338,14 +346,14 @@ void checkfragmentation() {
 		totalsize += cur->size;
 
 		cur = cur->next;
-	}
+	}*/
 
 	total--;
 
 	printf("Fragments: %u\n", total);
-
+/*
 	if (totalsize != ctx.size)
 		die("VRAM got corrupted, size doesn't match (%llu s/b %llu)\n",
 			(unsigned long long) totalsize,
-			(unsigned long long) ctx.size);
+			(unsigned long long) ctx.size);*/
 }
