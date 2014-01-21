@@ -37,6 +37,7 @@ static struct {
 	struct buf *ram;
 
 	struct buf *storage;
+	struct buf **holelist;
 } ctx;
 
 void initvram(const u64 size, const u32 edge, const u32 buffers) {
@@ -51,6 +52,23 @@ void initvram(const u64 size, const u32 edge, const u32 buffers) {
 	ctx.vram->hole = 1;
 
 	ctx.storage = xcalloc(buffers * sizeof(struct buf));
+	ctx.holelist = xcalloc(buffers * 2 * sizeof(void *));
+	ctx.holelist[0] = ctx.vram;
+}
+
+static void genholelist() {
+
+	struct buf *cur = ctx.vram;
+	u32 num = 0;
+	while (cur) {
+		if (cur->hole) {
+			ctx.holelist[num] = cur;
+
+			num++;
+		}
+
+		cur = cur->next;
+	}
 }
 
 void freevram() {
@@ -77,6 +95,8 @@ void freevram() {
 
 	free(ctx.storage);
 	ctx.storage = NULL;
+	free(ctx.holelist);
+	ctx.holelist = NULL;
 }
 
 static void dropvrambuf(struct buf * const oldest) {
@@ -97,6 +117,7 @@ static void dropvrambuf(struct buf * const oldest) {
 		free(hole2);
 
 		ctx.holes--;
+		genholelist();
 
 	} else if (oldest->prev && oldest->prev->hole) {
 		struct buf *hole = oldest->prev;
@@ -134,6 +155,8 @@ static void dropvrambuf(struct buf * const oldest) {
 
 		if (oldest == ctx.vram)
 			ctx.vram = hole;
+
+		genholelist();
 		return;
 	}
 
@@ -176,38 +199,21 @@ static void dropoldest() {
 
 static struct buf *fits(const u32 size) {
 
+	const u32 max = ctx.holes;
+
 	if (!ctx.edge || size < ctx.edge) {
 		// From the beginning
-		struct buf *cur = ctx.vram;
-		while (cur) {
-			if (!cur->hole) {
-				cur = cur->next;
-				continue;
-			}
-
-			if (cur->size > size) {
-				return cur;
-			}
-
-			cur = cur->next;
+		u32 i;
+		for (i = 0; i < max; i++) {
+			if (ctx.holelist[i]->size > size)
+				return ctx.holelist[i];
 		}
 	} else {
 		// From the end
-		struct buf *cur = ctx.vram;
-		while (cur->next)
-			cur = cur->next;
-
-		while (cur) {
-			if (!cur->hole) {
-				cur = cur->prev;
-				continue;
-			}
-
-			if (cur->size > size) {
-				return cur;
-			}
-
-			cur = cur->prev;
+		s32 i;
+		for (i = max - 1; i >= 0; i--) {
+			if (ctx.holelist[i]->size > size)
+				return ctx.holelist[i];
 		}
 	}
 
