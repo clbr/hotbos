@@ -67,7 +67,7 @@ public:
 		const u32 swaph = 10;
 
 		const u32 areax = boxx + border;
-		const u32 areay = boxy + border;
+		const u32 areay = boxy + border / 2;
 		const u32 areax2 = boxx2 - border;
 		const u32 areay2 = boxy2 - border - swaph * pairs;
 		const u32 areaw = areax2 - areax;
