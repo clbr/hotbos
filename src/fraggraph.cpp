@@ -84,8 +84,8 @@ public:
 			fl_color(FL_BLACK);
 
 			char buf[160];
-			snprintf(buf, 160, "%s (%.0f/%u)", labels[i], avgs[i],
-				maxes[i]);
+			snprintf(buf, 160, "%s (%.2f/%u/%.2f)", labels[i], avgs[i],
+				maxes[i], swapavg[i]);
 
 			fl_draw(buf, x + 3 * border, h() - border - fl_descent() - 2);
 		}
@@ -184,6 +184,8 @@ public:
 		maxes = new u16[pairs]();
 		avgs = new float[pairs]();
 		labels = new const char*[pairs];
+		swapavg = new float[pairs]();
+
 		this->pairs = pairs;
 
 		u32 i;
@@ -207,6 +209,19 @@ public:
 		avgs[idx] = (avgs[idx] * (size - 1) + frag) / size;
 	}
 
+	void calculate() {
+		u32 i, j;
+		for (i = 0; i < pairs; i++) {
+			const u32 max = swaps[0].size();
+			u32 on = 0;
+			for (j = 0; j < max; j++) {
+				if (swaps[i][j])
+					on++;
+			}
+			swapavg[i] = ((float) on) / max;
+		}
+	}
+
 	void setLabel(const u32 idx, const char * const label) {
 		labels[idx] = label;
 	}
@@ -219,6 +234,7 @@ private:
 	float *avgs;
 	const char **labels;
 	u16 maxall;
+	float *swapavg;
 };
 
 int main(int argc, char **argv) {
@@ -265,6 +281,8 @@ int main(int argc, char **argv) {
 
 		gzclose(f);
 	}
+
+	graph->calculate();
 
 	win->show();
 
