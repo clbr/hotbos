@@ -232,7 +232,7 @@ int main(int argc, char **argv) {
 
 	Fl_Window *win = new Fl_Double_Window(1024, 512);
 	win->color(FL_WHITE);
-	graph_t *graph = new graph_t(0, 0, 1024, 512);
+	graph_t *graph = new graph_t(0, 0, win->w(), win->h());
 	graph->color(FL_WHITE);
 	graph->reserve(pairs);
 	win->end();
