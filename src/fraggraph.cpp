@@ -230,7 +230,7 @@ int main(int argc, char **argv) {
 	const u32 pairs = argc / 2;
 	if (pairs > colorcount) die("We can only handle %u pairs\n", colorcount);
 
-	Fl_Window *win = new Fl_Double_Window(1024, 512);
+	Fl_Window *win = new Fl_Double_Window(1536, 768);
 	win->color(FL_WHITE);
 	graph_t *graph = new graph_t(0, 0, win->w(), win->h());
 	graph->color(FL_WHITE);
