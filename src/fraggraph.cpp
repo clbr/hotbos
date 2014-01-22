@@ -91,10 +91,6 @@ public:
 		}
 
 		fl_color(FL_BLACK);
-		char dashes[] = {4, 4, 0};
-		fl_line_style(FL_DASH | FL_CAP_ROUND, 0, dashes);
-		fl_line(boxx, areay2, boxx2, areay2);
-
 		fl_line_style(FL_SOLID | FL_CAP_ROUND, 2);
 
 		// 3 X Markers
@@ -173,6 +169,12 @@ public:
 					flx, fly + swaph);
 			}
 		}
+
+		fl_color(FL_BLACK);
+		char dashes[] = {4, 4, 0};
+		fl_line_style(FL_DASH | FL_CAP_ROUND, 0, dashes);
+		fl_line(boxx, areay2, boxx2, areay2);
+
 		fl_line_style(0);
 	}
 
