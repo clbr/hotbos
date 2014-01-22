@@ -52,7 +52,7 @@ void initvram(const u64 size, const u32 edge, const u32 buffers) {
 	ctx.vram->hole = 1;
 
 	ctx.storage = xcalloc(buffers * sizeof(struct buf));
-	ctx.holelist = xcalloc(buffers * 2 * sizeof(void *));
+	ctx.holelist = xcalloc((buffers + 2) * sizeof(void *));
 	ctx.holelist[0] = ctx.vram;
 }
 
