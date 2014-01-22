@@ -20,7 +20,7 @@ fragbench: fragbench.o bin.o vram.o
 fraggraph: CXXFLAGS += $(shell fltk-config --cxxflags)
 fraggraph: LDFLAGS += $(shell fltk-config --ldflags)
 fraggraph: fraggraph.o
-	g++ -o $@ $(CXXFLAGS) $(LDFLAGS) $^
+	g++ -o $@ $(CXXFLAGS) $^ $(LDFLAGS)
 
 clean:
 	rm -f *.o $(TARGETS)
