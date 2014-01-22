@@ -67,6 +67,13 @@ public:
 	void add(const u32 idx, const u16 frag, const u8 swap) {
 		frags[idx].push_back(frag);
 		swaps[idx].push_back(swap);
+
+		if (maxes[idx] < frag)
+			maxes[idx] = frag;
+
+		u32 size = frags[idx].size();
+
+		avgs[idx] = (avgs[idx] * (size - 1) + frag) / size;
 	}
 
 private:
