@@ -60,8 +60,9 @@ public:
 		fl_draw("Memory operations", (w() - tmp) / 2, boxy2 + 4 * border);
 
 		fl_draw("Holes (fragments)", 2 * border, 2 * border + fontsize);
-		fl_draw("The bars below the dashed line signify swapping.",
-			2 * border, boxy2 + border * 4 + fontsize);
+		fl_draw("The bars below the dashed line signify swapping. "
+			"Parenthesis: (avg/max)",
+			2 * border, boxy2 + border * 4 + fontsize + 5);
 
 		const u32 swaph = 10;
 
@@ -159,7 +160,7 @@ public:
 			}
 			fl_end_line();
 
-			fl_line_style(FL_SOLID, 3);
+			fl_line_style(FL_SOLID, 0);
 			u32 swaplen = areaw / max;
 			if (!swaplen) swaplen = 1;
 			for (j = 0; j < max; j++) {
