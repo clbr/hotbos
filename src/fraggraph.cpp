@@ -245,7 +245,8 @@ int main(int argc, char **argv) {
 		void * const f = gzopen(argv[i + 1], "rb");
 		if (!f) die("Failed opening %s\n", argv[i + 1]);
 
-		printf("Reading data from %s...\n", argv[i + 1]);
+		printf("Reading data from %s... ", argv[i + 1]);
+		fflush(stdout);
 
 		char buf[160];
 		while (gzgets(f, buf, 160)) {
@@ -259,6 +260,8 @@ int main(int argc, char **argv) {
 
 			graph->add(set, frag, swap);
 		}
+
+		puts("Done.");
 
 		gzclose(f);
 	}
