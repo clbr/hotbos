@@ -218,7 +218,7 @@ public:
 				if (swaps[i][j])
 					on++;
 			}
-			swapavg[i] = ((float) on) / max;
+			swapavg[i] = 100.0f * ((float) on) / max;
 		}
 	}
 
