@@ -61,7 +61,7 @@ public:
 
 		fl_draw("Holes (fragments)", 2 * border, 2 * border + fontsize);
 		fl_draw("The bars below the dashed line signify swapping. "
-			"Parenthesis: (avg/max)",
+			"Parenthesis: (avg/max/swap%)",
 			2 * border, boxy2 + border * 4 + fontsize + 5);
 
 		const u32 swaph = 8;
