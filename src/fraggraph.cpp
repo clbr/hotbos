@@ -271,8 +271,10 @@ int main(int argc, char **argv) {
 
 			u16 frag;
 			u8 swap;
-			if (sscanf(buf, "%hu, %hhu", &frag, &swap) != 2)
-				die("Failed on line %s\n", buf);
+
+			frag = strtoul(buf, NULL, 10);
+			char *space = strchr(buf + 2, ' ') + 1;
+			swap = *space == '1';
 
 			graph->add(set, frag, swap);
 		}
