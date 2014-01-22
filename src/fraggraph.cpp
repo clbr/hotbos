@@ -64,7 +64,7 @@ public:
 			"Parenthesis: (avg/max)",
 			2 * border, boxy2 + border * 4 + fontsize + 5);
 
-		const u32 swaph = 10;
+		const u32 swaph = 8;
 
 		const u32 areax = boxx + border;
 		const u32 areay = boxy + border / 2;
