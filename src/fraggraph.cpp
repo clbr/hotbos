@@ -12,7 +12,7 @@ using namespace std;
 
 static const u8 colors[][3] = {
 		{255, 0, 0},
-		{206, 107, 0},
+		{190, 190, 0},
 		{0, 0, 0},
 		{119, 0, 130},
 };
@@ -24,21 +24,30 @@ public:
 	graph_t(int x, int y, int w, int h): Fl_Widget(x, y, w, h, "") {
 		swaps = NULL;
 		frags = NULL;
+		maxall = 0;
 	}
 
-	virtual ~graph_t() {}
+	virtual ~graph_t() {
+		delete [] frags;
+		delete [] swaps;
+		delete [] maxes;
+		delete [] avgs;
+		delete [] labels;
+	}
 
 	void draw() {
 		// The scale
 		fl_color(FL_BLACK);
 		fl_line_style(FL_SOLID | FL_CAP_ROUND, 2);
+		const u32 fontsize = 14;
+		fl_font(FL_HELVETICA, fontsize);
 
 		const u32 border = 10;
 
 		u32 boxx, boxy, boxx2, boxy2;
 		boxx = boxy = border;
 		boxx2 = w() - border;
-		boxy2 = h() - border * 6;
+		boxy2 = h() - border * 10;
 
 		fl_begin_loop();
 		fl_vertex(boxx, boxy);
@@ -47,11 +56,121 @@ public:
 		fl_vertex(boxx2, boxy);
 		fl_end_loop();
 
-		// The data
+		u32 tmp = fl_width("Memory operations");
+		fl_draw("Memory operations", (w() - tmp) / 2, boxy2 + 4 * border);
+
+		fl_draw("Holes (fragments)", 2 * border, 2 * border + fontsize);
+		fl_draw("The bars below the dashed line signify swapping.",
+			2 * border, boxy2 + border * 4 + fontsize);
+
+		const u32 swaph = 10;
+
+		const u32 areax = boxx + border;
+		const u32 areay = boxy + border;
+		const u32 areax2 = boxx2 - border;
+		const u32 areay2 = boxy2 - border - swaph * pairs;
+		const u32 areaw = areax2 - areax;
+		const u32 areah = areay2 - areay;
+
 		u32 i;
 		for (i = 0; i < pairs; i++) {
 			fl_color(colors[i][0], colors[i][1], colors[i][2]);
-			fl_line_style(FL_SOLID | FL_CAP_ROUND, 1);
+			u32 x;
+			x = (w() / pairs) * i + 2 * border;
+
+			fl_rectf(x, h() - border * 3, 2 * border, 2 * border);
+
+			fl_color(FL_BLACK);
+
+			char buf[160];
+			snprintf(buf, 160, "%s (avg %.2f, max %u)", labels[i], avgs[i],
+				maxes[i]);
+
+			fl_draw(buf, x + 3 * border, h() - border - fl_descent() - 2);
+		}
+
+		fl_color(FL_BLACK);
+		char dashes[] = {4, 4, 0};
+		fl_line_style(FL_DASH | FL_CAP_ROUND, 0, dashes);
+		fl_line(boxx, areay2, boxx2, areay2);
+
+		fl_line_style(FL_SOLID | FL_CAP_ROUND, 2);
+
+		// 3 X Markers
+		const float xmax = frags[0].size();
+		const float xskip = xmax / 4.0f;
+		for (i = 1; i < 4; i++) {
+			const float xper = (xskip * i) / xmax;
+			const float flx = xper * areaw + areax;
+
+			fl_line(flx, boxy2 - border / 2,
+				flx, boxy2 + border / 2);
+
+			char buf[80];
+			u64 amount = xskip * i * 10;
+			char suffix[3] = "\0\0";
+
+			if (amount > 1000000) {
+				amount /= 1000000;
+				suffix[0] = ' ';
+				suffix[1] = 'M';
+			} else if (amount > 1000) {
+				amount /= 1000;
+				suffix[0] = ' ';
+				suffix[1] = 'k';
+			}
+
+			sprintf(buf, "%lu%s", amount, suffix);
+			tmp = fl_width(buf) / 2;
+			fl_draw(buf, flx - tmp, boxy2 + border + fontsize);
+		}
+
+		// 3 Y Markers
+		const float ymax = maxall;
+		const float yskip = maxall / 4.0f;
+		for (i = 1; i < 4; i++) {
+			const float yper = 1.0f - ((yskip * i) / ymax);
+			const float fly = yper * areah + areay;
+
+			fl_line(boxx - border / 2, fly,
+				boxx + border / 2, fly);
+
+			char buf[80];
+			sprintf(buf, "%u", (u32) (yskip * i));
+			tmp = fl_descent();
+			fl_draw(buf, boxx + border * 1.5f,
+				fly + fontsize / 2 - fl_descent());
+		}
+
+		// The data
+		for (i = 0; i < pairs; i++) {
+			fl_color(colors[i][0], colors[i][1], colors[i][2]);
+			fl_line_style(FL_SOLID | FL_CAP_ROUND, 0);
+
+			u32 j;
+			const u32 max = frags[i].size();
+			fl_begin_line();
+			for (j = 0; j < max; j++) {
+				const float flx = (j / (float) (max - 1)) * areaw;
+				const float fly = 1.0f - (frags[i][j] / (float) maxall);
+
+				fl_vertex(flx + areax,
+					fly * areah + areay);
+			}
+			fl_end_line();
+
+			fl_line_style(FL_SOLID, 3);
+			u32 swaplen = areaw / max;
+			if (!swaplen) swaplen = 1;
+			for (j = 0; j < max; j++) {
+				if (!swaps[i][j]) continue;
+				const float flx = (j / (float) (max - 1)) * areaw + areax;
+
+				const float fly = boxy2 - (pairs - i) * swaph - border;
+
+				fl_line(flx, fly,
+					flx, fly + swaph);
+			}
 		}
 		fl_line_style(0);
 	}
@@ -59,8 +178,9 @@ public:
 	void reserve(const u32 pairs) {
 		swaps = new vector<bool>[pairs];
 		frags = new vector<u16>[pairs];
-		maxes = new u16[pairs];
-		avgs = new u16[pairs];
+		maxes = new u16[pairs]();
+		avgs = new float[pairs]();
+		labels = new const char*[pairs];
 		this->pairs = pairs;
 	}
 
@@ -70,10 +190,16 @@ public:
 
 		if (maxes[idx] < frag)
 			maxes[idx] = frag;
+		if (maxall < frag)
+			maxall = frag;
 
 		u32 size = frags[idx].size();
 
 		avgs[idx] = (avgs[idx] * (size - 1) + frag) / size;
+	}
+
+	void setLabel(const u32 idx, const char * const label) {
+		labels[idx] = label;
 	}
 
 private:
@@ -81,7 +207,9 @@ private:
 	vector<bool> *swaps;
 	u8 pairs;
 	u16 *maxes;
-	u16 *avgs;
+	float *avgs;
+	const char **labels;
+	u16 maxall;
 };
 
 int main(int argc, char **argv) {
@@ -104,9 +232,11 @@ int main(int argc, char **argv) {
 	for (i = 1; i < (u32) argc; i += 2) {
 		const u32 set = i / 2;
 
-		//graph->setLabel(set, argv[i]);
+		graph->setLabel(set, argv[i]);
 		void * const f = gzopen(argv[i + 1], "rb");
 		if (!f) die("Failed opening %s\n", argv[i + 1]);
+
+		printf("Reading data from %s...\n", argv[i + 1]);
 
 		char buf[160];
 		while (gzgets(f, buf, 160)) {
