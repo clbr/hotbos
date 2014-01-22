@@ -182,6 +182,12 @@ public:
 		avgs = new float[pairs]();
 		labels = new const char*[pairs];
 		this->pairs = pairs;
+
+		u32 i;
+		for (i = 0; i < pairs; i++) {
+			swaps[i].reserve(1000000);
+			frags[i].reserve(1000000);
+		}
 	}
 
 	void add(const u32 idx, const u16 frag, const u8 swap) {
