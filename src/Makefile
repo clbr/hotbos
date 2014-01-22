@@ -1,9 +1,10 @@
 CFLAGS += -Wall -Wextra -g
+CXXFLAGS += -Wall -Wextra -g -fno-exceptions -fno-rtti
 LDFLAGS += -Wl,-O1
 LDFLAGS += -lz
 LDFLAGS += $(CFLAGS)
 
-TARGETS = raw2bin statinfo trainer fragbench
+TARGETS = raw2bin statinfo trainer fragbench fraggraph
 
 .PHONY: all clean
 
@@ -15,6 +16,8 @@ raw2bin: raw2bin.o
 statinfo: bin.o statinfo.o
 trainer: trainer.o vram.o
 fragbench: fragbench.o bin.o vram.o
+fraggraph: fraggraph.o
+	g++ -o $@ $(CXXFLAGS) $(LDFLAGS) $^
 
 clean:
 	rm -f *.o $(TARGETS)
