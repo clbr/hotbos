@@ -84,7 +84,7 @@ public:
 			fl_color(FL_BLACK);
 
 			char buf[160];
-			snprintf(buf, 160, "%s (avg %.2f, max %u)", labels[i], avgs[i],
+			snprintf(buf, 160, "%s (%.0f/%u)", labels[i], avgs[i],
 				maxes[i]);
 
 			fl_draw(buf, x + 3 * border, h() - border - fl_descent() - 2);
