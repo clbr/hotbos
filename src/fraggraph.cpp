@@ -188,8 +188,8 @@ public:
 
 		u32 i;
 		for (i = 0; i < pairs; i++) {
-			swaps[i].reserve(1000000);
-			frags[i].reserve(1000000);
+			swaps[i].reserve(10000000);
+			frags[i].reserve(10000000);
 		}
 	}
 
