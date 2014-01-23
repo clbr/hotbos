@@ -26,16 +26,23 @@ static u32 lasttime = 0;
 void readentry(entry * const e, void * const in, const u8 charbufs) {
 
 	u32 tmp = 0;
+	u8 buf[8];
+	sgzread(buf, charbufs + 1, in);
 
 	memset(e, 0, sizeof(entry));
 
-	sgzread(&tmp, 1, in);
+	tmp = buf[0];
 	e->id = (tmp >> 5) & 7;
 	const u32 reltime = (tmp & 0x1f);
 	e->time = reltime + lasttime;
 	lasttime += reltime;
 
-	sgzread(&e->buffer, charbufs, in);
+	((u8 *) &e->buffer)[0] = buf[1];
+	if (charbufs == 2) {
+		((u8 *) &e->buffer)[1] = buf[2];
+	} else if (charbufs == 3) {
+		((u8 *) &e->buffer)[2] = buf[3];
+	}
 
 	switch(e->id) {
 		case ID_CREATE:
