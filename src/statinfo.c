@@ -50,6 +50,7 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 	entry e;
 	const u8 direct = gzdirect(f);
 	const u8 cb = charbufs ? charbufs : 3;
+	u32 ctx = 0;
 
 	while (!gzeof(f)) {
 
@@ -58,7 +59,7 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 			if (pos >= size) break;
 		}
 
-		readentry(&e, f, cb);
+		readentry(&e, f, cb, &ctx);
 
 		switch (e.id) {
 			case ID_CREATE:
@@ -98,6 +99,7 @@ static void gocol(void * const f, const u32 size, const u8 charbufs) {
 	entry e;
 	const u8 direct = gzdirect(f);
 	const u8 cb = charbufs ? charbufs : 3;
+	u32 ctx = 0;
 
 	while (!gzeof(f)) {
 
@@ -106,7 +108,7 @@ static void gocol(void * const f, const u32 size, const u8 charbufs) {
 			if (pos >= size) break;
 		}
 
-		readentry(&e, f, cb);
+		readentry(&e, f, cb, &ctx);
 
 		switch (e.id) {
 			case ID_CREATE:

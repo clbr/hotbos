@@ -61,8 +61,7 @@ typedef struct {
 #define MAGIC "bostats1"
 #define MAGICLEN sizeof(MAGIC) - 1
 
-void readentry(entry * const e, void * const in, const u8 charbufs);
-void resetreading();
+void readentry(entry * const e, void * const in, const u8 charbufs, u32 *);
 
 void *gzbinopen(const char in[], u32 *size);
 

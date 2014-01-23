@@ -43,6 +43,7 @@ static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram
 	const u8 direct = gzdirect(f);
 	const u8 cb = charbufs ? charbufs : 3;
 	u8 ctr = 0;
+	u32 ctx = 0;
 
 	while (!gzeof(f)) {
 		if (direct) {
@@ -50,7 +51,7 @@ static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram
 			if (pos >= size) break;
 		}
 
-		readentry(&e, f, cb);
+		readentry(&e, f, cb, &ctx);
 
 		if (e.id == ID_CPUOP)
 			continue;
@@ -132,7 +133,6 @@ int main(int argc, char **argv) {
 			fprintf(stderr, "\tChecking file %u/%u: %s\n", i + 1, datafiles,
 				namelist[i]->d_name);
 
-			resetreading();
 			u32 size;
 			void * const f = gzbinopen(namelist[i]->d_name, &size);
 

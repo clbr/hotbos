@@ -21,9 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <unistd.h>
 #include <sys/stat.h>
 
-static u32 lasttime = 0;
-
-void readentry(entry * const e, void * const in, const u8 charbufs) {
+void readentry(entry * const e, void * const in, const u8 charbufs, u32 * const lasttime) {
 
 	u32 tmp = 0;
 	u8 buf[8];
@@ -34,8 +32,8 @@ void readentry(entry * const e, void * const in, const u8 charbufs) {
 	tmp = buf[0];
 	e->id = (tmp >> 5) & 7;
 	const u32 reltime = (tmp & 0x1f);
-	e->time = reltime + lasttime;
-	lasttime += reltime;
+	e->time = reltime + *lasttime;
+	*lasttime += reltime;
 
 	((u8 *) &e->buffer)[0] = buf[1];
 	if (charbufs == 2) {
@@ -58,10 +56,6 @@ void readentry(entry * const e, void * const in, const u8 charbufs) {
 		default:
 			die("Unknown entry id %u\n", e->id);
 	}
-}
-
-void resetreading() {
-	lasttime = 0;
 }
 
 void *gzbinopen(const char in[], u32 * const size) {
