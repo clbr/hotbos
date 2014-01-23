@@ -35,12 +35,7 @@ void readentry(entry * const e, void * const in, const u8 charbufs) {
 	e->time = reltime + lasttime;
 	lasttime += reltime;
 
-	if (charbufs == 1)
-		sgzread(&e->buffer, 1, in);
-	else if (charbufs == 2)
-		sgzread(&e->buffer, 2, in);
-	else
-		sgzread(&e->buffer, 3, in);
+	sgzread(&e->buffer, charbufs, in);
 
 	switch(e->id) {
 		case ID_CREATE:

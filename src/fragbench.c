@@ -41,6 +41,7 @@ static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram
 
 	entry e;
 	const u8 direct = gzdirect(f);
+	const u8 cb = charbufs ? charbufs : 3;
 	u8 ctr = 0;
 
 	while (!gzeof(f)) {
@@ -49,7 +50,7 @@ static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram
 			if (pos >= size) break;
 		}
 
-		readentry(&e, f, charbufs);
+		readentry(&e, f, cb);
 
 		if (e.id == ID_CPUOP)
 			continue;
