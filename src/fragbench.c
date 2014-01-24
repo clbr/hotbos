@@ -40,18 +40,15 @@ static u8 *destroyed;
 static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram) {
 
 	entry e;
-	const u8 direct = gzdirect(f);
 	const u8 cb = charbufs ? charbufs : 3;
 	u8 ctr = 0;
 	u32 ctx = 0;
+	u32 pos = 0;
 
-	while (!gzeof(f)) {
-		if (direct) {
-			long pos = gztell(f);
-			if (pos >= size) break;
-		}
+	while (pos < size) {
 
-		readentry(&e, f, cb, &ctx);
+		readentry(&e, f + pos, cb, &ctx);
+		pos += cb + 1;
 
 		if (e.id == ID_CPUOP)
 			continue;
@@ -65,6 +62,8 @@ static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram
 			// Abort the trace if it tries to create a buffer bigger than vram
 			if (e.size >= vram)
 				return;
+
+			pos += 4;
 
 			allocbuf(e.buffer, e.size);
 		} else if (e.id == ID_DESTROY) {
@@ -139,18 +138,24 @@ int main(int argc, char **argv) {
 			u32 buffers;
 			sgzread(&buffers, 4, f);
 
-			u8 charbuf = getcharbuf(buffers);
+			const u8 charbuf = getcharbuf(buffers);
 			initvram(vramsizes[v] * 1024 * 1024, edge * 1024,
 					buffers);
 
 			destroyed = xcalloc(buffers);
 
-			go(f, size, charbuf, vramsizes[v] * 1024 * 1024);
+			// Cache it
+			char *cache;
+			u32 cachelen;
+			bincache(f, &cache, &cachelen);
+
+			go(cache, cachelen, charbuf, vramsizes[v] * 1024 * 1024);
 
 			free(destroyed);
 
 			gzclose(f);
 			freevram();
+			free(cache);
 		}
 	}
 
