@@ -76,31 +76,28 @@ static inline u8 getcharbuf(const u32 bufs) {
 	return 0;
 }
 
-static inline void readentry(entry * const e, void * const in, const u8 charbufs,
+static inline void readentry(entry * const e, const char * const in, const u8 charbufs,
 		u32 * const lasttime) {
 
 	u32 tmp = 0;
-	u8 buf[8];
-	sgzread(buf, charbufs + 1, in);
-
 	memset(e, 0, sizeof(entry));
 
-	tmp = buf[0];
+	tmp = in[0];
 	e->id = (tmp >> 5) & 7;
 	const u32 reltime = (tmp & 0x1f);
 	e->time = reltime + *lasttime;
 	*lasttime += reltime;
 
-	((u8 *) &e->buffer)[0] = buf[1];
+	((u8 *) &e->buffer)[0] = in[1];
 	if (charbufs == 2) {
-		((u8 *) &e->buffer)[1] = buf[2];
+		((u8 *) &e->buffer)[1] = in[2];
 	} else if (charbufs == 3) {
-		((u8 *) &e->buffer)[2] = buf[3];
+		((u8 *) &e->buffer)[2] = in[3];
 	}
 
 	switch(e->id) {
 		case ID_CREATE:
-			sgzread(&tmp, 4, in);
+			memcpy(&tmp, in + charbufs + 1, 4);
 			e->high_prio = tmp >> 31;
 			e->size = tmp & 0x7fffffff;
 		break;

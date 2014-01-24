@@ -48,22 +48,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 static void go(void * const f, const u32 size, const u8 charbufs) {
 
 	entry e;
-	const u8 direct = gzdirect(f);
 	const u8 cb = charbufs ? charbufs : 3;
 	u32 ctx = 0;
+	u32 pos = 0;
 
-	while (!gzeof(f)) {
+	while (pos < size) {
 
-		if (direct) {
-			long pos = gztell(f);
-			if (pos >= size) break;
-		}
-
-		readentry(&e, f, cb, &ctx);
+		readentry(&e, f + pos, cb, &ctx);
+		pos += cb + 1;
 
 		switch (e.id) {
 			case ID_CREATE:
 				fputs_unlocked("create", stdout);
+				pos += 4;
 			break;
 			case ID_READ:
 				fputs_unlocked("read", stdout);
@@ -97,22 +94,19 @@ static void go(void * const f, const u32 size, const u8 charbufs) {
 static void gocol(void * const f, const u32 size, const u8 charbufs) {
 
 	entry e;
-	const u8 direct = gzdirect(f);
 	const u8 cb = charbufs ? charbufs : 3;
 	u32 ctx = 0;
+	u32 pos = 0;
 
-	while (!gzeof(f)) {
+	while (pos < size) {
 
-		if (direct) {
-			long pos = gztell(f);
-			if (pos >= size) break;
-		}
-
-		readentry(&e, f, cb, &ctx);
+		readentry(&e, f + pos, cb, &ctx);
+		pos += cb + 1;
 
 		switch (e.id) {
 			case ID_CREATE:
 				fputs_unlocked(ANSI_CYAN "create", stdout);
+				pos += 4;
 			break;
 			case ID_READ:
 				fputs_unlocked(ANSI_MAGENTA "read", stdout);
@@ -173,16 +167,23 @@ int main(int argc, char **argv) {
 	printf("%u buffers found\n", buffers);
 	fflush(stdout);
 
-	u8 charbuf = getcharbuf(buffers);
+	const u8 charbuf = getcharbuf(buffers);
+
+	// Cache it
+	char *cache;
+	u32 cachelen;
+
+	bincache(f, &cache, &cachelen);
 
 	if (argc == 3)
-		go(f, size, charbuf);
+		go(cache, cachelen, charbuf);
 	else
-		gocol(f, size, charbuf);
+		gocol(cache, cachelen, charbuf);
 
 	fclose(stdout);
 	if (p)
 		pclose(p);
 	gzclose(f);
+	free(cache);
 	return 0;
 }
