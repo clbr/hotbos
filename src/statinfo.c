@@ -148,8 +148,7 @@ int main(int argc, char **argv) {
 	if (argc < 2)
 		die("Usage: %s file.bin\n", argv[0]);
 
-	u32 size;
-	void * const f = gzbinopen(argv[1], &size);
+	void * const f = gzbinopen(argv[1]);
 
 	u32 buffers;
 	sgzread(&buffers, 4, f);

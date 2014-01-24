@@ -23,15 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <unistd.h>
 #include <sys/stat.h>
 
-void *gzbinopen(const char in[], u32 * const size) {
+void *gzbinopen(const char in[]) {
 
 	void * const f = gzopen(in, "rb");
 	if (!f) die("Failed to open file\n");
-
-	struct stat st;
-	if (stat(in, &st))
-		die("Failed in stat\n");
-	*size = st.st_size;
 
 	char magic[MAGICLEN];
 	sgzread(magic, MAGICLEN, f);

@@ -132,8 +132,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr, "\tChecking file %u/%u: %s\n", i + 1, datafiles,
 				namelist[i]->d_name);
 
-			u32 size;
-			void * const f = gzbinopen(namelist[i]->d_name, &size);
+			void * const f = gzbinopen(namelist[i]->d_name);
 
 			u32 buffers;
 			sgzread(&buffers, 4, f);
