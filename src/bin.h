@@ -64,6 +64,7 @@ typedef struct {
 #define MAGICLEN sizeof(MAGIC) - 1
 
 void *gzbinopen(const char in[], u32 *size);
+void bincache(void *, char **, u32 *);
 
 static inline u8 getcharbuf(const u32 bufs) {
 

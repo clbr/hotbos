@@ -14,6 +14,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#define _GNU_SOURCE
+
 #include "lrtypes.h"
 #include "bin.h"
 #include "helpers.h"
@@ -37,4 +39,24 @@ void *gzbinopen(const char in[], u32 * const size) {
 		die("This is not a bostats binary file.\n");
 
 	return f;
+}
+
+void bincache(void * const f, char **ptr, u32 *size) {
+
+	enum {
+		bufsize = 1024 * 1024
+	};
+
+	size_t s;
+	char buf[bufsize];
+	FILE * const tmp = open_memstream(ptr, &s);
+	while (1) {
+		int ret = gzread(f, buf, bufsize);
+		if (!ret) break;
+
+		swrite(buf, ret, tmp);
+	}
+	fclose(tmp);
+
+	*size = s;
 }
