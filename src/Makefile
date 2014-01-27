@@ -16,7 +16,9 @@ raw2bin: raw2bin.o
 statinfo: bin.o statinfo.o
 trainer: trainer.o vram.o
 fragbench: fragbench.o bin.o vram.o
+
 activation: activation.o
+activation: LDFLAGS += -lm
 
 fraggraph: CXXFLAGS += $(shell fltk-config --cxxflags)
 fraggraph: LDFLAGS += $(shell fltk-config --ldflags)
