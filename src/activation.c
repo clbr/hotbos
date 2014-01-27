@@ -24,7 +24,7 @@ static float clampf(const float in, const float min, const float max) {
 static u32 smootherstep(const u32 e0, const u32 e1, u32 x) {
 	x = clampu((x - e0)/(e1 - e0), 0, scale);
 
-	u32 tmp = fixedmul(x, 6 * scale);
+	u32 tmp = x * 6;
 	tmp -= 15 * scale;
 	tmp = fixedmul(tmp, x);
 	tmp += 10 * scale;
