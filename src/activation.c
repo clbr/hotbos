@@ -7,7 +7,7 @@ static const u32 scale = 1024;
 
 static u32 fixedmul(const u32 a, const u32 b) {
 
-	u32 out = a * b;
+	u64 out = a * b;
 	out /= scale;
 
 	return out;
