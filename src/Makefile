@@ -14,7 +14,7 @@ all: $(TARGETS)
 
 raw2bin: raw2bin.o
 statinfo: bin.o statinfo.o
-trainer: trainer.o vram.o
+trainer: trainer.o vram.o scoring.o
 fragbench: fragbench.o bin.o vram.o
 
 activation: activation.o
