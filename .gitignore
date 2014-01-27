@@ -3,6 +3,7 @@ trainer
 statinfo
 fragbench
 fraggraph
+activation
 bostats.*
 *.o
 *.d

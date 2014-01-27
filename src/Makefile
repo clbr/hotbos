@@ -4,7 +4,7 @@ LDFLAGS += -Wl,-O1
 LDFLAGS += -lz
 LDFLAGS += $(CFLAGS)
 
-TARGETS = raw2bin statinfo trainer fragbench fraggraph
+TARGETS = raw2bin statinfo trainer fragbench fraggraph activation
 
 .PHONY: all clean
 
@@ -16,6 +16,7 @@ raw2bin: raw2bin.o
 statinfo: bin.o statinfo.o
 trainer: trainer.o vram.o
 fragbench: fragbench.o bin.o vram.o
+activation: activation.o
 
 fraggraph: CXXFLAGS += $(shell fltk-config --cxxflags)
 fraggraph: LDFLAGS += $(shell fltk-config --ldflags)
