@@ -21,9 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "macros.h"
 
 enum {
-	SCORE_PCIE_LATENCY = 30000, // https://devtalk.nvidia.com/default/topic/485590/pci-express-latency-and-how-to-decrease-it/
+	SCORE_PCIE_LATENCY = 4640000, // https://devtalk.nvidia.com/default/topic/485590/pci-express-latency-and-how-to-decrease-it/
 	SCORE_RAM_MULTIPLIER = 18, // 232 / 12.8 GB/s scale difference
-	SCORE_STALL_LATENCY = 15000,
+	SCORE_STALL_LATENCY = SCORE_PCIE_LATENCY / 2,
 	SCORE_CACHED_MULTIPLIER = 3,
 };
 
