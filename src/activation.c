@@ -17,6 +17,10 @@ static u32 clampu(const u32 in, const u32 min, const u32 max) {
 	return in > max ? max : in < min ? min : in;
 }
 
+static float clampf(const float in, const float min, const float max) {
+	return in > max ? max : in < min ? min : in;
+}
+
 static u32 smootherstep(const u32 e0, const u32 e1, u32 x) {
 	x = clampu((x - e0)/(e1 - e0), 0, scale);
 
@@ -31,6 +35,12 @@ static u32 smootherstep(const u32 e0, const u32 e1, u32 x) {
 
 //	return x*x*x*(x*(x*6 - 15) + 10);
 	return tmp;
+}
+
+static float smootherstepf(const float e0, const float e1, float x) {
+	x = clampf((x - e0)/(e1 - e0), 0, 1);
+
+	return x*x*x*(x*(x*6 - 15) + 10);
 }
 
 static void tanhtest(const u32 rounds) {
@@ -55,6 +65,17 @@ static void smoothertest(const u32 rounds) {
 	printf("sum %u\n", sum);
 }
 
+static void smootherftest(const u32 rounds) {
+
+	u32 i;
+	float sum = 0;
+	for (i = 0; i < rounds; i++) {
+		sum += smootherstepf(0, 1, i);
+	}
+
+	printf("sum %g\n", sum);
+}
+
 static void results(const struct timeval * const start,
 			const struct timeval * const end) {
 
@@ -76,9 +97,18 @@ int main() {
 
 	results(&start, &end);
 
+
 	printf("Testing smootherstep, %u rounds...\n", rounds);
 	gettimeofday(&start, NULL);
 	smoothertest(rounds);
+	gettimeofday(&end, NULL);
+
+	results(&start, &end);
+
+
+	printf("Testing smootherstep float, %u rounds...\n", rounds);
+	gettimeofday(&start, NULL);
+	smootherftest(rounds);
 	gettimeofday(&end, NULL);
 
 	results(&start, &end);
