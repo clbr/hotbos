@@ -14,14 +14,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <limits.h>
 #include "scoring.h"
 #include "lrtypes.h"
 #include "helpers.h"
 
 u32 score(const enum scoredev_t dev, const enum scoreop_t op,
-		const enum scoredest_t dest, const u32 size) {
+		const enum scoredest_t dest, const u64 size) {
 
-	u32 out = 0;
+	u64 out = 0;
 
 	if (op == SCORE_MOVE) {
 		// The higher rw score + stall + pcie latency
@@ -71,6 +72,10 @@ u32 score(const enum scoredev_t dev, const enum scoreop_t op,
 	} else {
 		die("Unknown score device\n");
 	}
+
+	// Clamp
+	if (out > UINT_MAX)
+		out = UINT_MAX;
 
 	return out;
 }

@@ -44,6 +44,6 @@ enum scoreop_t {
 };
 
 u32 score(const enum scoredev_t dev, const enum scoreop_t op,
-		const enum scoredest_t dest, const u32 size) CONST_FUNC;
+		const enum scoredest_t dest, const u64 size) CONST_FUNC;
 
 #endif
