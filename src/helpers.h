@@ -42,7 +42,7 @@ static inline MALLOC_FUNC void *xcalloc(unsigned bytes) {
 	return ptr;
 }
 
-static inline void sread(void *ptr, size_t size, FILE *f) {
+static inline void sread(char *ptr, size_t size, FILE *f) {
 
 	size_t ret = 0;
 	u32 pos = 0;
@@ -55,7 +55,7 @@ static inline void sread(void *ptr, size_t size, FILE *f) {
 	}
 }
 
-static inline void sgzread(void *ptr, size_t size, void *f) {
+static inline void sgzread(char *ptr, size_t size, void *f) {
 
 	size_t ret = 0;
 	u32 pos = 0;
@@ -68,7 +68,7 @@ static inline void sgzread(void *ptr, size_t size, void *f) {
 	}
 }
 
-static inline void swrite(const void *ptr, size_t size, FILE *f) {
+static inline void swrite(const char *ptr, size_t size, FILE *f) {
 
 	size_t ret = 0;
 	u32 pos = 0;
