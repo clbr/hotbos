@@ -21,7 +21,7 @@ enum {
 	SCORE_PCIE_LATENCY = 30000, // https://devtalk.nvidia.com/default/topic/485590/pci-express-latency-and-how-to-decrease-it/
 	SCORE_RAM_MULTIPLIER = 18, // 232 / 12.8 GB/s scale difference
 	SCORE_STALL_LATENCY = 15000,
-	SCORE_CACHED_DIVISOR = 3,
+	SCORE_CACHED_MULTIPLIER = 3,
 };
 
 enum scoredev_t {
