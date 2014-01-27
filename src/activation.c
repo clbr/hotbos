@@ -3,12 +3,56 @@
 #include <sys/time.h>
 #include "lrtypes.h"
 
+static const u32 scale = 10000;
+
+static u32 fixedmul(const u32 a, const u32 b) {
+
+	u32 out = a * b;
+	out /= scale;
+
+	return out;
+}
+
+static u32 clampu(const u32 in, const u32 min, const u32 max) {
+	return in > max ? max : in < min ? min : in;
+}
+
+static u32 smootherstep(const u32 e0, const u32 e1, u32 x) {
+	x = clampu((x - e0)/(e1 - e0), 0, scale);
+
+	u32 tmp = fixedmul(x, 6 * scale);
+	tmp -= 15 * scale;
+	tmp = fixedmul(tmp, x);
+	tmp += 10 * scale;
+
+	tmp = fixedmul(tmp, x);
+	tmp = fixedmul(tmp, x);
+	tmp = fixedmul(tmp, x);
+
+//	return x*x*x*(x*(x*6 - 15) + 10);
+	return tmp;
+}
+
 static void tanhtest(const u32 rounds) {
 
+	u32 i;
+	float sum = 0;
+	for (i = 0; i < rounds; i++) {
+		sum += tanhf(i);
+	}
+
+	printf("sum %g\n", sum);
 }
 
 static void smoothertest(const u32 rounds) {
 
+	u32 i;
+	u32 sum = 0;
+	for (i = 0; i < rounds; i++) {
+		sum += smootherstep(0, 1*scale, i);
+	}
+
+	printf("sum %u\n", sum);
 }
 
 static void results(const struct timeval * const start,
