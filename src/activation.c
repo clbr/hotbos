@@ -3,7 +3,7 @@
 #include <sys/time.h>
 #include "lrtypes.h"
 
-static const u32 scale = 10000;
+static const u32 scale = 1024;
 
 static u32 fixedmul(const u32 a, const u32 b) {
 
