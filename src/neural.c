@@ -41,6 +41,7 @@ uint32_t calculate_score(const float inputs[INPUT_NEURONS],
 	uint32_t i, j;
 	float input_results[INPUT_NEURONS], hidden_results[INPUT_NEURONS];
 
+	/* Input layer */
 	for (i = 0; i < INPUT_NEURONS; i++) {
 		input_results[i] = smootherstep(net->input[i].weight * inputs[i] +
 					net->input[i].bias);
