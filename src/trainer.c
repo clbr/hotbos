@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "vram.h"
 #include "helpers.h"
 #include "header.h"
+#include "neural.h"
 #include <unistd.h>
 #include <getopt.h>
 #include <signal.h>
