@@ -106,8 +106,19 @@ int main(int argc, char **argv) {
 		return 0;
 	}
 
+	u32 iters = 0;
+	u8 improved = 0;
 	while (!quit) {
 		usleep(1);
+		iters++;
+	}
+
+	printf("Ran for %u iterations.\n", iters);
+
+	if (improved) {
+		// Print results, save new file
+	} else {
+		printf("No improvement was found.\n");
 	}
 
 	return 0;
