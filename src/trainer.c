@@ -100,6 +100,9 @@ int main(int argc, char **argv) {
 	signal(SIGINT, signaller);
 
 	// Read up current values
+	struct network ai, origai;
+	readhdr(&ai);
+	origai = ai;
 
 	// Do baseline simulation
 
@@ -118,6 +121,7 @@ int main(int argc, char **argv) {
 
 	if (improved) {
 		// Print results, save new file
+		writehdr(&ai);
 	} else {
 		printf("No improvement was found.\n");
 	}

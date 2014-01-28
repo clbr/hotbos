@@ -17,5 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef HEADER_H
 #define HEADER_H
 
+#include "neural.h"
+
+void readhdr(struct network *in);
+void writehdr(const struct network *in);
 
 #endif

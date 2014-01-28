@@ -16,3 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "header.h"
 #include <stdio.h>
+
+void readhdr(struct network * const in) {
+
+}
+
+void writehdr(const struct network * const in) {
+
+}
