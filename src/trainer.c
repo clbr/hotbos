@@ -97,5 +97,17 @@ int main(int argc, char **argv) {
 
 	signal(SIGINT, signaller);
 
+	// Read up current values
+
+	// Do baseline simulation
+
+	if (mode == BENCH) {
+		return 0;
+	}
+
+	while (!quit) {
+		usleep(1);
+	}
+
 	return 0;
 }
