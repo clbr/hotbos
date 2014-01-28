@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "helpers.h"
 #include <unistd.h>
 #include <getopt.h>
+#include <signal.h>
 
 static void usage(const char name[]) {
 	die("Usage: %s\n\n"
@@ -32,6 +33,12 @@ static void usage(const char name[]) {
 		"Options:\n"
 		"	-v --vram 64	Only test this vram amount\n"
 		, name);
+}
+
+static u8 quit = 0;
+
+static void signaller(int num __attribute__((unused))) {
+	quit = 1;
 }
 
 int main(int argc, char **argv) {
@@ -88,6 +95,7 @@ int main(int argc, char **argv) {
 	if (optind != argc)
 		usage(argv[0]);
 
+	signal(SIGINT, signaller);
 
 	return 0;
 }
