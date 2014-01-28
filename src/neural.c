@@ -23,7 +23,6 @@
  */
 
 #include "neural.h"
-#include <stdint.h>
 #include <limits.h>
 
 static float clampf(const float in, const float min, const float max) {
@@ -36,7 +35,8 @@ static float smootherstep(float x) {
 	return x*x*x*(x*(x*6 - 15) + 10);
 }
 
-uint32_t calculate_score(const float inputs[INPUT_NEURONS], const struct network * const net) {
+uint32_t calculate_score(const float inputs[INPUT_NEURONS],
+				const struct network * const net) {
 
 	uint32_t i, j;
 	float input_results[INPUT_NEURONS], hidden_results[INPUT_NEURONS];

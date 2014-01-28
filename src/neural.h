@@ -25,6 +25,8 @@
 #ifndef NEURAL_H
 #define NEURAL_H
 
+#include <stdint.h>
+
 #define INPUT_NEURONS 9
 
 struct input_neuron {
@@ -42,5 +44,8 @@ struct network {
 	struct neuron hidden[INPUT_NEURONS];
 	struct neuron output;
 };
+
+uint32_t calculate_score(const float inputs[INPUT_NEURONS],
+				const struct network * const net);
 
 #endif
