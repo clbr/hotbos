@@ -15,6 +15,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "bin.h"
+#include "vram.h"
+#include "helpers.h"
+#include <unistd.h>
+
+static void usage(const char name[]) {
+	die("Usage: %s\n", name);
+}
 
 int main(int argc, char **argv) {
 
