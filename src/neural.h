@@ -25,7 +25,7 @@
 #ifndef NEURAL_H
 #define NEURAL_H
 
-#define INPUTS 9
+#define INPUT_NEURONS 9
 
 struct input_neuron {
 	float weight;
@@ -33,16 +33,14 @@ struct input_neuron {
 };
 
 struct neuron {
-	float weights[INPUTS];
+	float weights[INPUT_NEURONS];
 	float bias;
 };
 
 struct network {
-	struct input_neuron input[INPUTS];
-	struct neuron hidden[INPUTS];
+	struct input_neuron input[INPUT_NEURONS];
+	struct neuron hidden[INPUT_NEURONS];
 	struct neuron output;
 };
-
-#undef INPUTS
 
 #endif
