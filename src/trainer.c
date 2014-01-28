@@ -36,7 +36,55 @@ static void usage(const char name[]) {
 
 int main(int argc, char **argv) {
 
-	usage(argv[0]);
+	const struct option opts[] = {
+		{"benchmark", 0, 0, 'b'},
+		{"revolve", 0, 0, 'r'},
+		{"evolve", 0, 0, 'e'},
+		{"finetune", 0, 0, 'f'},
+		{"help", 0, 0, 'h'},
+		{"vram", 1, 0, 'v'},
+		{0, 0, 0, 0}
+	};
+
+	const char optstr[] = "brefv:h";
+
+	enum {
+		BENCH = 0,
+		REVOLVE,
+		EVOLVE,
+		FINETUNE
+	} mode = BENCH;
+
+	u32 onlyvram = 0;
+
+	while (1) {
+		int c = getopt_long(argc, argv, optstr, opts, NULL);
+		if (c == -1) break;
+
+		switch (c) {
+			case 'b':
+				mode = BENCH;
+			break;
+			case 'r':
+				mode = REVOLVE;
+			break;
+			case 'e':
+				mode = EVOLVE;
+			break;
+			case 'f':
+				mode = FINETUNE;
+			break;
+			case 'v':
+				onlyvram = atoi(optarg);
+				if (onlyvram < 64 || onlyvram > 16384)
+					die("VRAM %u outside of usable limits\n",
+						onlyvram);
+			break;
+			case 'h':
+			default:
+				usage(argv[0]);
+		}
+	}
 
 	return 0;
 }
