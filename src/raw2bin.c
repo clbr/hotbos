@@ -149,13 +149,6 @@ static void output(const entry * const e, FILE * const out) {
 	lasttime = e->time;
 }
 
-static void nukenewline(char buf[]) {
-
-	char *ptr = strchr(buf, '\n');
-	if (ptr)
-		*ptr = '\0';
-}
-
 static void handle(FILE * const in, FILE * const out, const u32 bufcount, const u64 lines) {
 
 	printf("Total %u buffers created in the trace.\n", bufcount);

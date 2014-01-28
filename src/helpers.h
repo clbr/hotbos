@@ -20,8 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <string.h>
 #include <zlib.h>
 #include "macros.h"
+#include "lrtypes.h"
 
 static inline NORETURN_FUNC PRINTF_FUNC(1, 2) void die(const char fmt[], ...) {
 
@@ -87,6 +89,13 @@ static inline CONST_FUNC u8 hex2u8(const char in) {
 		return in - '0';
 
 	return in - 'a' + 10;
+}
+
+static inline void nukenewline(char buf[]) {
+
+	char *ptr = strchr(buf, '\n');
+	if (ptr)
+		*ptr = '\0';
 }
 
 #endif
