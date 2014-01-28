@@ -153,6 +153,6 @@ void writehdr(const struct network * const in) {
 	fprintf(f, "#define outputb %f\n",
 		in->output.bias);
 
-	fputs("#endif\n", f);
+	fputs("\n#endif\n", f);
 	fclose(f);
 }
