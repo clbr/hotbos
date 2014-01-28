@@ -38,7 +38,7 @@ struct neuron {
 };
 
 struct network {
-	struct input_neuron inputs[INPUTS];
+	struct input_neuron input[INPUTS];
 	struct neuron hidden[INPUTS];
 	struct neuron output;
 };
