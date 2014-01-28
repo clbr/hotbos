@@ -85,6 +85,9 @@ int main(int argc, char **argv) {
 				usage(argv[0]);
 		}
 	}
+	if (optind != argc)
+		usage(argv[0]);
+
 
 	return 0;
 }
