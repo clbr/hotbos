@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "bin.h"
 #include "helpers.h"
-#include "vram.h"
+#include "fragvram.h"
 #include <unistd.h>
 #include <string.h>
 #include <sys/types.h>

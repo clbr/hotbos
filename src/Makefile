@@ -15,7 +15,7 @@ all: $(TARGETS)
 raw2bin: raw2bin.o
 statinfo: bin.o statinfo.o
 trainer: trainer.o vram.o scoring.o
-fragbench: fragbench.o bin.o vram.o
+fragbench: fragbench.o bin.o fragvram.o
 
 activation: activation.o
 activation: LDFLAGS += -lm
