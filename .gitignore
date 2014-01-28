@@ -7,3 +7,4 @@ activation
 bostats.*
 *.o
 *.d
+magic.h
