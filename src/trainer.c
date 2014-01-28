@@ -14,16 +14,29 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#define _GNU_SOURCE
+
 #include "bin.h"
 #include "vram.h"
 #include "helpers.h"
 #include <unistd.h>
+#include <getopt.h>
 
 static void usage(const char name[]) {
-	die("Usage: %s\n", name);
+	die("Usage: %s\n\n"
+		"Modes:\n"
+		"	-b --benchmark	Test the current state vs LRU (default)\n"
+		"	-r --revolve	Revolutions\n"
+		"	-e --evolve	Evolutions\n"
+		"	-f --finetune	Fine tuning\n\n"
+		"Options:\n"
+		"	-v --vram 64	Only test this vram amount\n"
+		, name);
 }
 
 int main(int argc, char **argv) {
+
+	usage(argv[0]);
 
 	return 0;
 }
