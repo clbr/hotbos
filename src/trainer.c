@@ -66,6 +66,9 @@ static u64 sumscore(const u64 arr[vramelements]) {
 }
 
 static void printscores(const u64 olds[vramelements], const u64 news[vramelements]) {
+
+	puts("");
+
 	u32 i;
 	for (i = 0; i < vramelements; i++) {
 		printf("%lu: ", vramsizes[i]);
