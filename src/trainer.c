@@ -56,7 +56,7 @@ static void printscore(const u64 old, const u64 new) {
 	const u64 diff = (new - old) * 100;
 	const float percent = ((float) diff) / old;
 
-	printf("Score went from %lu to %lu - %f improvement\n",
+	printf("Score went from %lu to %lu - %.3g%% improvement\n",
 		old, new, percent);
 }
 
