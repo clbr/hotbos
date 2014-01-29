@@ -43,6 +43,14 @@ static void signaller(int num __attribute__((unused))) {
 	quit = 1;
 }
 
+static void printscore(const u64 old, const u64 new) {
+	const u64 diff = (new - old) * 100;
+	const float percent = ((float) diff) / old;
+
+	printf("Score went from %lu to %lu - %f improvement\n",
+		old, new, percent);
+}
+
 int main(int argc, char **argv) {
 
 	const struct option opts[] = {
