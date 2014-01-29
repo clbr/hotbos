@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 void *gzbinopen(const char in[]) {
 
 	void * const f = gzopen(in, "rb");
-	if (!f) die("Failed to open file\n");
+	if (!f) die("Failed to open file %s\n", in);
 
 	char magic[MAGICLEN];
 	sgzread(magic, MAGICLEN, f);
