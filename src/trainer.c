@@ -179,6 +179,9 @@ static void simulate(const u32 edge, const u32 datafiles,
 			free(cache);
 		}
 	}
+
+	printf("\r                                                  ");
+	fflush(stdout);
 }
 
 int main(int argc, char **argv) {
