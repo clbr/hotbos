@@ -100,9 +100,9 @@ int main(int argc, char **argv) {
 	signal(SIGINT, signaller);
 
 	// Read up current values
-	struct network ai, origai;
+	struct network ai, lastai;
 	readhdr(&ai);
-	origai = ai;
+	lastai = ai;
 
 	// Do baseline simulation
 
