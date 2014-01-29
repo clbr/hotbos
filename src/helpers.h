@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
 #include <zlib.h>
 #include "macros.h"
 #include "lrtypes.h"
@@ -96,6 +99,17 @@ static inline void nukenewline(char buf[]) {
 	char *ptr = strchr(buf, '\n');
 	if (ptr)
 		*ptr = '\0';
+}
+
+static inline int filterdata(const struct dirent * const d) {
+
+	if (d->d_type != DT_REG && d->d_type != DT_UNKNOWN)
+		return 0;
+
+	if (strstr(d->d_name, ".bin"))
+		return 1;
+
+	return 0;
 }
 
 #endif

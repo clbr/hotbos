@@ -24,17 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <dirent.h>
 #include <limits.h>
 
-static int filterdata(const struct dirent * const d) {
-
-	if (d->d_type != DT_REG && d->d_type != DT_UNKNOWN)
-		return 0;
-
-	if (strstr(d->d_name, ".bin"))
-		return 1;
-
-	return 0;
-}
-
 static u8 *destroyed;
 
 static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram) {
