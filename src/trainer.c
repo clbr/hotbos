@@ -260,12 +260,12 @@ int main(int argc, char **argv) {
 	int datafiles = scandir(datadir, &namelist, filterdata, alphasort);
 	if (datafiles < 0) die("Failed in scandir\n");
 
-	chdir(datadir);
-
 	// Read up current values
 	struct network ai, lastai;
 	readhdr(&ai);
 	lastai = ai;
+
+	chdir(datadir);
 
 	// Do baseline simulation
 	u64 basescores[vramelements], scores[vramelements], lastscores[vramelements];
