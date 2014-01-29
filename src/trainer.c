@@ -224,6 +224,7 @@ int main(int argc, char **argv) {
 	lastai = ai;
 
 	// Do baseline simulation
+	u64 basescores[vramelements], scores[vramelements];
 
 	if (mode == BENCH) {
 		return 0;
@@ -232,8 +233,18 @@ int main(int argc, char **argv) {
 	u32 iters = 0;
 	u8 improved = 0;
 	while (!quit) {
+		ai = lastai;
+		// Mutate
+
+		// Test
 		usleep(1);
 		iters++;
+
+		// Did it improve?
+		if (1) {
+			improved = 1;
+			lastai = ai;
+		}
 	}
 
 	printf("Ran for %u iterations.\n", iters);
