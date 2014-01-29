@@ -38,14 +38,18 @@ static struct {
 
 	struct buf *storage;
 	struct buf **holelist;
+
+	const struct network *net;
 } ctx;
 
-void initvram(const u64 size, const u32 edge, const u32 buffers) {
+void initvram(const u64 size, const u32 edge, const u32 buffers,
+		const struct network * const net) {
 
 	ctx.size = size;
 	ctx.edge = edge;
 	ctx.tick = 0;
 	ctx.holes = 1;
+	ctx.net = net;
 
 	ctx.vram = xcalloc(sizeof(struct buf));
 	ctx.vram->size = size;
@@ -97,6 +101,8 @@ void freevram() {
 	ctx.storage = NULL;
 	free(ctx.holelist);
 	ctx.holelist = NULL;
+
+	ctx.net = NULL;
 }
 
 static void dropvrambuf(struct buf * const oldest) {
