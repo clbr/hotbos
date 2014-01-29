@@ -105,7 +105,8 @@ static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram
 
 static void simulate(const u32 edge, const u32 datafiles,
 			const struct dirent **namelist,
-			const struct network * const net) {
+			const struct network * const net,
+			u64 scores[vramelements]) {
 
 	u32 i, v;
 	for (v = 0; v < vramelements; v++) {
@@ -136,7 +137,7 @@ static void simulate(const u32 edge, const u32 datafiles,
 			free(destroyed);
 
 			gzclose(f);
-			freevram();
+			scores[v] = freevram();
 			free(cache);
 		}
 	}
