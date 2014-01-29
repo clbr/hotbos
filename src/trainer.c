@@ -226,9 +226,8 @@ int main(int argc, char **argv) {
 	// Do baseline simulation
 	u64 basescores[vramelements], scores[vramelements];
 
-	if (mode == BENCH) {
+	if (mode == BENCH)
 		return 0;
-	}
 
 	u32 iters = 0;
 	u8 improved = 0;
