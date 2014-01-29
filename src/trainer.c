@@ -150,8 +150,10 @@ static void simulate(const u32 edge, const u32 datafiles,
 
 	u32 i, v;
 	for (v = 0; v < vramelements; v++) {
+		scores[v] = 0;
 		for (i = 0; i < datafiles; i++) {
-			printf("\r\tVRAM %lu: Checking file %u/%u: %s", vramsizes[v],
+			printf("\r\tVRAM %lu: Checking file %u/%u: %s"
+				"                               ", vramsizes[v],
 				i + 1, datafiles,
 				namelist[i]->d_name);
 			fflush(stdout);
@@ -177,7 +179,7 @@ static void simulate(const u32 edge, const u32 datafiles,
 			free(destroyed);
 
 			gzclose(f);
-			scores[v] = freevram();
+			scores[v] += freevram();
 			free(cache);
 		}
 	}
