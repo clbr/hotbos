@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <unistd.h>
 #include <getopt.h>
 #include <signal.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
 
 static void usage(const char name[]) {
 	die("Usage: %s\n\n"
@@ -49,6 +52,55 @@ static void printscore(const u64 old, const u64 new) {
 
 	printf("Score went from %lu to %lu - %f improvement\n",
 		old, new, percent);
+}
+
+static u8 *destroyed;
+
+static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram) {
+
+	entry e;
+	const u8 cb = charbufs ? charbufs : 3;
+	u8 ctr = 0;
+	u32 ctx = 0;
+	u32 pos = 0;
+
+	while (pos < size) {
+
+		readentry(&e, f + pos, cb, &ctx);
+		pos += cb + 1;
+
+		if (e.id == ID_CPUOP)
+			continue;
+
+		// Some traces have use-after-free.
+		// Filter those so we don't trip up.
+		if (destroyed[e.buffer])
+			continue;
+
+		if (e.id == ID_CREATE) {
+			// Abort the trace if it tries to create a buffer bigger than vram
+			if (e.size >= vram)
+				return;
+
+			pos += 4;
+
+			allocbuf(e.buffer, e.size);
+		} else if (e.id == ID_DESTROY) {
+			destroybuf(e.buffer);
+
+			destroyed[e.buffer] = 1;
+		} else {
+			touchbuf(e.buffer);
+		}
+
+		if (!ctr)
+			checkfragmentation();
+
+		ctr++;
+		ctr %= 10;
+	}
+
+	fflush(stdout);
 }
 
 int main(int argc, char **argv) {
