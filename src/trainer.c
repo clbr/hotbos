@@ -131,14 +131,14 @@ static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram
 }
 
 static void simulate(const u32 edge, const u32 datafiles,
-			const struct dirent **namelist,
+			struct dirent * const * const namelist,
 			const struct network * const net,
 			u64 scores[vramelements]) {
 
 	u32 i, v;
 	for (v = 0; v < vramelements; v++) {
 		for (i = 0; i < datafiles; i++) {
-			printf("\r\tVRAM %u: Checking file %u/%u: %s", vramsizes[v],
+			printf("\r\tVRAM %lu: Checking file %u/%u: %s", vramsizes[v],
 				i + 1, datafiles,
 				namelist[i]->d_name);
 			fflush(stdout);
