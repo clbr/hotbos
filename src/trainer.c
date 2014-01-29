@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <sys/stat.h>
 #include <dirent.h>
 #include <time.h>
+#include <fcntl.h>
 
 static void usage(const char name[]) {
 	die("Usage: %s\n\n"
@@ -265,6 +266,8 @@ int main(int argc, char **argv) {
 	readhdr(&ai);
 	lastai = ai;
 
+	const int pwd = open(".", O_RDONLY);
+	if (pwd < 0) die("Failed to get current dir\n");
 	chdir(datadir);
 
 	// Do baseline simulation
@@ -304,6 +307,8 @@ int main(int argc, char **argv) {
 		// Print results, save new file
 		printf("Improvement:\n");
 		printscores(basescores, lastscores);
+
+		fchdir(pwd);
 		writehdr(&ai);
 	} else {
 		printf("No improvement was found.\n");
@@ -315,6 +320,8 @@ int main(int argc, char **argv) {
 		free(namelist[i]);
 	}
 	free(namelist);
+
+	close(pwd);
 
 	return 0;
 }
