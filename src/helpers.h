@@ -60,7 +60,9 @@ static inline void sread(char *ptr, size_t size, FILE *f) {
 	}
 }
 
-static inline void sgzread(char *ptr, size_t size, void *f) {
+static inline void sgzread(void *vptr, size_t size, void *f) {
+
+	char *ptr = (char *) vptr;
 
 	size_t ret = 0;
 	u32 pos = 0;
@@ -73,7 +75,9 @@ static inline void sgzread(char *ptr, size_t size, void *f) {
 	}
 }
 
-static inline void swrite(const char *ptr, size_t size, FILE *f) {
+static inline void swrite(const void *vptr, size_t size, FILE *f) {
+
+	const char *ptr = (const char *) vptr;
 
 	size_t ret = 0;
 	u32 pos = 0;
