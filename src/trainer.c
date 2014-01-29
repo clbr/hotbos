@@ -54,6 +54,17 @@ static void printscore(const u64 old, const u64 new) {
 		old, new, percent);
 }
 
+static u64 sumscore(const u64 arr[vramelements]) {
+
+	u64 sum = 0;
+	u32 i;
+	for (i = 0; i < vramelements; i++) {
+		sum += arr[i];
+	}
+
+	return sum;
+}
+
 static u8 *destroyed;
 
 static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram) {
