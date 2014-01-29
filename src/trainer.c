@@ -159,6 +159,25 @@ int main(int argc, char **argv) {
 
 	signal(SIGINT, signaller);
 
+	const char *datadir = NULL;
+
+	// Locate the data files
+	if (!access("INDEX", R_OK))
+		datadir = ".";
+	else if (!access("data/INDEX", R_OK))
+		datadir = "data";
+	else if (!access("../data/INDEX", R_OK))
+		datadir = "../data";
+
+	if (!datadir) die("Cannot find data\n");
+
+	// Loop over the data files
+	struct dirent **namelist;
+	int datafiles = scandir(datadir, &namelist, filterdata, alphasort);
+	if (datafiles < 0) die("Failed in scandir\n");
+
+	chdir(datadir);
+
 	// Read up current values
 	struct network ai, lastai;
 	readhdr(&ai);
@@ -185,6 +204,13 @@ int main(int argc, char **argv) {
 	} else {
 		printf("No improvement was found.\n");
 	}
+
+	// Cleanup
+	u32 i;
+	for (i = 0; i < (u32) datafiles; i++) {
+		free(namelist[i]);
+	}
+	free(namelist);
 
 	return 0;
 }
