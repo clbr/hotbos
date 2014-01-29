@@ -28,7 +28,7 @@ void initvram(const u64 size, const u32 edge, const u32 buffers,
 void allocbuf(const u32 id, const u32 size);
 void touchbuf(const u32 id);
 void destroybuf(const u32 id);
-void freevram();
+u64 freevram();
 
 void checkfragmentation();
 

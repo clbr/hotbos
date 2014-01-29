@@ -32,6 +32,7 @@ static struct {
 	u64 tick;
 	u32 edge;
 	u32 holes;
+	u64 score;
 
 	struct buf *vram;
 	struct buf *ram;
@@ -50,6 +51,7 @@ void initvram(const u64 size, const u32 edge, const u32 buffers,
 	ctx.tick = 0;
 	ctx.holes = 1;
 	ctx.net = net;
+	ctx.score = 0;
 
 	ctx.vram = xcalloc(sizeof(struct buf));
 	ctx.vram->size = size;
@@ -75,7 +77,7 @@ static void genholelist() {
 	}
 }
 
-void freevram() {
+u64 freevram() {
 
 	ctx.size = ctx.edge = 0;
 
@@ -103,6 +105,8 @@ void freevram() {
 	ctx.holelist = NULL;
 
 	ctx.net = NULL;
+
+	return ctx.score;
 }
 
 static void dropvrambuf(struct buf * const oldest) {
