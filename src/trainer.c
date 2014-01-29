@@ -94,7 +94,6 @@ static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram
 
 	entry e;
 	const u8 cb = charbufs ? charbufs : 3;
-	u8 ctr = 0;
 	u32 ctx = 0;
 	u32 pos = 0;
 
@@ -126,12 +125,6 @@ static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram
 		} else {
 			touchbuf(e.buffer);
 		}
-
-		if (!ctr)
-			checkfragmentation();
-
-		ctr++;
-		ctr %= 10;
 	}
 
 	fflush(stdout);
@@ -144,11 +137,11 @@ static void simulate(const u32 edge, const u32 datafiles,
 
 	u32 i, v;
 	for (v = 0; v < vramelements; v++) {
-		fprintf(stderr, "VRAM size %lu\n", vramsizes[v]);
-
 		for (i = 0; i < datafiles; i++) {
-			fprintf(stderr, "\tChecking file %u/%u: %s\n", i + 1, datafiles,
+			printf("\r\tVRAM %u: Checking file %u/%u: %s", vramsizes[v],
+				i + 1, datafiles,
 				namelist[i]->d_name);
+			fflush(stdout);
 
 			void * const f = gzbinopen(namelist[i]->d_name);
 
@@ -258,7 +251,10 @@ int main(int argc, char **argv) {
 	lastai = ai;
 
 	// Do baseline simulation
-	u64 basescores[vramelements], scores[vramelements];
+	u64 basescores[vramelements], scores[vramelements], prevscores[vramelements];
+
+	simulate(0, datafiles, namelist, NULL, basescores);
+	simulate(512, datafiles, namelist, &ai, scores);
 
 	if (mode == BENCH)
 		return 0;
