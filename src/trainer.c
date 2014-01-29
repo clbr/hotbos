@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <time.h>
 #include <fcntl.h>
 
+#define ERASE "\33[2K"
+
 static void usage(const char name[]) {
 	die("Usage: %s\n\n"
 		"Modes:\n"
@@ -66,8 +68,6 @@ static u64 sumscore(const u64 arr[vramelements]) {
 }
 
 static void printscores(const u64 olds[vramelements], const u64 news[vramelements]) {
-
-	puts("");
 
 	u32 i;
 	for (i = 0; i < vramelements; i++) {
@@ -153,8 +153,8 @@ static void simulate(const u32 edge, const u32 datafiles,
 	for (v = 0; v < vramelements; v++) {
 		scores[v] = 0;
 		for (i = 0; i < datafiles; i++) {
-			printf("\r\tVRAM %lu: Checking file %u/%u: %s"
-				"                               ", vramsizes[v],
+			printf(ERASE "\r\tVRAM %lu: Checking file %u/%u: %s",
+				vramsizes[v],
 				i + 1, datafiles,
 				namelist[i]->d_name);
 			fflush(stdout);
@@ -185,7 +185,7 @@ static void simulate(const u32 edge, const u32 datafiles,
 		}
 	}
 
-	printf("\r                                                  ");
+	printf(ERASE "\r");
 	fflush(stdout);
 }
 
