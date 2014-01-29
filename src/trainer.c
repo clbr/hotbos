@@ -65,6 +65,29 @@ static u64 sumscore(const u64 arr[vramelements]) {
 	return sum;
 }
 
+static int acceptable(const u64 olds[vramelements], const u64 news[vramelements]) {
+
+	const u64 oldsum = sumscore(olds);
+	const u64 newsum = sumscore(news);
+
+	if (newsum >= oldsum)
+		return 0;
+
+	u32 i;
+	for (i = 0; i < vramelements; i++) {
+		if (news[i] > olds[i]) {
+			// If a case got worse, by how much? 5% is acceptable
+			const u64 diff = (news[i] - olds[i]) * 100;
+			const u64 per = diff / olds[i];
+
+			if (per >= 5)
+				return 0;
+		}
+	}
+
+	return 1;
+}
+
 static u8 *destroyed;
 
 static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram) {
