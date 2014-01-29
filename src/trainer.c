@@ -45,6 +45,10 @@ static void usage(const char name[]) {
 static u8 quit = 0;
 
 static void signaller(int num __attribute__((unused))) {
+
+	if (quit)
+		die("OK, you want out\n");
+
 	quit = 1;
 }
 
