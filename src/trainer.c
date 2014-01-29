@@ -271,6 +271,8 @@ int main(int argc, char **argv) {
 	simulate(0, datafiles, namelist, NULL, basescores);
 	simulate(512, datafiles, namelist, &ai, scores);
 
+	printscores(basescores, scores);
+
 	if (mode == BENCH)
 		return 0;
 
