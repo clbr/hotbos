@@ -37,8 +37,6 @@ static void usage(const char name[]) {
 		"	-r --revolve	Revolutions\n"
 		"	-e --evolve	Evolutions\n"
 		"	-f --finetune	Fine tuning\n\n"
-		"Options:\n"
-		"	-v --vram 64	Only test this vram amount\n"
 		, name);
 }
 
@@ -198,11 +196,10 @@ int main(int argc, char **argv) {
 		{"evolve", 0, 0, 'e'},
 		{"finetune", 0, 0, 'f'},
 		{"help", 0, 0, 'h'},
-		{"vram", 1, 0, 'v'},
 		{0, 0, 0, 0}
 	};
 
-	const char optstr[] = "brefv:h";
+	const char optstr[] = "brefh";
 
 	enum {
 		BENCH = 0,
@@ -210,8 +207,6 @@ int main(int argc, char **argv) {
 		EVOLVE,
 		FINETUNE
 	} mode = BENCH;
-
-	u32 onlyvram = 0;
 
 	while (1) {
 		int c = getopt_long(argc, argv, optstr, opts, NULL);
@@ -229,12 +224,6 @@ int main(int argc, char **argv) {
 			break;
 			case 'f':
 				mode = FINETUNE;
-			break;
-			case 'v':
-				onlyvram = atoi(optarg);
-				if (onlyvram < 64 || onlyvram > 16384)
-					die("VRAM %u outside of usable limits\n",
-						onlyvram);
 			break;
 			case 'h':
 			default:
