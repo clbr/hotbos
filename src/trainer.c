@@ -103,6 +103,45 @@ static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram
 	fflush(stdout);
 }
 
+static void simulate(const u32 edge, const u32 datafiles,
+			const struct dirent **namelist,
+			const struct network * const net) {
+
+	u32 i, v;
+	for (v = 0; v < vramelements; v++) {
+		fprintf(stderr, "VRAM size %lu\n", vramsizes[v]);
+
+		for (i = 0; i < datafiles; i++) {
+			fprintf(stderr, "\tChecking file %u/%u: %s\n", i + 1, datafiles,
+				namelist[i]->d_name);
+
+			void * const f = gzbinopen(namelist[i]->d_name);
+
+			u32 buffers;
+			sgzread((char *) &buffers, 4, f);
+
+			const u8 charbuf = getcharbuf(buffers);
+			initvram(vramsizes[v] * 1024 * 1024, edge * 1024,
+					buffers, net);
+
+			destroyed = xcalloc(buffers);
+
+			// Cache it
+			char *cache;
+			u32 cachelen;
+			bincache(f, &cache, &cachelen);
+
+			go(cache, cachelen, charbuf, vramsizes[v] * 1024 * 1024);
+
+			free(destroyed);
+
+			gzclose(f);
+			freevram();
+			free(cache);
+		}
+	}
+}
+
 int main(int argc, char **argv) {
 
 	const struct option opts[] = {
