@@ -55,9 +55,9 @@ enum id_t {
 typedef struct {
 	u32 time;
 	u32 size;
-	enum id_t id;
 	u32 buffer;
 	u8 high_prio;
+	u8 id;
 } entry;
 
 #define MAGIC "bostats1"
