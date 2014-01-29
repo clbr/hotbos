@@ -65,6 +65,17 @@ static u64 sumscore(const u64 arr[vramelements]) {
 	return sum;
 }
 
+static void printscores(const u64 olds[vramelements], const u64 news[vramelements]) {
+	u32 i;
+	for (i = 0; i < vramelements; i++) {
+		printf("%lu: ", vramsizes[i]);
+		printscore(olds[i], news[i]);
+	}
+
+	printf("\nTotal: ");
+	printscore(sumscore(olds), sumscore(news));
+}
+
 static int acceptable(const u64 olds[vramelements], const u64 news[vramelements]) {
 
 	const u64 oldsum = sumscore(olds);
