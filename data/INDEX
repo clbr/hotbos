@@ -1,72 +1,72 @@
-heaven1.bin: heaven 3.0 1920x1080, AF16x, shaders high, no AA
-heaven2.bin: heaven 3.0 1920x1080, AF16x, shaders high, no AA
-etqw1.bin: 1680*1050 all max
-left4dead2_1.bin: 2.1.3.5 Dec 2013, 1920x1080, AA off, AF off, others med-low
-pa1.bin: Planetary Annihilation v58772, 1920x1200, AA off, others max
-skyrim1.bin: Wine git, AA off, others max
+0ad1.bin:
+1995_1.bin: 1366x768
+1finger1.bin: 1366x768
+471110_1.bin: 640x480
+amnesia1.bin: Amnesia: The dark descent
+amnesiamfp1.bin: Amnesia: A machine for pigs
+anna1.bin: Anna extended version
+aquaria1.bin:
 assassin2_1.bin: No AA, shadows low, others max
-xonotic1.bin: git, Solarium map, 1680x1050, all max, no TC
-css1.bin: Counter-Strike Source 1680x1050
-left4dead2_2.bin: 1680x1050
-hl2ep2_1.bin: 1680x1050
+awesomenauts1.bin: 1680x1050
+bastion1.bin: 1680x1050
+beathazard1.bin:
+blackplague1.bin: Penumbra Black Plague
+brokenage1.bin:
 cim_1.bin: Cities in Motion 1, AA on
 cim2_1.bin: Cities in Motion 2, AA on
-lightsmark1.bin: 2008 1600x900
-xonotic2.bin: 1680x1050
-smokingguns1.bin: 1680x1050
-openarena1.bin: 1680x1050
-worldofpadman1.bin: 1680x1050
-urbanterror1.bin: 1680x1050
-lugaru1.bin: 1680x1050
-nexuiz1.bin: 1680x1050
-tf2_1.bin: 1680x1050
-trine2_1.bin: 1680x1050
-bastion1.bin: 1680x1050
-awesomenauts1.bin: 1680x1050
-tremulous1.bin: 1680x1050
-sam3_1.bin:
-glxgears1.bin: default res 300x300
-glxgears2.bin: 1024x1024
-minecraft1.bin: 1.7.4
+css1.bin: Counter-Strike Source 1680x1050
+css2.bin: 1280x800
+darwinia1.bin:
 dota2_1.bin: 1366x768 all max
 dota2_2.bin: 1366x768 low shadows, others max
 dota2_3.bin: 1920x1080 low shadows, others max
-minecraft2.bin: Sonic Ether GLSL deferred mod
-supertuxkart1.bin: STK cand git, mid settings, Hacienda level
-supertuxkart2.bin: STK cand git, mid settings, Jungle level
-thomas1.bin: And Thomas was alone
-amnesia1.bin: Amnesia: The dark descent
-penumbra1.bin: Penumbra Overture
-blackplague1.bin: Penumbra Black Plague
-shatter1.bin:
-wormsreloaded1.bin:
-brokenage1.bin:
-beathazard1.bin:
-amnesiamfp1.bin: Amnesia: A machine for pigs
-0ad1.bin:
-aquaria1.bin:
-anna1.bin: Anna extended version
-runner2_1.bin:
-dungeondefenders1.bin:
-surgeonsim1.bin: Surgeon Simulator 2013
-tf2_2.bin: pl_barnblitz map
-fez1.bin: 1366x768
-kerbal1.bin: 0.18.3 demo
-471110_1.bin: 640x480
-fr-062_1.bin: 1366x768
-fr-063_1.bin: 1366x768 CSMT disabled
-muoto1.bin: 1366x768 2xMSAA
-party_heart1.bin: 1366x768
-spin1.bin: 1366x768 AA disabled
-stargazer1.bin: 1366x768
-youshould1.bin: 1366x768
-dub1.bin: 1366x768
-1995_1.bin: 1366x768
-nederland1.bin: 1366x768
-1finger1.bin: 1366x768
 dreamchild1.bin: 800x600
+dub1.bin: 1366x768
+dungeondefenders1.bin:
+etqw1.bin: 1680*1050 all max
+fez1.bin: 1366x768
 fr-025_1.bin: 1366x768
 fr-043_1.bin: 1366x768
+fr-062_1.bin: 1366x768
+fr-063_1.bin: 1366x768 CSMT disabled
+glxgears1.bin: default res 300x300
+glxgears2.bin: 1024x1024
+heaven1.bin: heaven 3.0 1920x1080, AF16x, shaders high, no AA
+heaven2.bin: heaven 3.0 1920x1080, AF16x, shaders high, no AA
+hl2ep2_1.bin: 1680x1050
+kerbal1.bin: 0.18.3 demo
+left4dead2_1.bin: 2.1.3.5 Dec 2013, 1920x1080, AA off, AF off, others med-low
+left4dead2_2.bin: 1680x1050
+lightsmark1.bin: 2008 1600x900
+lugaru1.bin: 1680x1050
+minecraft1.bin: 1.7.4
+minecraft2.bin: Sonic Ether GLSL deferred mod
+muoto1.bin: 1366x768 2xMSAA
+nederland1.bin: 1366x768
+nexuiz1.bin: 1680x1050
+openarena1.bin: 1680x1050
+pa1.bin: Planetary Annihilation v58772, 1920x1200, AA off, others max
+party_heart1.bin: 1366x768
+penumbra1.bin: Penumbra Overture
+runner2_1.bin:
+sam3_1.bin:
+shatter1.bin:
+skyrim1.bin: Wine git, AA off, others max
+smokingguns1.bin: 1680x1050
+spin1.bin: 1366x768 AA disabled
 splice1.bin:
-darwinia1.bin:
-css2.bin: 1280x800
+stargazer1.bin: 1366x768
+supertuxkart1.bin: STK cand git, mid settings, Hacienda level
+supertuxkart2.bin: STK cand git, mid settings, Jungle level
+surgeonsim1.bin: Surgeon Simulator 2013
+tf2_1.bin: 1680x1050
+tf2_2.bin: pl_barnblitz map
+thomas1.bin: And Thomas was alone
+tremulous1.bin: 1680x1050
+trine2_1.bin: 1680x1050
+urbanterror1.bin: 1680x1050
+worldofpadman1.bin: 1680x1050
+wormsreloaded1.bin:
+xonotic1.bin: git, Solarium map, 1680x1050, all max, no TC
+xonotic2.bin: 1680x1050
+youshould1.bin: 1366x768
