@@ -268,7 +268,7 @@ int main(int argc, char **argv) {
 	lastai = ai;
 
 	// Do baseline simulation
-	u64 basescores[vramelements], scores[vramelements], prevscores[vramelements];
+	u64 basescores[vramelements], scores[vramelements], lastscores[vramelements];
 	printf("Doing baseline simulation.\n");
 
 	simulate(0, datafiles, namelist, NULL, basescores);
@@ -281,18 +281,20 @@ int main(int argc, char **argv) {
 
 	u32 iters = 0;
 	u8 improved = 0;
+	memcpy(lastscores, scores, sizeof(u64) * vramelements);
 	while (!quit) {
 		ai = lastai;
 		// Mutate
 
 		// Test
-		usleep(1);
+		simulate(512, datafiles, namelist, &ai, scores);
 		iters++;
 
 		// Did it improve?
-		if (1) {
+		if (acceptable(lastscores, scores)) {
 			improved = 1;
 			lastai = ai;
+			memcpy(lastscores, scores, sizeof(u64) * vramelements);
 		}
 	}
 
