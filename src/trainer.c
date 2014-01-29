@@ -252,6 +252,7 @@ int main(int argc, char **argv) {
 
 	// Do baseline simulation
 	u64 basescores[vramelements], scores[vramelements], prevscores[vramelements];
+	printf("Doing baseline simulation.\n");
 
 	simulate(0, datafiles, namelist, NULL, basescores);
 	simulate(512, datafiles, namelist, &ai, scores);
