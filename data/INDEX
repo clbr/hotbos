@@ -52,20 +52,20 @@ surgeonsim1.bin: Surgeon Simulator 2013
 tf2_2.bin: pl_barnblitz map
 fez1.bin: 1366x768
 kerbal1.bin: 0.18.3 demo
-471110_1: 640x480
-fr-062_1: 1366x768
-fr-063_1: 1366x768 CSMT disabled
-muoto1: 1366x768 2xMSAA
-party_heart1: 1366x768
-spin1: 1366x768 AA disabled
-stargazer1: 1366x768
-youshould1: 1366x768
-dub1: 1366x768
-1995_1: 1366x768
-nederland1: 1366x768
-1finger1: 1366x768
-dreamchild1: 800x600
-fr-025_1: 1366x768
-fr-043_1: 1366x768
+471110_1.bin: 640x480
+fr-062_1.bin: 1366x768
+fr-063_1.bin: 1366x768 CSMT disabled
+muoto1.bin: 1366x768 2xMSAA
+party_heart1.bin: 1366x768
+spin1.bin: 1366x768 AA disabled
+stargazer1.bin: 1366x768
+youshould1.bin: 1366x768
+dub1.bin: 1366x768
+1995_1.bin: 1366x768
+nederland1.bin: 1366x768
+1finger1.bin: 1366x768
+dreamchild1.bin: 800x600
+fr-025_1.bin: 1366x768
+fr-043_1.bin: 1366x768
 splice1.bin:
 darwinia1.bin:
