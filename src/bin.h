@@ -92,6 +92,7 @@ static inline void readentry(entry * const e, const char * const in, const u8 ch
 	if (charbufs == 2) {
 		((u8 *) &e->buffer)[1] = in[2];
 	} else if (charbufs == 3) {
+		((u8 *) &e->buffer)[1] = in[2];
 		((u8 *) &e->buffer)[2] = in[3];
 	}
 
