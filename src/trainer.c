@@ -302,6 +302,7 @@ int main(int argc, char **argv) {
 
 	if (improved) {
 		// Print results, save new file
+		printscores(basescores, lastscores);
 		writehdr(&ai);
 	} else {
 		printf("No improvement was found.\n");
