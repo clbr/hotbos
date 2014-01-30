@@ -148,6 +148,9 @@ static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram
 	fflush(stdout);
 }
 
+static void **cachedbin = NULL;
+static u32 *cachedsizes = NULL;
+
 static void simulate(const u32 edge, const u32 datafiles,
 			struct dirent * const * const namelist,
 			const struct network * const net,
@@ -268,6 +271,9 @@ int main(int argc, char **argv) {
 	if (pwd < 0) die("Failed to get current dir\n");
 	chdir(datadir);
 
+	cachedbin = xcalloc(datafiles * sizeof(void *));
+	cachedsizes = xcalloc(datafiles * sizeof(u32));
+
 	// Do baseline simulation
 	u64 basescores[vramelements], scores[vramelements], lastscores[vramelements];
 	printf("Doing baseline simulation.\n");
@@ -318,6 +324,8 @@ int main(int argc, char **argv) {
 		free(namelist[i]);
 	}
 	free(namelist);
+	free(cachedbin);
+	free(cachedsizes);
 
 	close(pwd);
 
