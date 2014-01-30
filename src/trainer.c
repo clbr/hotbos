@@ -108,7 +108,7 @@ static int acceptable(const u64 olds[vramelements], const u64 news[vramelements]
 
 static u8 *destroyed;
 
-static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram) {
+static void go(const void * const f, const u32 size, const u8 charbufs, const u64 vram) {
 
 	entry e;
 	const u8 cb = charbufs ? charbufs : 3;
