@@ -177,10 +177,15 @@ static void simulate(const u32 edge, const u32 datafiles,
 
 			destroyed = xcalloc(buffers);
 
-			// Cache it
+			// Cache it; is it already cached?
 			char *cache;
 			u32 cachelen;
-			bincache(f, &cache, &cachelen);
+			if (!cachedbin[i]) {
+				bincache(f, &cache, &cachelen);
+			} else {
+				cache = cachedbin[i];
+				cachelen = cachedsizes[i];
+			}
 
 			go(cache, cachelen, charbuf, vramsizes[v] * 1024 * 1024);
 
@@ -188,7 +193,19 @@ static void simulate(const u32 edge, const u32 datafiles,
 
 			gzclose(f);
 			scores[v] += freevram();
-			free(cache);
+
+			// Should we cache it for future runs, or free it?
+			// Cache the big ones, they have the most zlib hit
+			// Can't cache everything, it would take > 11gb,
+			// I don't have that much RAM...
+			if (!cachedbin[i]) {
+				if (cachelen >= 300 * 1024 * 1024) {
+					cachedbin[i] = cache;
+					cachedsizes[i] = cachelen;
+				} else {
+					free(cache);
+				}
+			}
 		}
 	}
 
@@ -322,6 +339,7 @@ int main(int argc, char **argv) {
 	u32 i;
 	for (i = 0; i < (u32) datafiles; i++) {
 		free(namelist[i]);
+		free(cachedbin[i]);
 	}
 	free(namelist);
 	free(cachedbin);
