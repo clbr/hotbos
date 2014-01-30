@@ -1,0 +1,9 @@
+./statinfo ../data/tremulous1.bin ff | md5sum
+2f3fbeb9e2bb38df063a37c5f0e43434  -
+
+./statinfo ../data/glxgears2.bin ff | md5sum
+fdf9a16e86aa86f919b79d40bf9ddb64  -
+
+./statinfo ../data/minecraft2.bin ff | md5sum
+1b47b300495812e46ab3c6037e3fd68a  -
+
