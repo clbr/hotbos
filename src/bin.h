@@ -76,7 +76,7 @@ static inline u8 getcharbuf(const u32 bufs) {
 	return 0;
 }
 
-static inline void readentry(entry * const e, const char * const in, const u8 charbufs,
+static inline void readentry(entry * const e, const u8 * const in, const u8 charbufs,
 		u32 * const lasttime) {
 
 	u32 tmp = 0;
