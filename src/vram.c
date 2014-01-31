@@ -24,6 +24,7 @@ struct buf {
 	u64 tick;
 	u64 size;
 	u32 id;
+	u32 score;
 	u8 hole;
 	u8 vram;
 };
