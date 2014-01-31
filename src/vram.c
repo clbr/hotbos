@@ -19,6 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scoring.h"
 
 struct buf {
+	struct {
+		u64 reads;
+		u64 writes;
+		u64 lastread;
+		u64 lastwrite;
+		u64 cpuops;
+		u64 lastcpu;
+	} stats;
 	struct buf *next;
 	struct buf *prev;
 	u64 tick;
