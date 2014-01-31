@@ -316,6 +316,8 @@ int main(int argc, char **argv) {
 
 		// Did it improve?
 		if (acceptable(lastscores, scores)) {
+			if (!improved) puts("Improved!");
+
 			improved = 1;
 			lastai = ai;
 			memcpy(lastscores, scores, sizeof(u64) * vramelements);
@@ -330,7 +332,7 @@ int main(int argc, char **argv) {
 		printscores(basescores, lastscores);
 
 		fchdir(pwd);
-		writehdr(&ai);
+		writehdr(&lastai);
 	} else {
 		printf("No improvement was found.\n");
 	}
