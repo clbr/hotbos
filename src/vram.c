@@ -206,7 +206,7 @@ static void dropvrambuf(struct buf * const oldest) {
 
 static void dropoldest() {
 
-	printf("Fragmentation caused a swap\n");
+	//printf("Fragmentation caused a swap\n");
 
 	struct buf *cur, *oldest;
 
@@ -220,8 +220,13 @@ static void dropoldest() {
 		if (oldest->hole)
 			oldest = cur;
 
-		if (cur->tick < oldest->tick)
-			oldest = cur;
+		if (ctx.net) {
+			if (cur->score < oldest->score)
+				oldest = cur;
+		} else {
+			if (cur->tick < oldest->tick)
+				oldest = cur;
+		}
 
 		cur = cur->next;
 	}
