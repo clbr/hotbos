@@ -62,7 +62,7 @@ uint32_t calculate_score(const float inputs[INPUT_NEURONS],
 		weighted_sum += net->output.weights[i] * hidden_results[i];
 	}
 
-	const float score = clampf(smootherstep(weighted_sum), 0, 1);
+	const float score = clampf(smootherstep(weighted_sum), 0, 0.999f);
 
 	return score * UINT_MAX;
 }
