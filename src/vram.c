@@ -72,6 +72,10 @@ void initvram(const u64 size, const u32 edge, const u32 buffers,
 	ctx.holelist[0] = ctx.vram;
 }
 
+static void stats2inputs(const struct buf * const in, float inputs[INPUT_NEURONS]) {
+
+}
+
 static void genholelist() {
 
 	struct buf *cur = ctx.vram;
@@ -351,6 +355,16 @@ void touchbuf(const u32 id, const u8 write) {
 
 	ctx.score += score(SCORE_GPU, write ? SCORE_W : SCORE_R, SCORE_VRAM,
 				ctx.storage[id].size);
+
+	// If in AI mode, and enough time since last update, update the buffer's score
+	if (ctx.net &&
+		(!ctx.storage[id].score || (ctx.tick - ctx.storage[id].tick) > 600)) {
+
+		float inputs[INPUT_NEURONS];
+		stats2inputs(&ctx.storage[id], inputs);
+
+		ctx.storage[id].score = calculate_score(inputs, ctx.net);
+	}
 
 	// Is the buffer in VRAM? If so, update its timestamp and quit
 	if (ctx.storage[id].vram) {
