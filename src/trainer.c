@@ -53,11 +53,15 @@ static void signaller(int num __attribute__((unused))) {
 }
 
 static void printscore(const u64 old, const u64 new) {
-	const u64 diff = (new - old) * 100;
-	const float percent = ((float) diff) / old;
+	const float diff = (((double) old) - new) * 100;
+	const float percent = diff / old;
 
-	printf("Score went from %lu to %lu - %.3g%% improvement\n",
-		old, new, percent);
+	if (old >= new)
+		printf("Score went from %lu to %lu - %.3g%% improvement\n",
+			old, new, percent);
+	else
+		printf("Score went from %lu to %lu - %.3g%% worse\n",
+			old, new, percent);
 }
 
 static u64 sumscore(const u64 arr[vramelements]) {
