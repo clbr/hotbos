@@ -352,7 +352,11 @@ void touchbuf(const u32 id, const u8 write) {
 }
 
 void cpubuf(const u32 id) {
+	u8 vram = SCORE_RAM;
+	if (ctx.storage[id].vram)
+		vram = SCORE_VRAM;
 
+	ctx.score += score(SCORE_CPU, SCORE_W, vram, ctx.storage[id].size);
 }
 
 void checkfragmentation() {
