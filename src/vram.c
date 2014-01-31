@@ -99,6 +99,10 @@ static void genholelist() {
 			ctx.holelist[num] = cur;
 
 			num++;
+
+			// Early exit if we found all holes
+			if (num == ctx.holes)
+				break;
 		}
 
 		cur = cur->next;
