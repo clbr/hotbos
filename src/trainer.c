@@ -137,7 +137,7 @@ static void go(const void * const f, const u32 size, const u8 charbufs, const u6
 
 			pos += 4;
 
-			allocbuf(e.buffer, e.size);
+			allocbuf(e.buffer, e.size, e.high_prio);
 		} else if (e.id == ID_DESTROY) {
 			destroybuf(e.buffer);
 

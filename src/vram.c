@@ -35,6 +35,7 @@ struct buf {
 	u32 score;
 	u8 hole;
 	u8 vram;
+	u8 highprio;
 };
 
 static struct {
@@ -331,7 +332,7 @@ static void internaltouch(const u32 id) {
 	}
 }
 
-void allocbuf(const u32 id, const u32 size) {
+void allocbuf(const u32 id, const u32 size, const u8 highprio) {
 
 	ctx.tick++;
 
@@ -339,6 +340,7 @@ void allocbuf(const u32 id, const u32 size) {
 	cur->size = size;
 	cur->id = id;
 	cur->tick = ctx.tick;
+	cur->highprio = highprio;
 
 	// Allocate a new buffer, put it to RAM, internaltouch moves it to vram
 	cur->next = ctx.ram;
