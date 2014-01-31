@@ -213,6 +213,52 @@ static void simulate(const u32 edge, const u32 datafiles,
 	fflush(stdout);
 }
 
+static void mutate(struct network * const ai, const float minchange,
+			const u32 change, const u32 targets) {
+	u32 i;
+	for (i = 0; i < targets; i++) {
+		const u32 layer = rand() % 3;
+		const u32 neuron = rand() % INPUT_NEURONS;
+		const u32 weight = rand() % INPUT_NEURONS;
+		const u32 bias = rand() % 4 == 0;
+		float *val = NULL;
+
+		switch (layer) {
+			case 0:
+				if (bias)
+					val = &ai->input[neuron].bias;
+				else
+					val = &ai->input[neuron].weight;
+			break;
+			case 1:
+				if (bias)
+					val = &ai->hidden[neuron].bias;
+				else
+					val = &ai->hidden[neuron].weights[weight];
+			break;
+			case 2:
+				if (bias)
+					val = &ai->output.bias;
+				else
+					val = &ai->output.weights[weight];
+			break;
+		}
+
+		float per = rand() % (change * 10);
+		per /= 1000.0f;
+
+		float amount = *val * per;
+		if (amount < minchange)
+			amount = minchange;
+
+		// Plus or minus?
+		if (rand() % 2)
+			*val -= amount;
+		else
+			*val += amount;
+	}
+}
+
 int main(int argc, char **argv) {
 
 	srand(time(NULL));
@@ -309,6 +355,28 @@ int main(int argc, char **argv) {
 	while (!quit) {
 		ai = lastai;
 		// Mutate
+		u32 change = 0, targets = 0;
+		float minchange = 0;
+		switch (mode) {
+			case REVOLVE:
+				targets = 5;
+				minchange = 0.05;
+				change = 20;
+			break;
+			case EVOLVE:
+				targets = 3;
+				minchange = 0.02;
+				change = 5;
+			break;
+			case FINETUNE:
+				targets = 1;
+				minchange = 0.01;
+				change = 3;
+			break;
+			default:
+				die("Unknown mode");
+		}
+		mutate(&ai, minchange, change, targets);
 
 		// Test
 		simulate(512, datafiles, namelist, &ai, scores);
