@@ -109,6 +109,25 @@ static void genholelist() {
 	}
 }
 
+static void dropholefromlist(const struct buf * const in) {
+
+	// Locate it
+	u32 i;
+	for (i = 0; i < ctx.holes; i++) {
+		if (ctx.holelist[i] == in) {
+			if (i == ctx.holes - 1)
+				return;
+
+			const u32 amount = ctx.holes - i - 1;
+			memmove(&ctx.holelist[i], &ctx.holelist[i + 1], amount * sizeof(void *));
+
+			return;
+		}
+	}
+
+	die("Didn't find the hole to drop?\n");
+}
+
 u64 freevram() {
 
 	ctx.size = ctx.edge = 0;
@@ -160,8 +179,8 @@ static void dropvrambuf(struct buf * const oldest) {
 
 		free(hole2);
 
+		dropholefromlist(hole2);
 		ctx.holes--;
-		genholelist();
 
 	} else if (oldest->prev && oldest->prev->hole) {
 		struct buf *hole = oldest->prev;
