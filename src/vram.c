@@ -368,6 +368,15 @@ void touchbuf(const u32 id, const u8 write) {
 		ctx.storage[id].score = calculate_score(inputs, ctx.net);
 	}
 
+	// Update its stats
+	if (write) {
+		ctx.storage[id].stats.lastwrite = ctx.tick;
+		ctx.storage[id].stats.writes++;
+	} else {
+		ctx.storage[id].stats.lastread = ctx.tick;
+		ctx.storage[id].stats.reads++;
+	}
+
 	// Is the buffer in VRAM? If so, update its timestamp and quit
 	if (ctx.storage[id].vram) {
 		ctx.storage[id].tick = ctx.tick;
