@@ -395,6 +395,9 @@ void cpubuf(const u32 id) {
 		vram = SCORE_VRAM;
 
 	ctx.score += score(SCORE_CPU, SCORE_W, vram, ctx.storage[id].size);
+
+	ctx.storage[id].stats.cpuops++;
+	ctx.storage[id].stats.lastcpu = ctx.tick;
 }
 
 void checkfragmentation() {
