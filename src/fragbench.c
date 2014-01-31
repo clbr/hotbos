@@ -41,6 +41,8 @@ static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram
 
 		if (e.id == ID_CPUOP)
 			continue;
+		if (e.id == ID_CREATE)
+			pos += 4;
 
 		// Some traces have use-after-free.
 		// Filter those so we don't trip up.
@@ -51,8 +53,6 @@ static void go(void * const f, const u32 size, const u8 charbufs, const u64 vram
 			// Abort the trace if it tries to create a buffer bigger than vram
 			if (e.size >= vram)
 				return;
-
-			pos += 4;
 
 			allocbuf(e.buffer, e.size);
 		} else if (e.id == ID_DESTROY) {

@@ -124,6 +124,9 @@ static void go(const void * const f, const u32 size, const u8 charbufs, const u6
 		readentry(&e, f + pos, cb, &ctx);
 		pos += cb + 1;
 
+		if (e.id == ID_CREATE)
+			pos += 4;
+
 		// Some traces have use-after-free.
 		// Filter those so we don't trip up.
 		if (destroyed[e.buffer])
@@ -138,8 +141,6 @@ static void go(const void * const f, const u32 size, const u8 charbufs, const u6
 			// Abort the trace if it tries to create a buffer bigger than vram
 			if (e.size >= vram)
 				return;
-
-			pos += 4;
 
 			allocbuf(e.buffer, e.size, e.high_prio);
 		} else if (e.id == ID_DESTROY) {
