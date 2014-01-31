@@ -349,6 +349,8 @@ void touchbuf(const u32 id, const u8 write) {
 		return;
 	}
 
+	ctx.score += score(SCORE_GPU, SCORE_MOVE, SCORE_VRAM, ctx.storage[id].size);
+
 	// It's not. Touch it from RAM.
 	internaltouch(id);
 }
