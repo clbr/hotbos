@@ -114,6 +114,8 @@ static void dropvrambuf(struct buf * const oldest) {
 
 	oldest->vram = 0;
 
+	ctx.score += score(SCORE_GPU, SCORE_MOVE, SCORE_RAM, oldest->size);
+
 	// Is the buffer on either side a hole? If so, merge
 	if (oldest->prev && oldest->next && oldest->prev->hole && oldest->next->hole) {
 		// Merge two holes
