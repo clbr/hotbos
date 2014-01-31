@@ -143,7 +143,7 @@ static void go(const void * const f, const u32 size, const u8 charbufs, const u6
 
 			destroyed[e.buffer] = 1;
 		} else {
-			touchbuf(e.buffer);
+			touchbuf(e.buffer, e.id == ID_WRITE);
 		}
 	}
 

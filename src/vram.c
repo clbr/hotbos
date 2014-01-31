@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "vram.h"
 #include "helpers.h"
+#include "scoring.h"
 
 struct buf {
 	struct buf *next;
@@ -333,9 +334,12 @@ void allocbuf(const u32 id, const u32 size) {
 	internaltouch(id);
 }
 
-void touchbuf(const u32 id) {
+void touchbuf(const u32 id, const u8 write) {
 
 	ctx.tick++;
+
+	ctx.score += score(SCORE_GPU, write ? SCORE_W : SCORE_R, SCORE_VRAM,
+				ctx.storage[id].size);
 
 	// Is the buffer in VRAM? If so, update its timestamp and quit
 	if (ctx.storage[id].vram) {
@@ -345,6 +349,10 @@ void touchbuf(const u32 id) {
 
 	// It's not. Touch it from RAM.
 	internaltouch(id);
+}
+
+void cpubuf(const u32 id) {
+
 }
 
 void checkfragmentation() {
