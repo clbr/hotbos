@@ -120,13 +120,15 @@ static void go(const void * const f, const u32 size, const u8 charbufs, const u6
 		readentry(&e, f + pos, cb, &ctx);
 		pos += cb + 1;
 
-		if (e.id == ID_CPUOP)
-			continue;
-
 		// Some traces have use-after-free.
 		// Filter those so we don't trip up.
 		if (destroyed[e.buffer])
 			continue;
+
+		if (e.id == ID_CPUOP) {
+			cpubuf(e.buffer);
+			continue;
+		}
 
 		if (e.id == ID_CREATE) {
 			// Abort the trace if it tries to create a buffer bigger than vram
