@@ -75,7 +75,7 @@ static void printscores(const u64 olds[vramelements], const u64 news[vramelement
 
 	u32 i;
 	for (i = 0; i < vramelements; i++) {
-		printf("%lu: ", vramsizes[i]);
+		printf("%5lu: ", vramsizes[i]);
 		printscore(olds[i], news[i]);
 	}
 
