@@ -291,20 +291,7 @@ void destroybuf(const u32 id) {
 static void internaltouch(const u32 id) {
 
 	// The meat.
-
-	// Find the buffer in RAM
-	struct buf *cur = ctx.ram;
-	u8 found = 0;
-	while (cur) {
-		if (cur->id == id) {
-			found = 1;
-			break;
-		}
-
-		cur = cur->next;
-	}
-
-	if (!found) die("Asked to find a buffer not in RAM %u\n", id);
+	struct buf *cur = &ctx.storage[id];
 
 	cur->tick = ctx.tick;
 	cur->vram = 1;
