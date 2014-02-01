@@ -37,6 +37,7 @@ heaven1.bin: heaven 3.0 1920x1080, AF16x, shaders high, no AA
 heaven2.bin: heaven 3.0 1920x1080, AF16x, shaders high, no AA
 hl2ep2_1.bin: 1680x1050
 kerbal1.bin: 0.18.3 demo
+killingfloor1.bin: 1280x800, lowest
 left4dead2_1.bin: 2.1.3.5 Dec 2013, 1920x1080, AA off, AF off, others med-low
 left4dead2_2.bin: 1680x1050
 lightsmark1.bin: 2008 1600x900
