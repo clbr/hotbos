@@ -30,6 +30,7 @@ dota2_1.bin: 1366x768 all max
 dota2_2.bin: 1366x768 low shadows, others max
 dota2_3.bin: 1920x1080 low shadows, others max
 dreamchild1.bin: 800x600
+droidassault1.bin:
 dub1.bin: 1366x768
 dungeondefenders1.bin:
 dynamitejack1.bin:
