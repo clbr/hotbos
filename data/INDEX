@@ -30,10 +30,13 @@ dub1.bin: 1366x768
 dungeondefenders1.bin:
 etqw1.bin: 1680*1050 all max
 fez1.bin: 1366x768
+fortrix2_1.bin: 1280x800
 fr-025_1.bin: 1366x768
 fr-043_1.bin: 1366x768
 fr-062_1.bin: 1366x768
 fr-063_1.bin: 1366x768 CSMT disabled
+frozensynapse1.bin: 1280x800
+galconfusion1.bin: 1280x800
 glxgears1.bin: default res 300x300
 glxgears2.bin: 1024x1024
 heaven1.bin: heaven 3.0 1920x1080, AF16x, shaders high, no AA
