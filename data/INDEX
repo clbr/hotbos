@@ -38,6 +38,7 @@ glxgears1.bin: default res 300x300
 glxgears2.bin: 1024x1024
 heaven1.bin: heaven 3.0 1920x1080, AF16x, shaders high, no AA
 heaven2.bin: heaven 3.0 1920x1080, AF16x, shaders high, no AA
+hl1.bin:
 hl2ep2_1.bin: 1680x1050
 kerbal1.bin: 0.18.3 demo
 killingfloor1.bin: 1280x800, lowest
