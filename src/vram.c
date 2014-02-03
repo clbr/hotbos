@@ -227,9 +227,7 @@ static void dropvrambuf(struct buf * const oldest) {
 		ctx.vram = oldest->next;
 }
 
-static void dropoldest() {
-
-	//printf("Fragmentation caused a swap\n");
+static struct buf *findoldest() {
 
 	struct buf *cur, *oldest;
 
@@ -255,6 +253,15 @@ static void dropoldest() {
 	}
 
 	if (oldest->hole) die("Tried to drop a hole\n");
+
+	return oldest;
+}
+
+static void dropoldest() {
+
+	//printf("Fragmentation caused a swap\n");
+
+	struct buf * const oldest = findoldest();
 
 	dropvrambuf(oldest);
 
