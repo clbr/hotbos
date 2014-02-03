@@ -397,6 +397,8 @@ int main(int argc, char **argv) {
 			improved = 1;
 			lastai = ai;
 			memcpy(lastscores, scores, sizeof(u64) * vramelements);
+		} else {
+			puts("No improvement.");
 		}
 	}
 
