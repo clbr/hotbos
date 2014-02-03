@@ -318,17 +318,28 @@ void destroybuf(const u32 id) {
 		free(cur);
 }
 
-static void internaltouch(const u32 id) {
+static void internaltouch(const u32 id, const u8 write) {
 
 	// The meat.
 	struct buf *cur = &ctx.storage[id];
 
 	cur->tick = ctx.tick;
-	cur->vram = 1;
 
 	// Check if there's space for it
 	struct buf *const mine = cur;
 	struct buf *fit = fits(mine->size);
+
+	if (!fit && ctx.net) {
+		// Check whether we should move it to VRAM at all
+		struct buf * const oldest = findoldest();
+		if (oldest->score > cur->score) {
+			ctx.score += score(SCORE_GPU, write ? SCORE_W : SCORE_R, SCORE_RAM,
+					ctx.storage[id].size);
+			return;
+		}
+	}
+	ctx.score += score(SCORE_GPU, SCORE_MOVE, SCORE_VRAM, ctx.storage[id].size);
+	cur->vram = 1;
 
 	while (!fit) {
 		dropoldest();
@@ -383,15 +394,12 @@ void allocbuf(const u32 id, const u32 size, const u8 highprio) {
 		ctx.ram->prev = cur;
 	ctx.ram = cur;
 
-	internaltouch(id);
+	internaltouch(id, 0);
 }
 
 void touchbuf(const u32 id, const u8 write) {
 
 	ctx.tick++;
-
-	ctx.score += score(SCORE_GPU, write ? SCORE_W : SCORE_R, SCORE_VRAM,
-				ctx.storage[id].size);
 
 	// If in AI mode, and enough time since last update, update the buffer's score
 	if (ctx.net &&
@@ -415,13 +423,14 @@ void touchbuf(const u32 id, const u8 write) {
 	// Is the buffer in VRAM? If so, update its timestamp and quit
 	if (ctx.storage[id].vram) {
 		ctx.storage[id].tick = ctx.tick;
+
+		ctx.score += score(SCORE_GPU, write ? SCORE_W : SCORE_R, SCORE_VRAM,
+					ctx.storage[id].size);
 		return;
 	}
 
-	ctx.score += score(SCORE_GPU, SCORE_MOVE, SCORE_VRAM, ctx.storage[id].size);
-
 	// It's not. Touch it from RAM.
-	internaltouch(id);
+	internaltouch(id, write);
 }
 
 void cpubuf(const u32 id) {
