@@ -348,13 +348,14 @@ int main(int argc, char **argv) {
 	u64 basescores[vramelements], scores[vramelements], lastscores[vramelements];
 	printf("Doing baseline simulation.\n");
 
-	simulate(0, datafiles, namelist, NULL, basescores);
+	if (mode == BENCH)
+		simulate(0, datafiles, namelist, NULL, basescores);
 	simulate(512, datafiles, namelist, &ai, scores);
 
-	printscores(basescores, scores);
-
-	if (mode == BENCH)
+	if (mode == BENCH) {
+		printscores(basescores, scores);
 		return 0;
+	}
 
 	u32 iters = 0;
 	u8 improved = 0;
@@ -391,7 +392,7 @@ int main(int argc, char **argv) {
 
 		// Did it improve?
 		if (acceptable(lastscores, scores)) {
-			if (!improved) puts("Improved!");
+			puts("Improved!");
 
 			improved = 1;
 			lastai = ai;
