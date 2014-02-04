@@ -359,8 +359,8 @@ int main(int argc, char **argv) {
 	basescores[7] = 6788258883170870ULL;
 	basescores[8] = 6768448221629419ULL;
 
-	if (mode == BENCH)
-		simulate(0, datafiles, namelist, NULL, basescores);
+//	if (mode == BENCH)
+//		simulate(0, datafiles, namelist, NULL, basescores);
 	simulate(512, datafiles, namelist, &ai, scores);
 
 	if (mode == BENCH) {
