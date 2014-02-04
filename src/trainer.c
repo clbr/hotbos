@@ -348,6 +348,17 @@ int main(int argc, char **argv) {
 	u64 basescores[vramelements], scores[vramelements], lastscores[vramelements];
 	printf("Doing baseline simulation.\n");
 
+	// Pre-calculated base scores
+	basescores[0] =	11373443721800562ULL;
+	basescores[1] = 8457631614472705ULL;
+	basescores[2] = 6823682679644306ULL;
+	basescores[3] = 6366782903587257ULL;
+	basescores[4] = 6103944126818047ULL;
+	basescores[5] = 5889442175382210ULL;
+	basescores[6] = 6091687353267279ULL;
+	basescores[7] = 6788258883170870ULL;
+	basescores[8] = 6768448221629419ULL;
+
 	if (mode == BENCH)
 		simulate(0, datafiles, namelist, NULL, basescores);
 	simulate(512, datafiles, namelist, &ai, scores);
