@@ -504,9 +504,9 @@ int main(int argc, char **argv) {
 			const u32 hotties = (popmax / 2) - 1;
 			const u32 hottiespow = hotties * hotties;
 			x = (rand() % hottiespow) / hotties;
-			y = (rand() % hottiespow) / hotties;
+			y = x;
 			while (x == y)
-				y = (rand() % (popmax * popmax)) / popmax;
+				y = (rand() % hottiespow) / hotties;
 
 			// Swap a few genes
 			for (j = 0; j < 5; j++) {
