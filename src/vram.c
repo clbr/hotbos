@@ -257,11 +257,12 @@ static struct buf *findoldest() {
 	return oldest;
 }
 
-static void dropoldest() {
+static void dropoldest(struct buf *oldest) {
 
 	//printf("Fragmentation caused a swap\n");
 
-	struct buf * const oldest = findoldest();
+	if (!oldest)
+		oldest = findoldest();
 
 	dropvrambuf(oldest);
 
@@ -337,12 +338,16 @@ static void internaltouch(const u32 id, const u8 write) {
 					ctx.storage[id].size);
 			return;
 		}
+
+		// Since we know the oldest one, drop it now
+		dropoldest(oldest);
+		fit = fits(mine->size);
 	}
 	ctx.score += score(SCORE_GPU, SCORE_MOVE, SCORE_VRAM, ctx.storage[id].size);
 	cur->vram = 1;
 
 	while (!fit) {
-		dropoldest();
+		dropoldest(NULL);
 		fit = fits(mine->size);
 	}
 
