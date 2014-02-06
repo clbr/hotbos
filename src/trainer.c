@@ -497,6 +497,26 @@ int main(int argc, char **argv) {
 			memset(pop[i].genome, 0, NEURAL_VARS);
 		}
 
+		// Did best improve?
+		if (pop[0].score < oldbest) {
+			fruitless = 0;
+
+			if (oldbest != ULLONG_MAX) {
+				improved = 1;
+				puts("Improved");
+				genome2ai(pop[0].genome, &lastai);
+				// The score is wrong, but copy something
+				memcpy(lastscores, scores, sizeof(u64) * vramelements);
+			} else {
+				puts("Initial round done");
+			}
+
+			oldbest = pop[0].score;
+		} else {
+			puts("No improvement");
+			fruitless++;
+		}
+
 		// Sex
 		for (i = popmax / 2; i < popmax; i++) {
 			// i is the target. Now who will mate?
@@ -529,26 +549,6 @@ int main(int argc, char **argv) {
 			if (rand() % 1000 == 666) {
 				pop[i].genome[rand() % NEURAL_VARS] ^= rand() % 256;
 			}
-		}
-
-		// Did best improve?
-		if (pop[0].score < oldbest) {
-			fruitless = 0;
-
-			if (oldbest != ULLONG_MAX) {
-				improved = 1;
-				puts("Improved");
-				genome2ai(pop[0].genome, &lastai);
-				// The score is wrong, but copy something
-				memcpy(lastscores, scores, sizeof(u64) * vramelements);
-			} else {
-				puts("Initial round done");
-			}
-
-			oldbest = pop[0].score;
-		} else {
-			puts("No improvement");
-			fruitless++;
 		}
 
 		iters++;
