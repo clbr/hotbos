@@ -213,7 +213,7 @@ static void simulate(const u32 edge, const u32 datafiles,
 			// Can't cache everything, it would take > 11gb,
 			// I don't have that much RAM...
 			if (!cachedbin[i]) {
-				if (cachelen >= 300 * 1024 * 1024) {
+				if (cachelen >= 300 * 1024 * 1024 || datafiles < 10) {
 					cachedbin[i] = cache;
 					cachedsizes[i] = cachelen;
 				} else {
