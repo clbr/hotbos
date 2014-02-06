@@ -38,7 +38,9 @@ static void usage(const char name[]) {
 		"	-b --benchmark	Test the current state vs LRU (default)\n"
 		"	-r --revolve	Revolutions\n"
 		"	-e --evolve	Evolutions\n"
-		"	-f --finetune	Fine tuning\n\n"
+		"	-f --finetune	Fine tuning\n"
+		"	-g --genetic	Genetic evolution\n"
+		"\n"
 		, name);
 }
 
@@ -305,16 +307,18 @@ int main(int argc, char **argv) {
 		{"evolve", 0, 0, 'e'},
 		{"finetune", 0, 0, 'f'},
 		{"help", 0, 0, 'h'},
+		{"genetic", 0, 0, 'g'},
 		{0, 0, 0, 0}
 	};
 
-	const char optstr[] = "brefh";
+	const char optstr[] = "brefhg";
 
 	enum {
 		BENCH = 0,
 		REVOLVE,
 		EVOLVE,
-		FINETUNE
+		FINETUNE,
+		GENETIC
 	} mode = BENCH;
 
 	while (1) {
@@ -333,6 +337,9 @@ int main(int argc, char **argv) {
 			break;
 			case 'f':
 				mode = FINETUNE;
+			break;
+			case 'g':
+				mode = GENETIC;
 			break;
 			case 'h':
 			default:
