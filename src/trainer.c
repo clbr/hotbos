@@ -430,6 +430,7 @@ int main(int argc, char **argv) {
 			for (j = 0; j < NEURAL_VARS; j++) {
 				pop[i].genome[j] = rand() % 256;
 			}
+			pop[i].score = 0;
 		}
 	}
 
