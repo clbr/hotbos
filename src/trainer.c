@@ -408,7 +408,7 @@ int main(int argc, char **argv) {
 	u32 iters = 0;
 	u8 improved = 0;
 	memcpy(lastscores, scores, sizeof(u64) * vramelements);
-	while (!quit) {
+	if (mode != GENETIC) while (!quit) {
 		ai = lastai;
 		// Mutate
 		u32 change = 0, targets = 0;
@@ -448,6 +448,8 @@ int main(int argc, char **argv) {
 		} else {
 			puts("No improvement.");
 		}
+	} else while (!quit) {
+		usleep(10);
 	}
 
 	printf("Ran for %u iterations.\n", iters);
