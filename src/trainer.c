@@ -422,7 +422,7 @@ int main(int argc, char **argv) {
 		return 0;
 	}
 
-	const u32 popmax = 10;
+	const u32 popmax = 1000;
 	struct critter pop[popmax];
 	u32 i, j;
 	if (mode == GENETIC) {
