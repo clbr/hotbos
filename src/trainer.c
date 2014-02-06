@@ -405,6 +405,17 @@ int main(int argc, char **argv) {
 		return 0;
 	}
 
+	const u32 popmax = 3;
+	u8 pop[popmax][118];
+	u32 i, j;
+	if (mode == GENETIC) {
+		for (i = 0; i < popmax; i++) {
+			for (j = 0; j < 118; j++) {
+				pop[i][j] = rand() % 256;
+			}
+		}
+	}
+
 	u32 iters = 0;
 	u8 improved = 0;
 	u8 fruitless = 0;
@@ -450,6 +461,9 @@ int main(int argc, char **argv) {
 			puts("No improvement.");
 		}
 	} else while (!quit) {
+
+
+
 		if (fruitless > 20) {
 			puts("Converged");
 			break;
@@ -470,7 +484,6 @@ int main(int argc, char **argv) {
 	}
 
 	// Cleanup
-	u32 i;
 	for (i = 0; i < (u32) datafiles; i++) {
 		free(namelist[i]);
 		free(cachedbin[i]);
