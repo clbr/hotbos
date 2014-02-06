@@ -273,7 +273,7 @@ static float gene2f(const u8 gene) {
 	return out;
 }
 
-static void genome2ai(const u8 genome[118], struct network * const ai) {
+static void genome2ai(const u8 genome[NEURAL_VARS], struct network * const ai) {
 	u32 i, g = 0;
 
 	for (i = 0; i < INPUT_NEURONS; i++) {
@@ -294,7 +294,7 @@ static void genome2ai(const u8 genome[118], struct network * const ai) {
 	}
 	ai->output.bias = gene2f(genome[g++]);
 
-	if (g != 118) die("genome2ai\n");
+	if (g != NEURAL_VARS) die("genome2ai\n");
 }
 
 int main(int argc, char **argv) {
@@ -406,11 +406,11 @@ int main(int argc, char **argv) {
 	}
 
 	const u32 popmax = 3;
-	u8 pop[popmax][118];
+	u8 pop[popmax][NEURAL_VARS];
 	u32 i, j;
 	if (mode == GENETIC) {
 		for (i = 0; i < popmax; i++) {
-			for (j = 0; j < 118; j++) {
+			for (j = 0; j < NEURAL_VARS; j++) {
 				pop[i][j] = rand() % 256;
 			}
 		}

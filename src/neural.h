@@ -28,6 +28,7 @@
 #include <stdint.h>
 
 #define INPUT_NEURONS 9
+#define NEURAL_VARS 118
 
 struct input_neuron {
 	float weight;
