@@ -407,6 +407,7 @@ int main(int argc, char **argv) {
 
 	u32 iters = 0;
 	u8 improved = 0;
+	u8 fruitless = 0;
 	memcpy(lastscores, scores, sizeof(u64) * vramelements);
 	if (mode != GENETIC) while (!quit) {
 		ai = lastai;
@@ -449,7 +450,10 @@ int main(int argc, char **argv) {
 			puts("No improvement.");
 		}
 	} else while (!quit) {
-		usleep(10);
+		if (fruitless > 20) {
+			puts("Converged");
+			break;
+		}
 	}
 
 	printf("Ran for %u iterations.\n", iters);
