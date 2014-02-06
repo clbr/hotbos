@@ -302,6 +302,18 @@ static void genome2ai(const u8 genome[NEURAL_VARS], struct network * const ai) {
 	if (g != NEURAL_VARS) die("genome2ai\n");
 }
 
+static int crittercmp(const void * const ap, const void * const bp) {
+	const struct critter * const a = (struct critter *) ap;
+	const struct critter * const b = (struct critter *) bp;
+
+	if (a->score < b->score)
+		return -1;
+	else if (a->score > b->score)
+		return 1;
+
+	return 0;
+}
+
 int main(int argc, char **argv) {
 
 	srand(time(NULL));
