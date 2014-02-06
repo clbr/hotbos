@@ -539,8 +539,12 @@ int main(int argc, char **argv) {
 				improved = 1;
 				puts("Improved");
 				genome2ai(pop[0].genome, &lastai);
+				// The score is wrong, but copy something
 				memcpy(lastscores, scores, sizeof(u64) * vramelements);
+			} else {
+				puts("Initial round done");
 			}
+
 			oldbest = pop[0].score;
 		} else {
 			puts("No improvement");
