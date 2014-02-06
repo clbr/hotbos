@@ -266,6 +266,11 @@ static void mutate(struct network * const ai, const float minchange,
 	}
 }
 
+static float gene2f(const u8 gene) {
+	float out = gene / 127.5f - 1;
+	return out;
+}
+
 int main(int argc, char **argv) {
 
 	srand(time(NULL));
