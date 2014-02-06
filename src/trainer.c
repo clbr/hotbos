@@ -530,11 +530,12 @@ int main(int argc, char **argv) {
 
 		// Did best improve?
 		if (pop[0].score < oldbest) {
-			puts("Improved");
 			fruitless = 0;
 
-			if (oldbest != ULLONG_MAX)
+			if (oldbest != ULLONG_MAX) {
 				improved = 1;
+				puts("Improved");
+			}
 			oldbest = pop[0].score;
 		} else {
 			puts("No improvement");
