@@ -538,7 +538,7 @@ int main(int argc, char **argv) {
 			if (oldbest != ULLONG_MAX) {
 				improved = 1;
 				puts("Improved");
-				lastai = ai;
+				genome2ai(pop[0].genome, &lastai);
 				memcpy(lastscores, scores, sizeof(u64) * vramelements);
 			}
 			oldbest = pop[0].score;
