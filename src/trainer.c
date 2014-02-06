@@ -397,7 +397,8 @@ int main(int argc, char **argv) {
 
 //	if (mode == BENCH)
 //		simulate(0, datafiles, namelist, NULL, basescores);
-	simulate(512, datafiles, namelist, &ai, scores);
+	if (mode != GENETIC)
+		simulate(512, datafiles, namelist, &ai, scores);
 
 	if (mode == BENCH) {
 		printscores(basescores, scores);
@@ -429,7 +430,7 @@ int main(int argc, char **argv) {
 				change = 3;
 			break;
 			default:
-				die("Unknown mode");
+				die("Unknown mode\n");
 		}
 		mutate(&ai, minchange, change, targets);
 
