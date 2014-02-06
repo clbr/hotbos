@@ -271,6 +271,30 @@ static float gene2f(const u8 gene) {
 	return out;
 }
 
+static void genome2ai(const u8 genome[118], struct network * const ai) {
+	u32 i, g = 0;
+
+	for (i = 0; i < INPUT_NEURONS; i++) {
+		ai->input[i].weight = gene2f(genome[g++]);
+		ai->input[i].bias = gene2f(genome[g++]);
+	}
+
+	for (i = 0; i < INPUT_NEURONS; i++) {
+		u32 w;
+		for (w = 0; w < INPUT_NEURONS; w++)
+			ai->hidden[i].weights[w] = gene2f(genome[g++]);
+
+		ai->hidden[i].bias = gene2f(genome[g++]);
+	}
+
+	for (i = 0; i < INPUT_NEURONS; i++) {
+		ai->output.weights[i] = gene2f(genome[g++]);
+	}
+	ai->output.bias = gene2f(genome[g++]);
+
+	if (g != 118) die("genome2ai\n");
+}
+
 int main(int argc, char **argv) {
 
 	srand(time(NULL));
