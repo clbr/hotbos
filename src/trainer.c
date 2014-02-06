@@ -32,6 +32,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define ERASE "\33[2K"
 
+struct critter {
+	u64 score;
+	u8 genome[NEURAL_VARS];
+};
+
 static void usage(const char name[]) {
 	die("Usage: %s\n\n"
 		"Modes:\n"
@@ -405,18 +410,19 @@ int main(int argc, char **argv) {
 		return 0;
 	}
 
-	const u32 popmax = 3;
-	u8 pop[popmax][NEURAL_VARS];
+	const u32 popmax = 10;
+	struct critter pop[popmax];
 	u32 i, j;
 	if (mode == GENETIC) {
 		for (i = 0; i < popmax; i++) {
 			for (j = 0; j < NEURAL_VARS; j++) {
-				pop[i][j] = rand() % 256;
+				pop[i].genome[j] = rand() % 256;
 			}
 		}
 	}
 
 	u32 iters = 0;
+	u64 oldbest = ULLONG_MAX;
 	u8 improved = 0;
 	u8 fruitless = 0;
 	memcpy(lastscores, scores, sizeof(u64) * vramelements);
@@ -462,8 +468,64 @@ int main(int argc, char **argv) {
 		}
 	} else while (!quit) {
 
+		// For each critter, calculate a score
+		for (i = 0; i < popmax; i++) {
+			genome2ai(pop[i].genome, &ai);
+			simulate(512, datafiles, namelist, &ai, scores);
+			pop[i].score = sumscore(scores);
+		}
 
+		// Sort them by score
+		qsort(pop, popmax, sizeof(struct critter), crittercmp);
 
+		// Kill worse half
+		for (i = popmax / 2; i < popmax; i++) {
+			pop[i].score = 0;
+			memset(pop[i].genome, 0, NEURAL_VARS);
+		}
+
+		// Sex
+		for (i = popmax / 2; i < popmax; i++) {
+			// i is the target. Now who will mate?
+			u32 x = 0, y = 0;
+			x = (rand() % (popmax * popmax)) / popmax;
+			y = (rand() % (popmax * popmax)) / popmax;
+			while (x == y)
+				y = (rand() % (popmax * popmax)) / popmax;
+
+			// Swap a few genes
+			for (j = 0; j < 5; j++) {
+				u32 g = rand() % NEURAL_VARS;
+				u8 tmp = pop[x].genome[g];
+				pop[x].genome[g] = pop[y].genome[g];
+				pop[y].genome[g] = tmp;
+			}
+
+			// Kid is half papa, half mama
+			memcpy(pop[i].genome, pop[x].genome, NEURAL_VARS / 2);
+			memcpy(pop[i].genome + NEURAL_VARS / 2,
+				pop[y].genome + NEURAL_VARS / 2,
+				NEURAL_VARS / 2);
+		}
+
+		// Mutations
+		for (i = 0; i < popmax; i++) {
+			if (rand() % 1000 == 666) {
+				pop[i].genome[rand() % NEURAL_VARS] ^= rand() % 256;
+			}
+		}
+
+		// Did best improve?
+		if (pop[0].score < oldbest) {
+			puts("Improved");
+			fruitless = 0;
+			oldbest = pop[0].score;
+		} else {
+			puts("No improvement");
+			fruitless++;
+		}
+
+		iters++;
 		if (fruitless > 20) {
 			puts("Converged");
 			break;
