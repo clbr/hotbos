@@ -501,8 +501,10 @@ int main(int argc, char **argv) {
 		for (i = popmax / 2; i < popmax; i++) {
 			// i is the target. Now who will mate?
 			u32 x = 0, y = 0;
-			x = (rand() % (popmax * popmax)) / popmax;
-			y = (rand() % (popmax * popmax)) / popmax;
+			const u32 hotties = (popmax / 2) - 1;
+			const u32 hottiespow = hotties * hotties;
+			x = (rand() % hottiespow) / hotties;
+			y = (rand() % hottiespow) / hotties;
 			while (x == y)
 				y = (rand() % (popmax * popmax)) / popmax;
 
@@ -515,10 +517,11 @@ int main(int argc, char **argv) {
 			}
 
 			// Kid is half papa, half mama
-			memcpy(pop[i].genome, pop[x].genome, NEURAL_VARS / 2);
-			memcpy(pop[i].genome + NEURAL_VARS / 2,
-				pop[y].genome + NEURAL_VARS / 2,
-				NEURAL_VARS / 2);
+			const u32 half = NEURAL_VARS / 2;
+			memcpy(pop[i].genome, pop[x].genome, half);
+			memcpy(pop[i].genome + half,
+				pop[y].genome + half,
+				NEURAL_VARS - half);
 		}
 
 		// Mutations
