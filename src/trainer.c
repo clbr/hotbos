@@ -491,6 +491,14 @@ int main(int argc, char **argv) {
 		// Sort them by score
 		qsort(pop, popmax, sizeof(struct critter), crittercmp);
 
+		// Calculate average score
+		double avg = 0;
+		for (i = 0; i < popmax; i++) {
+			avg += pop[i].score;
+		}
+		avg /= popmax;
+		const float rel = pop[0].score / avg;
+
 		// Kill worse half
 		for (i = popmax / 2; i < popmax; i++) {
 			pop[i].score = 0;
@@ -503,7 +511,7 @@ int main(int argc, char **argv) {
 
 			if (oldbest != ULLONG_MAX) {
 				improved = 1;
-				puts("Improved");
+				printf("Improved, average to best ratio %.3f\n", rel);
 				genome2ai(pop[0].genome, &lastai);
 				// The score is wrong, but copy something
 				memcpy(lastscores, scores, sizeof(u64) * vramelements);
@@ -548,7 +556,7 @@ int main(int argc, char **argv) {
 		}
 
 		iters++;
-		if (fruitless > 20) {
+		if (fruitless > 20 || rel > 0.999f) {
 			puts("Converged");
 			break;
 		}
