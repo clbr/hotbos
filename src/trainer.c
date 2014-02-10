@@ -528,14 +528,6 @@ int main(int argc, char **argv) {
 			while (x == y)
 				y = (rand() % hottiespow) / hotties;
 
-			// Swap a few genes
-			for (j = 0; j < 5; j++) {
-				u32 g = rand() % NEURAL_VARS;
-				u8 tmp = pop[x].genome[g];
-				pop[x].genome[g] = pop[y].genome[g];
-				pop[y].genome[g] = tmp;
-			}
-
 			// Kid is half papa, half mama
 			const u32 half = NEURAL_VARS / 2;
 			memcpy(pop[i].genome, pop[x].genome, half);
