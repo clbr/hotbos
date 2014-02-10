@@ -529,11 +529,13 @@ int main(int argc, char **argv) {
 				y = (rand() % hottiespow) / hotties;
 
 			// Kid is half papa, half mama
-			const u32 half = NEURAL_VARS / 2;
-			memcpy(pop[i].genome, pop[x].genome, half);
-			memcpy(pop[i].genome + half,
-				pop[y].genome + half,
-				NEURAL_VARS - half);
+			for (j = 0; j < NEURAL_VARS; j++) {
+				if (rand() % 2) {
+					pop[i].genome[j] = pop[x].genome[j];
+				} else {
+					pop[i].genome[j] = pop[y].genome[j];
+				}
+			}
 		}
 
 		// Mutations
