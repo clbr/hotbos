@@ -522,11 +522,13 @@ int main(int argc, char **argv) {
 			// i is the target. Now who will mate?
 			u32 x = 0, y = 0;
 			const u32 hotties = (popmax / 2) - 1;
-			const u32 hottiespow = hotties * hotties;
-			x = (rand() % hottiespow) / hotties;
+			u32 tmp = rand() % hotties;
+			x = (tmp * tmp) / hotties;
 			y = x;
-			while (x == y)
-				y = (rand() % hottiespow) / hotties;
+			while (x == y) {
+				tmp = rand() % hotties;
+				y = (tmp * tmp) / hotties;
+			}
 
 			// Kid is half papa, half mama
 			for (j = 0; j < NEURAL_VARS; j++) {
