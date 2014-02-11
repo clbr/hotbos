@@ -96,7 +96,7 @@ void addbucket(struct bucket * const b, const u32 id, const u32 score) {
 
 	const u32 dir = hash / 64;
 	const u8 bit = (hash % 64);
-	b->used[dir] |= 1 << bit;
+	b->used[dir] |= 1ULL << bit;
 }
 
 void delbucket(struct bucket * const b, const u32 id) {
@@ -115,7 +115,7 @@ void delbucket(struct bucket * const b, const u32 id) {
 		else {
 			const u32 dir = hash / 64;
 			const u8 bit = (hash % 64);
-			b->used[dir] &= ~(1 << bit);
+			b->used[dir] &= ~(1ULL << bit);
 
 			if (hash == b->lowest)
 				updatelowest(b, hash);
