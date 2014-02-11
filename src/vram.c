@@ -261,6 +261,7 @@ static struct buf *findoldest() {
 		cur = cur->next;
 	}
 
+	if (!oldest->vram) die("Tried to drop a RAM buffer\n");
 	if (oldest->hole) die("Tried to drop a hole\n");
 
 	return oldest;
