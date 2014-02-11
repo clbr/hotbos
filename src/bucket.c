@@ -35,7 +35,7 @@ struct bucket {
 	u32 lowest;
 	u32 entries;
 
-	u8 used[BUCKETS / 8];
+	u64 used[BUCKETS / 64];
 };
 
 static void updatelowest(struct bucket * const b, const u32 start) {
@@ -47,8 +47,8 @@ static void updatelowest(struct bucket * const b, const u32 start) {
 
 	u32 i;
 	for (i = start; i < BUCKETS; i++) {
-		while (!b->used[i/8])
-			i += 8 - (i % 8);
+		while (!b->used[i/64])
+			i += 64 - (i % 64);
 
 		if (b->bucket[i]) {
 			b->lowest = i;
@@ -92,8 +92,8 @@ void addbucket(struct bucket * const b, const u32 id, const u32 score) {
 	if (hash < b->lowest)
 		b->lowest = hash;
 
-	const u32 dir = hash / 8;
-	const u8 bit = (hash % 8);
+	const u32 dir = hash / 64;
+	const u8 bit = (hash % 64);
 	b->used[dir] |= 1 << bit;
 }
 
@@ -111,8 +111,8 @@ void delbucket(struct bucket * const b, const u32 id) {
 		if (cur->next)
 			b->bucket[hash]->prev = NULL;
 		else {
-			const u32 dir = hash / 8;
-			const u8 bit = (hash % 8);
+			const u32 dir = hash / 64;
+			const u8 bit = (hash % 64);
 			b->used[dir] &= ~(1 << bit);
 
 			if (hash == b->lowest)
