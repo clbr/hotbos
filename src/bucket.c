@@ -99,6 +99,8 @@ void delbucket(struct bucket * const b, const u32 id) {
 		b->bucket[hash] = cur->next;
 		if (cur->next)
 			b->bucket[hash]->prev = NULL;
+		else
+			updatelowest(b);
 	} else {
 		struct node * const prev = cur->prev;
 		struct node * const next = cur->next;
@@ -111,8 +113,6 @@ void delbucket(struct bucket * const b, const u32 id) {
 
 	cur->score = 0;
 	cur->prev = cur->next = NULL;
-
-	updatelowest(b);
 }
 
 void updatebucket(struct bucket * const b, const u32 id,
