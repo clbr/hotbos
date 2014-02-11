@@ -66,11 +66,16 @@ void freebuckets(struct bucket * const b) {
 	free(b);
 }
 
+static u32 hashscore(const u32 score) {
+
+	return score / BUCKETS;
+}
+
 void addbucket(struct bucket * const b, const u32 id, const u32 score) {
 
 	b->entries++;
 
-	const u32 hash = score / BUCKETS;
+	const u32 hash = hashscore(score);
 	b->nodes[id].score = score;
 
 	b->nodes[id].next = b->bucket[hash];
@@ -87,7 +92,7 @@ void delbucket(struct bucket * const b, const u32 id) {
 
 	// Find it
 	struct node *cur = &b->nodes[id];
-	const u32 hash = cur->score / BUCKETS;
+	const u32 hash = hashscore(cur->score);
 
 	// Is it the first?
 	if (cur == b->bucket[hash]) {
