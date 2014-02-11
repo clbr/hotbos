@@ -143,7 +143,9 @@ u32 getlowestbucket(const struct bucket * const b) {
 
 	struct node *cur = b->bucket[b->lowest];
 	struct node *target = cur;
-	if (!cur || !b->entries) die("Tried to get NULL lowest\n");
+	if (!cur || !b->entries)
+		die("Tried to get NULL lowest (%u entries, %u lowest)\n",
+			b->entries, b->lowest);
 	cur = cur->next;
 
 	while (cur) {
