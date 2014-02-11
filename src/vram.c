@@ -173,6 +173,8 @@ static void dropvrambuf(struct buf * const oldest) {
 
 	ctx.score += score(SCORE_GPU, SCORE_MOVE, SCORE_RAM, oldest->size);
 
+	delbucket(ctx.bucket, oldest->id);
+
 	// Is the buffer on either side a hole? If so, merge
 	if (oldest->prev && oldest->next && oldest->prev->hole && oldest->next->hole) {
 		// Merge two holes
@@ -388,6 +390,8 @@ static void internaltouch(const u32 id, const u8 write) {
 			fit->next->prev = mine;
 		fit->next = mine;
 	}
+
+	addbucket(ctx.bucket, mine->id, mine->score);
 }
 
 void allocbuf(const u32 id, const u32 size, const u8 highprio) {
@@ -421,6 +425,7 @@ void touchbuf(const u32 id, const u8 write) {
 		stats2inputs(&ctx.storage[id], inputs);
 
 		ctx.storage[id].score = calculate_score(inputs, ctx.net);
+		updatebucket(ctx.bucket, id, ctx.storage[id].score);
 	}
 
 	// Update its stats
