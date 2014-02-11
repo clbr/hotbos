@@ -83,7 +83,8 @@ void addbucket(struct bucket * const b, const u32 id, const u32 score) {
 		b->bucket[hash]->prev = &b->nodes[id];
 	b->bucket[hash] = &b->nodes[id];
 
-	updatelowest(b);
+	if (hash < b->lowest)
+		b->lowest = hash;
 }
 
 void delbucket(struct bucket * const b, const u32 id) {
