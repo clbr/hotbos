@@ -70,7 +70,7 @@ void addbucket(struct bucket * const b, const u32 id, const u32 score) {
 
 	b->entries++;
 
-	const u32 hash = score % BUCKETS;
+	const u32 hash = score / BUCKETS;
 	b->nodes[id].score = score;
 
 	b->nodes[id].next = b->bucket[hash];
@@ -87,7 +87,7 @@ void delbucket(struct bucket * const b, const u32 id) {
 
 	// Find it
 	struct node *cur = &b->nodes[id];
-	const u32 hash = cur->score % BUCKETS;
+	const u32 hash = cur->score / BUCKETS;
 
 	// Is it the first?
 	if (cur == b->bucket[hash]) {
@@ -125,7 +125,7 @@ u32 getlowestbucket(const struct bucket * const b) {
 	cur = cur->next;
 
 	while (cur) {
-		if (cur->score < target->score)
+		if (cur->score <= target->score)
 			target = cur;
 
 		cur = cur->next;
