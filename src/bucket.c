@@ -46,7 +46,7 @@ static void updatelowest(struct bucket * const b, const u32 start) {
 	}
 
 	u32 i = start;
-	while (!b->used[i/64])
+	while (!b->used[i/64] && i < BUCKETS)
 		i += 64 - (i % 64);
 
 	for (; i < BUCKETS; i++) {
@@ -55,6 +55,8 @@ static void updatelowest(struct bucket * const b, const u32 start) {
 			break;
 		}
 	}
+
+	if (i == BUCKETS) die("Didn't find the lowest?\n");
 }
 
 struct bucket *initbuckets(const u32 bufs) {
