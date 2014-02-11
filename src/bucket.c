@@ -36,6 +36,22 @@ struct bucket {
 	u32 entries;
 };
 
+static void updatelowest(struct bucket * const b) {
+
+	if (!b->entries) {
+		b->lowest = 0;
+		return;
+	}
+
+	u32 i;
+	for (i = 0; i < BUCKETS; i++) {
+		if (b->bucket[i]) {
+			b->lowest = i;
+			break;
+		}
+	}
+}
+
 struct bucket *initbuckets(const u32 bufs) {
 
 	struct bucket *b = xcalloc(sizeof(struct bucket));
@@ -61,6 +77,8 @@ void addbucket(struct bucket * const b, const u32 id, const u32 score) {
 	if (b->bucket[hash])
 		b->bucket[hash]->prev = &b->nodes[id];
 	b->bucket[hash] = &b->nodes[id];
+
+	updatelowest(b);
 }
 
 void delbucket(struct bucket * const b, const u32 id) {
@@ -87,6 +105,8 @@ void delbucket(struct bucket * const b, const u32 id) {
 
 	cur->score = 0;
 	cur->prev = cur->next = NULL;
+
+	updatelowest(b);
 }
 
 void updatebucket(struct bucket * const b, const u32 id,
