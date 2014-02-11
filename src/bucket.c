@@ -46,7 +46,7 @@ static void updatelowest(struct bucket * const b, const u32 start) {
 	}
 
 	u32 i = start;
-	while (!b->used[i/64] && i < BUCKETS)
+	while (!b->used[i/64] && i < (BUCKETS - 64))
 		i += 64 - (i % 64);
 
 	for (; i < BUCKETS; i++) {
