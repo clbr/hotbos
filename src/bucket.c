@@ -92,7 +92,8 @@ void delbucket(struct bucket * const b, const u32 id) {
 	// Is it the first?
 	if (cur == b->bucket[hash]) {
 		b->bucket[hash] = cur->next;
-		b->bucket[hash]->prev = NULL;
+		if (cur->next)
+			b->bucket[hash]->prev = NULL;
 	} else {
 		struct node * const prev = cur->prev;
 		struct node * const next = cur->next;
