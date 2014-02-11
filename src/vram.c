@@ -52,6 +52,8 @@ static struct {
 	struct buf *storage;
 	struct buf **holelist;
 
+	struct bucket *bucket;
+
 	const struct network *net;
 } ctx;
 
@@ -72,6 +74,8 @@ void initvram(const u64 size, const u32 edge, const u32 buffers,
 	ctx.storage = xcalloc(buffers * sizeof(struct buf));
 	ctx.holelist = xcalloc((buffers + 2) * sizeof(void *));
 	ctx.holelist[0] = ctx.vram;
+
+	ctx.bucket = initbuckets(buffers);
 }
 
 static float clampf(const float in, const float min, const float max) {
@@ -157,6 +161,8 @@ u64 freevram() {
 	ctx.holelist = NULL;
 
 	ctx.net = NULL;
+
+	freebuckets(ctx.bucket);
 
 	return ctx.score;
 }
