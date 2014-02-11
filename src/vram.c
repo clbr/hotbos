@@ -426,7 +426,9 @@ void touchbuf(const u32 id, const u8 write) {
 		stats2inputs(&ctx.storage[id], inputs);
 
 		ctx.storage[id].score = calculate_score(inputs, ctx.net);
-		updatebucket(ctx.bucket, id, ctx.storage[id].score);
+
+		if (ctx.storage[id].vram)
+			updatebucket(ctx.bucket, id, ctx.storage[id].score);
 	}
 
 	// Update its stats
