@@ -241,7 +241,7 @@ static struct buf *findoldest() {
 	struct buf *cur, *oldest;
 
 	oldest = cur = ctx.vram;
-	while (cur) {
+	/*while (cur) {
 		if (cur->hole) {
 			cur = cur->next;
 			continue;
@@ -259,7 +259,10 @@ static struct buf *findoldest() {
 		}
 
 		cur = cur->next;
-	}
+	}*/
+	const u32 id = getlowestbucket(ctx.bucket);
+	oldest = &ctx.storage[id];
+	//if (cur->score != oldest->score) die("Mismatch\n");
 
 	if (!oldest->vram) die("Tried to drop a RAM buffer\n");
 	if (oldest->hole) die("Tried to drop a hole\n");
