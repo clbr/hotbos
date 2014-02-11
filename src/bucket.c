@@ -79,8 +79,10 @@ void delbucket(struct bucket * const b, const u32 id) {
 		struct node * const prev = cur->prev;
 		struct node * const next = cur->next;
 
-		prev->next = next;
-		next->prev = prev;
+		if (prev)
+			prev->next = next;
+		if (next)
+			next->prev = prev;
 	}
 
 	cur->score = 0;
@@ -108,5 +110,5 @@ u32 getlowestbucket(const struct bucket * const b) {
 		cur = cur->next;
 	}
 
-	return (target - b->nodes) / sizeof(struct node);
+	return (target - b->nodes);
 }
