@@ -41,7 +41,7 @@ struct bucket {
 static void updatelowest(struct bucket * const b, const u32 start) {
 
 	if (!b->entries) {
-		b->lowest = 0;
+		b->lowest = UINT_MAX;
 		return;
 	}
 
