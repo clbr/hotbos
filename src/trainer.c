@@ -168,13 +168,14 @@ static u32 *cachedsizes = NULL;
 static void simulate(const u32 edge, const u32 datafiles,
 			struct dirent * const * const namelist,
 			const struct network * const net,
-			u64 scores[vramelements]) {
+			u64 scores[vramelements], const char addmsg[]) {
 
 	u32 i, v;
 	for (v = 0; v < vramelements; v++) {
 		scores[v] = 0;
 		for (i = 0; i < datafiles; i++) {
-			printf(ERASE "\r\tVRAM %lu: Checking file %u/%u: %s",
+			printf(ERASE "\r\t%sVRAM %lu: Checking file %u/%u: %s",
+				addmsg,
 				vramsizes[v],
 				i + 1, datafiles,
 				namelist[i]->d_name);
@@ -413,9 +414,9 @@ int main(int argc, char **argv) {
 	basescores[8] = 6768448221629419ULL;
 
 //	if (mode == BENCH)
-//		simulate(0, datafiles, namelist, NULL, basescores);
+//		simulate(0, datafiles, namelist, NULL, basescores, "");
 	if (mode != GENETIC)
-		simulate(512, datafiles, namelist, &ai, scores);
+		simulate(512, datafiles, namelist, &ai, scores, "");
 
 	if (mode == BENCH) {
 		printscores(basescores, scores);
@@ -466,7 +467,7 @@ int main(int argc, char **argv) {
 		mutate(&ai, minchange, change, targets);
 
 		// Test
-		simulate(512, datafiles, namelist, &ai, scores);
+		simulate(512, datafiles, namelist, &ai, scores, "");
 		iters++;
 
 		// Did it improve?
@@ -484,7 +485,11 @@ int main(int argc, char **argv) {
 		// For each critter, calculate a score
 		for (i = 0; i < popmax; i++) {
 			genome2ai(pop[i].genome, &ai);
-			simulate(512, datafiles, namelist, &ai, scores);
+
+			char tmp[80];
+			snprintf(tmp, 80, "Critter %u/%u ", i, popmax);
+
+			simulate(512, datafiles, namelist, &ai, scores, tmp);
 			pop[i].score = sumscore(scores);
 		}
 
