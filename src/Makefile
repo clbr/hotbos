@@ -15,6 +15,7 @@ all: $(TARGETS)
 raw2bin: raw2bin.o
 statinfo: bin.o statinfo.o
 trainer: trainer.o vram.o scoring.o header.o neural.o bin.o bucket.o
+	$(CC) -o $@ $(CFLAGS) $^ $(LDCFLAGS) $(LDFLAGS)
 fragbench: fragbench.o bin.o fragvram.o
 
 activation: activation.o
