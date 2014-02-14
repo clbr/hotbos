@@ -25,9 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define HDR "magic.h"
 
-void readhdr(struct network * const in) {
+void readhdr(struct network * const in, const char name[]) {
 
-	FILE * const f = fopen(HDR, "r");
+	FILE * const f = fopen(name, "r");
 	if (!f) die("Failed to open file\n");
 
 	enum {

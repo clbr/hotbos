@@ -388,7 +388,7 @@ int main(int argc, char **argv) {
 
 	// Read up current values
 	struct network ai, lastai;
-	readhdr(&ai);
+	readhdr(&ai, "magic.h");
 	lastai = ai;
 
 	const int pwd = open(".", O_RDONLY);

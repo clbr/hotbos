@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "neural.h"
 
-void readhdr(struct network *in);
+void readhdr(struct network *in, const char name[]);
 void writehdr(const struct network *in);
 
 #endif
