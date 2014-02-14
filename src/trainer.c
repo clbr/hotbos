@@ -387,8 +387,9 @@ int main(int argc, char **argv) {
 	if (datafiles < 0) die("Failed in scandir\n");
 
 	// Read up current values
-	struct network ai, lastai;
+	struct network ai, lastai, bestai;
 	readhdr(&ai, "magic.h");
+	readhdr(&bestai, "trinegen_magic.h");
 	lastai = ai;
 
 	const int pwd = open(".", O_RDONLY);
