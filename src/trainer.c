@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <dirent.h>
 #include <time.h>
 #include <fcntl.h>
+#include <math.h>
 
 #define ERASE "\33[2K"
 
@@ -279,6 +280,13 @@ static float gene2f(const u8 gene) {
 	return out;
 }
 
+static u8 f2gene(float val) {
+	val += 1;
+	val *= 127.5f;
+	u8 out = roundf(val);
+	return out;
+}
+
 static void genome2ai(const u8 genome[NEURAL_VARS], struct network * const ai) {
 	u32 i, g = 0;
 
@@ -301,6 +309,30 @@ static void genome2ai(const u8 genome[NEURAL_VARS], struct network * const ai) {
 	ai->output.bias = gene2f(genome[g++]);
 
 	if (g != NEURAL_VARS) die("genome2ai\n");
+}
+
+static void ai2genome(const struct network * const ai, u8 genome[NEURAL_VARS]) {
+	u32 i, g = 0;
+
+	for (i = 0; i < INPUT_NEURONS; i++) {
+		genome[g++] = f2gene(ai->input[i].weight);
+		genome[g++] = f2gene(ai->input[i].bias);
+	}
+
+	for (i = 0; i < INPUT_NEURONS; i++) {
+		u32 w;
+		for (w = 0; w < INPUT_NEURONS; w++)
+			genome[g++] = f2gene(ai->hidden[i].weights[w]);
+
+		genome[g++] = f2gene(ai->hidden[i].bias);
+	}
+
+	for (i = 0; i < INPUT_NEURONS; i++) {
+		genome[g++] = f2gene(ai->output.weights[i]);
+	}
+	genome[g++] = f2gene(ai->output.bias);
+
+	if (g != NEURAL_VARS) die("ai2genome\n");
 }
 
 static int crittercmp(const void * const ap, const void * const bp) {
