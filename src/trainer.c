@@ -466,6 +466,9 @@ int main(int argc, char **argv) {
 			}
 			pop[i].score = 0;
 		}
+
+		// Insert the current best AI as one critter
+		ai2genome(&bestai, pop[0].genome);
 	}
 
 	u32 iters = 0;
