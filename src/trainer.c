@@ -443,7 +443,7 @@ int main(int argc, char **argv) {
 	// Read up current values
 	struct network ai, lastai, bestai;
 	readhdr(&ai, "magic.h");
-	readhdr(&bestai, "trinegen_magic.h");
+	readhdr(&bestai, "weekend7_tuned_magic.h");
 	lastai = ai;
 
 	const int pwd = open(".", O_RDONLY);
