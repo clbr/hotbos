@@ -47,6 +47,8 @@ static void usage(const char name[]) {
 		"	-f --finetune	Fine tuning\n"
 		"	-g --genetic	Genetic evolution\n"
 		"\n"
+		"	-m --max-entries [N] Only run up to this many entries (def 100k)\n"
+		"\n"
 		, name);
 }
 
@@ -120,17 +122,20 @@ static int acceptable(const u64 olds[vramelements], const u64 news[vramelements]
 
 static u8 *destroyed;
 
-static void go(const void * const f, const u32 size, const u8 charbufs, const u64 vram) {
+static void go(const void * const f, const u32 size, const u8 charbufs, const u64 vram,
+		const u32 maxentries) {
 
 	entry e;
 	const u8 cb = charbufs ? charbufs : 3;
 	u32 ctx = 0;
 	u32 pos = 0;
+	u32 handled = 0;
 
-	while (pos < size) {
+	while (pos < size && handled < maxentries) {
 
 		readentry(&e, f + pos, cb, &ctx);
 		pos += cb + 1;
+		handled++;
 
 		if (e.id == ID_CREATE)
 			pos += 4;
@@ -169,7 +174,8 @@ static u32 *cachedsizes = NULL;
 static void simulate(const u32 edge, const u32 datafiles,
 			struct dirent * const * const namelist,
 			const struct network * const net,
-			u64 scores[vramelements], const char addmsg[]) {
+			u64 scores[vramelements], const char addmsg[],
+			const u32 maxentries) {
 
 	u32 i, v;
 	for (v = 0; v < vramelements; v++) {
@@ -203,7 +209,8 @@ static void simulate(const u32 edge, const u32 datafiles,
 				cachelen = cachedsizes[i];
 			}
 
-			go(cache, cachelen, charbuf, vramsizes[v] * 1024 * 1024);
+			go(cache, cachelen, charbuf, vramsizes[v] * 1024 * 1024,
+				maxentries);
 
 			free(destroyed);
 
@@ -358,10 +365,11 @@ int main(int argc, char **argv) {
 		{"finetune", 0, 0, 'f'},
 		{"help", 0, 0, 'h'},
 		{"genetic", 0, 0, 'g'},
+		{"max-entries", 2, 0, 'm'},
 		{0, 0, 0, 0}
 	};
 
-	const char optstr[] = "brefhg";
+	const char optstr[] = "brefhgm::";
 
 	enum {
 		BENCH = 0,
@@ -370,6 +378,8 @@ int main(int argc, char **argv) {
 		FINETUNE,
 		GENETIC
 	} mode = BENCH;
+
+	u32 maxentries = UINT_MAX;
 
 	while (1) {
 		int c = getopt_long(argc, argv, optstr, opts, NULL);
@@ -390,6 +400,11 @@ int main(int argc, char **argv) {
 			break;
 			case 'g':
 				mode = GENETIC;
+			break;
+			case 'm':
+				maxentries = 100000;
+				if (optarg)
+					maxentries = atoi(optarg);
 			break;
 			case 'h':
 			default:
@@ -447,9 +462,9 @@ int main(int argc, char **argv) {
 	basescores[8] = 6768448221629419ULL;
 
 //	if (mode == BENCH)
-//		simulate(0, datafiles, namelist, NULL, basescores, "");
+//		simulate(0, datafiles, namelist, NULL, basescores, "", maxentries);
 	if (mode != GENETIC)
-		simulate(512, datafiles, namelist, &ai, scores, "");
+		simulate(512, datafiles, namelist, &ai, scores, "", maxentries);
 
 	if (mode == BENCH) {
 		printscores(basescores, scores);
@@ -503,7 +518,7 @@ int main(int argc, char **argv) {
 		mutate(&ai, minchange, change, targets);
 
 		// Test
-		simulate(512, datafiles, namelist, &ai, scores, "");
+		simulate(512, datafiles, namelist, &ai, scores, "", maxentries);
 		iters++;
 
 		// Did it improve?
@@ -525,7 +540,7 @@ int main(int argc, char **argv) {
 			char tmp[80];
 			snprintf(tmp, 80, "Critter %u/%u ", i, popmax);
 
-			simulate(512, datafiles, namelist, &ai, scores, tmp);
+			simulate(512, datafiles, namelist, &ai, scores, tmp, maxentries);
 			pop[i].score = sumscore(scores);
 		}
 
