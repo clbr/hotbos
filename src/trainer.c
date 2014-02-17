@@ -225,6 +225,13 @@ static void simulate(const u32 edge, const u32 datafiles,
 				if (cachelen >= 300 * 1024 * 1024 || datafiles < 10) {
 					cachedbin[i] = cache;
 					cachedsizes[i] = cachelen;
+				} else if (maxentries < UINT_MAX) {
+					cachedbin[i] = cache;
+					cachedsizes[i] = cachelen;
+
+					if (cachelen > maxentries * 8) {
+						cachedbin[i] = realloc(cache, maxentries * 8);
+					}
 				} else {
 					free(cache);
 				}
