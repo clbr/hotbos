@@ -412,6 +412,7 @@ int main(int argc, char **argv) {
 				maxentries = 100000;
 				if (optarg)
 					maxentries = atoi(optarg);
+				printf("Max-entries %uk\n", maxentries/1000);
 			break;
 			case 'h':
 			default:
