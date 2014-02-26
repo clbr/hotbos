@@ -373,10 +373,11 @@ int main(int argc, char **argv) {
 		{"help", 0, 0, 'h'},
 		{"genetic", 0, 0, 'g'},
 		{"max-entries", 2, 0, 'm'},
+		{"pop-max", 1, 0, 'p'},
 		{0, 0, 0, 0}
 	};
 
-	const char optstr[] = "brefhgm::";
+	const char optstr[] = "brefhgm::p:";
 
 	enum {
 		BENCH = 0,
@@ -387,6 +388,7 @@ int main(int argc, char **argv) {
 	} mode = BENCH;
 
 	u32 maxentries = UINT_MAX;
+	u32 popmax = 1000;
 
 	while (1) {
 		int c = getopt_long(argc, argv, optstr, opts, NULL);
@@ -413,6 +415,9 @@ int main(int argc, char **argv) {
 				if (optarg)
 					maxentries = atoi(optarg);
 				printf("Max-entries %uk\n", maxentries/1000);
+			break;
+			case 'p':
+				popmax = atoi(optarg);
 			break;
 			case 'h':
 			default:
@@ -479,7 +484,6 @@ int main(int argc, char **argv) {
 		return 0;
 	}
 
-	const u32 popmax = 1000;
 	struct critter pop[popmax];
 	u32 i, j;
 	if (mode == GENETIC) {
