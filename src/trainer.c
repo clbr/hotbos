@@ -594,11 +594,11 @@ int main(int argc, char **argv) {
 			// i is the target. Now who will mate?
 			u32 x = 0, y = 0;
 			const u32 hotties = (popmax / 2) - 1;
-			u32 tmp = rand() % (hotties + 1);
+			float tmp = (rand() % ((hotties + 1) * 100)) / 100.0f;
 			x = (tmp * tmp) / hotties;
 			y = x;
 			while (x == y) {
-				tmp = rand() % (hotties + 1);
+				tmp = (rand() % ((hotties + 1) * 100)) / 100.0f;
 				y = (tmp * tmp) / hotties;
 			}
 
