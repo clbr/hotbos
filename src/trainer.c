@@ -48,6 +48,7 @@ static void usage(const char name[]) {
 		"	-g --genetic	Genetic evolution\n"
 		"\n"
 		"	-m --max-entries [N] Only run up to this many entries (def 100k)\n"
+		"	-p --pop-max N	Use N as the population size\n"
 		"\n"
 		, name);
 }
