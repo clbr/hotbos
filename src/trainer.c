@@ -585,7 +585,7 @@ int main(int argc, char **argv) {
 
 			oldbest = pop[0].score;
 		} else {
-			puts("No improvement");
+			printf("No improvement, average to best ratio %.3f\n", rel);
 			fruitless++;
 		}
 
