@@ -551,7 +551,7 @@ int main(int argc, char **argv) {
 			genome2ai(pop[i].genome, &ai);
 
 			char tmp[80];
-			snprintf(tmp, 80, "Critter %u/%u ", i, popmax);
+			snprintf(tmp, 80, "Critter %u/%u ", i + 1, popmax);
 
 			simulate(512, datafiles, namelist, &ai, scores, tmp, maxentries);
 			pop[i].score = sumscore(scores);
