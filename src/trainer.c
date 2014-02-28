@@ -615,6 +615,14 @@ int main(int argc, char **argv) {
 					pop[i].genome[j] = pop[y].genome[j];
 				}
 			}
+
+			// If mama is identical to papa, adopt a kid.
+			// This is not clone wars.
+			if (!memcmp(pop[x].genome, pop[y].genome, NEURAL_VARS)) {
+				for (j = 0; j < NEURAL_VARS; j++) {
+					pop[i].genome[j] = rand() % 256;
+				}
+			}
 		}
 
 		// Mutations
