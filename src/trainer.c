@@ -632,6 +632,17 @@ int main(int argc, char **argv) {
 			}
 		}
 
+		// Judgement day?
+		if (rel > 0.992f) {
+			printf("Judgement day\n");
+			const u32 max = popmax / 2;
+			for (i = popmax / 3; i < max; i++) {
+				for (j = 0; j < NEURAL_VARS; j++) {
+					pop[i].genome[j] = rand() % 256;
+				}
+			}
+		}
+
 		iters++;
 		if (fruitless > 20 || rel > 0.999f) {
 			puts("Converged");
