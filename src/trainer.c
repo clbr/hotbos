@@ -412,7 +412,7 @@ int main(int argc, char **argv) {
 				mode = GENETIC;
 			break;
 			case 'm':
-				maxentries = 100000;
+				maxentries = 400000;
 				if (optarg)
 					maxentries = atoi(optarg);
 				printf("Max-entries %uk\n", maxentries/1000);
