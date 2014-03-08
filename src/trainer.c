@@ -450,7 +450,7 @@ int main(int argc, char **argv) {
 	// Read up current values
 	struct network ai, lastai, bestai;
 	readhdr(&ai, "magic.h");
-	readhdr(&bestai, "ov1_magic.h");
+	readhdr(&bestai, "ov2_magic.h");
 	lastai = ai;
 
 	const int pwd = open(".", O_RDONLY);
