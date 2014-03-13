@@ -31,6 +31,7 @@ struct node {
 struct bucket {
 	struct node *bucket[BUCKETS];
 	struct node *nodes;
+	struct node *oldest0;
 
 	u32 lowest;
 	u32 entries;
@@ -97,6 +98,9 @@ void addbucket(struct bucket * const b, const u32 id, const u32 score) {
 	const u32 dir = hash / 64;
 	const u8 bit = (hash % 64);
 	b->used[dir] |= 1ULL << bit;
+
+	if (!hash && !b->bucket[0]->next)
+		b->oldest0 = b->bucket[0];
 }
 
 void delbucket(struct bucket * const b, const u32 id) {
@@ -130,6 +134,9 @@ void delbucket(struct bucket * const b, const u32 id) {
 			next->prev = prev;
 	}
 
+	if (!hash && b->oldest0 == cur)
+		b->oldest0 = b->oldest0->prev;
+
 	cur->score = 0;
 	cur->prev = cur->next = NULL;
 }
@@ -149,6 +156,9 @@ u32 getlowestbucket(const struct bucket * const b) {
 		die("Tried to get NULL lowest (%u entries, %u lowest)\n",
 			b->entries, b->lowest);
 	cur = cur->next;
+
+	if (b->oldest0 && !b->oldest0->score)
+		return (b->oldest0 - b->nodes);
 
 	while (cur) {
 		if (cur->score <= target->score)
