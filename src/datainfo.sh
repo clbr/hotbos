@@ -7,7 +7,7 @@ for file in ../data/*.bin; do
 	echo ${file##*/}
 
 	first=`./statinfo $file fo | head -n1`
-	ms=`./statinfo $file fo | tail -n1 | awk '{print $5}'`
+	ms=`./statinfo $file fo | tail -n1 | sed 's@.* at @@' | awk '{print $1}'`
 	min=`calc $ms / 60000`
 	min=`printf %.1f $min`
 
