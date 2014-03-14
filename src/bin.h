@@ -96,18 +96,11 @@ static inline void readentry(entry * const e, const u8 * const in, const u8 char
 		((u8 *) &e->buffer)[2] = in[3];
 	}
 
-	switch(e->id) {
-		case ID_CREATE:
+	if (e->id == ID_CREATE) {
 			memcpy(&tmp, in + charbufs + 1, 4);
 			e->high_prio = tmp >> 31;
 			e->size = tmp & 0x7fffffff;
-		break;
-		case ID_READ:
-		case ID_WRITE:
-		case ID_DESTROY:
-		case ID_CPUOP:
-		break;
-		default:
+	} else if (e->id > ID_CPUOP) {
 			die("Unknown entry id %u\n", e->id);
 	}
 }
