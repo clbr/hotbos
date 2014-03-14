@@ -47,6 +47,22 @@ static inline MALLOC_FUNC void *xcalloc(unsigned bytes) {
 	return ptr;
 }
 
+static inline void *pagerealloc(void *in, const u32 size) {
+
+	const u64 tmp = (u64) in;
+	if (!(tmp & 4095))
+		return in;
+
+	void *out;
+	if (posix_memalign(&out, 4096, size))
+		die("OOM\n");
+
+	memcpy(out, in, size);
+	free(in);
+
+	return out;
+}
+
 static inline void sread(char *ptr, size_t size, FILE *f) {
 
 	size_t ret = 0;
