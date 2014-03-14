@@ -130,13 +130,13 @@ static void go(const void * const f, const u32 size, const u8 charbufs, const u6
 
 	entry e;
 	const u8 cb = charbufs ? charbufs : 3;
-	u32 ctx = 0;
+	u32 readctx = 0;
 	u32 pos = 0;
 	u32 handled = 0;
 
 	while (pos < size && handled < maxentries) {
 
-		readentry(&e, f + pos, cb, &ctx);
+		readentry(&e, f + pos, cb, &readctx);
 		pos += cb + 1;
 		handled++;
 
