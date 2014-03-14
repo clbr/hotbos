@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <time.h>
 #include <fcntl.h>
 #include <math.h>
+#include <sys/mman.h>
+#include <errno.h>
 
 #define ERASE "\33[2K"
 
@@ -236,6 +238,19 @@ static void simulate(const u32 edge, const u32 datafiles,
 					cachedsizes[i] = cachelen;
 				} else {
 					free(cache);
+				}
+
+				#ifndef MADV_MERGEABLE
+				#define MADV_MERGEABLE 12
+				#endif
+
+				// If we cached it, mark it for KSM dedup
+				if (cachedbin[i]) {
+					u64 base = (u64) cachedbin[i];
+					base &= ~4095;
+					int ret = madvise((void *) base, cachelen, MADV_MERGEABLE);
+					if (ret == -1 && errno != ENOMEM)
+						printf("\nmadvise error %d\n", errno);
 				}
 			}
 		}
