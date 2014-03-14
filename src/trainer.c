@@ -178,9 +178,10 @@ static void simulate(const u32 edge, const u32 datafiles,
 			u64 scores[vramelements], const char addmsg[],
 			const u32 maxentries) {
 
+	memset(scores, 0, sizeof(u64) * vramelements);
+
 	u32 i, v;
 	for (v = 0; v < vramelements; v++) {
-		scores[v] = 0;
 		for (i = 0; i < datafiles; i++) {
 			printf(ERASE "\r\t%sVRAM %lu: Checking file %u/%u: %s",
 				addmsg,
