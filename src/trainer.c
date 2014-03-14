@@ -183,11 +183,16 @@ static void simulate(const u32 edge, const u32 datafiles,
 
 	u32 i, v;
 	for (v = 0; v < vramelements; v++) {
+		u32 itot = 0;
+		#pragma omp parallel for private(i)
 		for (i = 0; i < datafiles; i++) {
+			#pragma omp atomic
+			itot++;
+
 			printf(ERASE "\r\t%sVRAM %lu: Checking file %u/%u: %s",
 				addmsg,
 				vramsizes[v],
-				i + 1, datafiles,
+				itot, datafiles,
 				namelist[i]->d_name);
 			fflush(stdout);
 
@@ -221,12 +226,14 @@ static void simulate(const u32 edge, const u32 datafiles,
 
 			free(destroyed);
 
+			#pragma omp atomic
 			scores[v] += freevram(ctx);
 
 			// Should we cache it for future runs, or free it?
 			// Cache the big ones, they have the most zlib hit
 			// Can't cache everything, it would take > 11gb,
 			// I don't have that much RAM...
+			#pragma omp critical
 			if (!cachedbin[i]) {
 				if (maxentries < UINT_MAX) {
 					cachedbin[i] = cache;
