@@ -23,14 +23,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 static const u64 vramsizes[] = { 64, 128, 256, 384, 512, 1024, 1536, 2048, 4096 };
 static const u32 vramelements = sizeof(vramsizes) / sizeof(u64);
 
-void initvram(const u64 size, const u32 edge, const u32 buffers,
-		const struct network *net);
-void allocbuf(const u32 id, const u32 size, const u8 highprio);
-void touchbuf(const u32 id, const u8 write);
-void destroybuf(const u32 id);
-u64 freevram();
-void cpubuf(const u32 id);
+struct vramctx;
 
-void checkfragmentation();
+struct vramctx *initvram(const u64 size, const u32 edge, const u32 buffers,
+		const struct network *net);
+void allocbuf(struct vramctx *, const u32 id, const u32 size, const u8 highprio);
+void touchbuf(struct vramctx *, const u32 id, const u8 write);
+void destroybuf(struct vramctx *, const u32 id);
+u64 freevram(struct vramctx *);
+void cpubuf(struct vramctx *, const u32 id);
+
+void checkfragmentation(const struct vramctx *);
 
 #endif

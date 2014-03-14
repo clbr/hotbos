@@ -39,7 +39,7 @@ struct buf {
 	u8 highprio;
 };
 
-static struct {
+struct vramctx {
 	u64 size;
 	u64 tick;
 	u32 edge;
@@ -55,58 +55,63 @@ static struct {
 	struct bucket *bucket;
 
 	const struct network *net;
-} ctx;
+};
 
-void initvram(const u64 size, const u32 edge, const u32 buffers,
+struct vramctx *initvram(const u64 size, const u32 edge, const u32 buffers,
 		const struct network * const net) {
 
-	ctx.size = size;
-	ctx.edge = edge;
-	ctx.tick = 0;
-	ctx.holes = 1;
-	ctx.net = net;
-	ctx.score = 0;
+	struct vramctx *ctx = xcalloc(sizeof(struct vramctx));
 
-	ctx.vram = xcalloc(sizeof(struct buf));
-	ctx.vram->size = size;
-	ctx.vram->hole = 1;
+	ctx->size = size;
+	ctx->edge = edge;
+	ctx->tick = 0;
+	ctx->holes = 1;
+	ctx->net = net;
+	ctx->score = 0;
 
-	ctx.storage = xcalloc(buffers * sizeof(struct buf));
-	ctx.holelist = xcalloc((buffers + 2) * sizeof(void *));
-	ctx.holelist[0] = ctx.vram;
+	ctx->vram = xcalloc(sizeof(struct buf));
+	ctx->vram->size = size;
+	ctx->vram->hole = 1;
 
-	ctx.bucket = initbuckets(buffers);
+	ctx->storage = xcalloc(buffers * sizeof(struct buf));
+	ctx->holelist = xcalloc((buffers + 2) * sizeof(void *));
+	ctx->holelist[0] = ctx->vram;
+
+	ctx->bucket = initbuckets(buffers);
+
+	return ctx;
 }
 
 static float clampf(const float in, const float min, const float max) {
 	return in > max ? max : in < min ? min : in;
 }
 
-static void stats2inputs(const struct buf * const in, float inputs[INPUT_NEURONS]) {
+static void stats2inputs(const struct vramctx * const ctx,
+	const struct buf * const in, float inputs[INPUT_NEURONS]) {
 
 	inputs[0] = clampf(in->size / (1024.0f * 1024 * 1024), 0, 1);
-	inputs[1] = clampf(ctx.size / (1024.0f * 1024 * 1024 * 10), 0, 1);
+	inputs[1] = clampf(ctx->size / (1024.0f * 1024 * 1024 * 10), 0, 1);
 	inputs[2] = in->highprio;
-	inputs[3] = clampf((ctx.tick - in->stats.lastread) / 2400.0f, 0, 1);
-	inputs[4] = clampf((ctx.tick - in->stats.lastwrite) / 2400.0f, 0, 1);
+	inputs[3] = clampf((ctx->tick - in->stats.lastread) / 2400.0f, 0, 1);
+	inputs[4] = clampf((ctx->tick - in->stats.lastwrite) / 2400.0f, 0, 1);
 	inputs[5] = clampf(in->stats.reads / 500.0f, 0, 1);
 	inputs[6] = clampf(in->stats.writes / 500.0f, 0, 1);
-	inputs[7] = clampf((ctx.tick - in->stats.lastcpu) / 2400.0f, 0, 1);
+	inputs[7] = clampf((ctx->tick - in->stats.lastcpu) / 2400.0f, 0, 1);
 	inputs[8] = clampf(in->stats.cpuops / 500.0f, 0, 1);
 }
 
-static void genholelist() {
+static void genholelist(struct vramctx * const ctx) {
 
-	struct buf *cur = ctx.vram;
+	struct buf *cur = ctx->vram;
 	u32 num = 0;
 	while (cur) {
 		if (cur->hole) {
-			ctx.holelist[num] = cur;
+			ctx->holelist[num] = cur;
 
 			num++;
 
 			// Early exit if we found all holes
-			if (num == ctx.holes)
+			if (num == ctx->holes)
 				break;
 		}
 
@@ -114,17 +119,17 @@ static void genholelist() {
 	}
 }
 
-static void dropholefromlist(const struct buf * const in) {
+static void dropholefromlist(struct vramctx * const ctx, const struct buf * const in) {
 
 	// Locate it
 	u32 i;
-	for (i = 0; i < ctx.holes; i++) {
-		if (ctx.holelist[i] == in) {
-			if (i == ctx.holes - 1)
+	for (i = 0; i < ctx->holes; i++) {
+		if (ctx->holelist[i] == in) {
+			if (i == ctx->holes - 1)
 				return;
 
-			const u32 amount = ctx.holes - i - 1;
-			memmove(&ctx.holelist[i], &ctx.holelist[i + 1], amount * sizeof(void *));
+			const u32 amount = ctx->holes - i - 1;
+			memmove(&ctx->holelist[i], &ctx->holelist[i + 1], amount * sizeof(void *));
 
 			return;
 		}
@@ -133,11 +138,11 @@ static void dropholefromlist(const struct buf * const in) {
 	die("Didn't find the hole to drop?\n");
 }
 
-u64 freevram() {
+u64 freevram(struct vramctx * const ctx) {
 
-	ctx.size = ctx.edge = 0;
+	ctx->size = ctx->edge = 0;
 
-	struct buf *cur = ctx.vram;
+	struct buf *cur = ctx->vram;
 	while (cur) {
 		struct buf *next = cur->next;
 		if (cur->hole)
@@ -145,7 +150,7 @@ u64 freevram() {
 		cur = next;
 	}
 
-	cur = ctx.ram;
+	cur = ctx->ram;
 	while (cur) {
 		struct buf *next = cur->next;
 		if (cur->hole)
@@ -153,27 +158,30 @@ u64 freevram() {
 		cur = next;
 	}
 
-	ctx.vram = ctx.ram = NULL;
+	ctx->vram = ctx->ram = NULL;
 
-	free(ctx.storage);
-	ctx.storage = NULL;
-	free(ctx.holelist);
-	ctx.holelist = NULL;
+	free(ctx->storage);
+	ctx->storage = NULL;
+	free(ctx->holelist);
+	ctx->holelist = NULL;
 
-	ctx.net = NULL;
+	ctx->net = NULL;
 
-	freebuckets(ctx.bucket);
+	freebuckets(ctx->bucket);
 
-	return ctx.score;
+	const u64 outscore = ctx->score;
+	free(ctx);
+
+	return outscore;
 }
 
-static void dropvrambuf(struct buf * const oldest) {
+static void dropvrambuf(struct vramctx * const ctx, struct buf * const oldest) {
 
 	oldest->vram = 0;
 
-	ctx.score += score(SCORE_GPU, SCORE_MOVE, SCORE_RAM, oldest->size);
+	ctx->score += score(SCORE_GPU, SCORE_MOVE, SCORE_RAM, oldest->size);
 
-	delbucket(ctx.bucket, oldest->id);
+	delbucket(ctx->bucket, oldest->id);
 
 	// Is the buffer on either side a hole? If so, merge
 	if (oldest->prev && oldest->next && oldest->prev->hole && oldest->next->hole) {
@@ -188,8 +196,8 @@ static void dropvrambuf(struct buf * const oldest) {
 
 		free(hole2);
 
-		dropholefromlist(hole2);
-		ctx.holes--;
+		dropholefromlist(ctx, hole2);
+		ctx->holes--;
 
 	} else if (oldest->prev && oldest->prev->hole) {
 		struct buf *hole = oldest->prev;
@@ -215,32 +223,32 @@ static void dropvrambuf(struct buf * const oldest) {
 		hole->prev = oldest->prev;
 		hole->next = oldest->next;
 
-		ctx.holes++;
+		ctx->holes++;
 
 		if (hole->prev)
 			hole->prev->next = hole;
-		else if (oldest != ctx.vram)
+		else if (oldest != ctx->vram)
 			die("%p had no prev, but is not vram\n", oldest);
 
 		if (hole->next)
 			hole->next->prev = hole;
 
-		if (oldest == ctx.vram)
-			ctx.vram = hole;
+		if (oldest == ctx->vram)
+			ctx->vram = hole;
 
-		genholelist();
+		genholelist(ctx);
 		return;
 	}
 
-	if (oldest == ctx.vram)
-		ctx.vram = oldest->next;
+	if (oldest == ctx->vram)
+		ctx->vram = oldest->next;
 }
 
-static struct buf *findoldest() {
+static struct buf *findoldest(const struct vramctx * const ctx) {
 
 	struct buf *cur, *oldest;
 
-	oldest = cur = ctx.vram;
+	oldest = cur = ctx->vram;
 	/*while (cur) {
 		if (cur->hole) {
 			cur = cur->next;
@@ -250,7 +258,7 @@ static struct buf *findoldest() {
 		if (oldest->hole)
 			oldest = cur;
 
-		if (ctx.net) {
+		if (ctx->net) {
 			if (cur->score < oldest->score)
 				oldest = cur;
 		} else {
@@ -260,8 +268,8 @@ static struct buf *findoldest() {
 
 		cur = cur->next;
 	}*/
-	const u32 id = getlowestbucket(ctx.bucket);
-	oldest = &ctx.storage[id];
+	const u32 id = getlowestbucket(ctx->bucket);
+	oldest = &ctx->storage[id];
 	//if (cur->score != oldest->score) die("Mismatch\n");
 
 	if (!oldest->vram) die("Tried to drop a RAM buffer\n");
@@ -270,56 +278,56 @@ static struct buf *findoldest() {
 	return oldest;
 }
 
-static void dropoldest(struct buf *oldest) {
+static void dropoldest(struct vramctx * const ctx, struct buf *oldest) {
 
 	//printf("Fragmentation caused a swap\n");
 
 	if (!oldest)
-		oldest = findoldest();
+		oldest = findoldest(ctx);
 
-	dropvrambuf(oldest);
+	dropvrambuf(ctx, oldest);
 
 	// Drop oldest
 	oldest->prev = NULL;
-	oldest->next = ctx.ram;
-	ctx.ram->prev = oldest;
-	ctx.ram = oldest;
+	oldest->next = ctx->ram;
+	ctx->ram->prev = oldest;
+	ctx->ram = oldest;
 }
 
-static struct buf *fits(const u32 size) {
+static struct buf *fits(const struct vramctx * const ctx, const u32 size) {
 
-	const u32 max = ctx.holes;
+	const u32 max = ctx->holes;
 
-	if (!ctx.edge || size < ctx.edge) {
+	if (!ctx->edge || size < ctx->edge) {
 		// From the beginning
 		u32 i;
 		for (i = 0; i < max; i++) {
-			if (ctx.holelist[i]->size > size)
-				return ctx.holelist[i];
+			if (ctx->holelist[i]->size > size)
+				return ctx->holelist[i];
 		}
 	} else {
 		// From the end
 		s32 i;
 		for (i = max - 1; i >= 0; i--) {
-			if (ctx.holelist[i]->size > size)
-				return ctx.holelist[i];
+			if (ctx->holelist[i]->size > size)
+				return ctx->holelist[i];
 		}
 	}
 
 	return NULL;
 }
 
-void destroybuf(const u32 id) {
+void destroybuf(struct vramctx * const ctx, const u32 id) {
 
 	// Is it in ram? Easy drop then
-	struct buf * const cur = &ctx.storage[id];
+	struct buf * const cur = &ctx->storage[id];
 	if (!cur->vram) {
 		if (cur->prev)
 			cur->prev->next = cur->next;
 		if (cur->next)
 			cur->next->prev = cur->prev;
-		if (cur == ctx.ram)
-			ctx.ram = cur->next;
+		if (cur == ctx->ram)
+			ctx->ram = cur->next;
 
 		if (cur->hole)
 			free(cur);
@@ -327,41 +335,41 @@ void destroybuf(const u32 id) {
 	}
 
 	// Nope, it's in vram then
-	dropvrambuf(cur);
+	dropvrambuf(ctx, cur);
 	if (cur->hole)
 		free(cur);
 }
 
-static void internaltouch(const u32 id, const u8 write) {
+static void internaltouch(struct vramctx * const ctx, const u32 id, const u8 write) {
 
 	// The meat.
-	struct buf *cur = &ctx.storage[id];
+	struct buf *cur = &ctx->storage[id];
 
-	cur->tick = ctx.tick;
+	cur->tick = ctx->tick;
 
 	// Check if there's space for it
 	struct buf *const mine = cur;
-	struct buf *fit = fits(mine->size);
+	struct buf *fit = fits(ctx, mine->size);
 
-	if (!fit && ctx.net) {
+	if (!fit && ctx->net) {
 		// Check whether we should move it to VRAM at all
-		struct buf * const oldest = findoldest();
+		struct buf * const oldest = findoldest(ctx);
 		if (oldest->score > cur->score) {
-			ctx.score += score(SCORE_GPU, write ? SCORE_W : SCORE_R, SCORE_RAM,
-					ctx.storage[id].size);
+			ctx->score += score(SCORE_GPU, write ? SCORE_W : SCORE_R, SCORE_RAM,
+					ctx->storage[id].size);
 			return;
 		}
 
 		// Since we know the oldest one, drop it now
-		dropoldest(oldest);
-		fit = fits(mine->size);
+		dropoldest(ctx, oldest);
+		fit = fits(ctx, mine->size);
 	}
-	ctx.score += score(SCORE_GPU, SCORE_MOVE, SCORE_VRAM, ctx.storage[id].size);
+	ctx->score += score(SCORE_GPU, SCORE_MOVE, SCORE_VRAM, ctx->storage[id].size);
 	cur->vram = 1;
 
 	while (!fit) {
-		dropoldest(NULL);
-		fit = fits(mine->size);
+		dropoldest(ctx, NULL);
+		fit = fits(ctx, mine->size);
 	}
 
 	// Cool, it fits in the space occupied by this hole
@@ -370,11 +378,11 @@ static void internaltouch(const u32 id, const u8 write) {
 		mine->next->prev = mine->prev;
 	if (mine->prev)
 		mine->prev->next = mine->next;
-	if (mine == ctx.ram)
-		ctx.ram = mine->next;
+	if (mine == ctx->ram)
+		ctx->ram = mine->next;
 
 	// Do we add it to its start or end?
-	if (!ctx.edge || mine->size < ctx.edge) {
+	if (!ctx->edge || mine->size < ctx->edge) {
 		// start
 		mine->prev = fit->prev;
 		mine->next = fit;
@@ -383,8 +391,8 @@ static void internaltouch(const u32 id, const u8 write) {
 			fit->prev->next = mine;
 		fit->prev = mine;
 
-		if (ctx.vram == fit)
-			ctx.vram = mine;
+		if (ctx->vram == fit)
+			ctx->vram = mine;
 	} else {
 		// end
 		mine->prev = fit;
@@ -395,86 +403,87 @@ static void internaltouch(const u32 id, const u8 write) {
 		fit->next = mine;
 	}
 
-	addbucket(ctx.bucket, mine->id, mine->score);
+	addbucket(ctx->bucket, mine->id, mine->score);
 }
 
-void allocbuf(const u32 id, const u32 size, const u8 highprio) {
+void allocbuf(struct vramctx * const ctx, const u32 id,
+		const u32 size, const u8 highprio) {
 
-	ctx.tick++;
+	ctx->tick++;
 
-	struct buf *cur = &ctx.storage[id];
+	struct buf *cur = &ctx->storage[id];
 	cur->size = size;
 	cur->id = id;
-	cur->tick = ctx.tick;
+	cur->tick = ctx->tick;
 	cur->highprio = highprio;
 
 	// Allocate a new buffer, put it to RAM, internaltouch moves it to vram
-	cur->next = ctx.ram;
-	if (ctx.ram)
-		ctx.ram->prev = cur;
-	ctx.ram = cur;
+	cur->next = ctx->ram;
+	if (ctx->ram)
+		ctx->ram->prev = cur;
+	ctx->ram = cur;
 
-	internaltouch(id, 0);
+	internaltouch(ctx, id, 0);
 }
 
-void touchbuf(const u32 id, const u8 write) {
+void touchbuf(struct vramctx * const ctx, const u32 id, const u8 write) {
 
-	ctx.tick++;
+	ctx->tick++;
 
 	// If in AI mode, and enough time since last update, update the buffer's score
-	if (ctx.net &&
-		(!ctx.storage[id].score || (ctx.tick - ctx.storage[id].tick) > 600)) {
+	if (ctx->net &&
+		(!ctx->storage[id].score || (ctx->tick - ctx->storage[id].tick) > 600)) {
 
 		float inputs[INPUT_NEURONS];
-		stats2inputs(&ctx.storage[id], inputs);
+		stats2inputs(ctx, &ctx->storage[id], inputs);
 
-		ctx.storage[id].score = calculate_score(inputs, ctx.net);
+		ctx->storage[id].score = calculate_score(inputs, ctx->net);
 
-		if (ctx.storage[id].vram)
-			updatebucket(ctx.bucket, id, ctx.storage[id].score);
+		if (ctx->storage[id].vram)
+			updatebucket(ctx->bucket, id, ctx->storage[id].score);
 	}
 
 	// Update its stats
 	if (write) {
-		ctx.storage[id].stats.lastwrite = ctx.tick;
-		ctx.storage[id].stats.writes++;
+		ctx->storage[id].stats.lastwrite = ctx->tick;
+		ctx->storage[id].stats.writes++;
 	} else {
-		ctx.storage[id].stats.lastread = ctx.tick;
-		ctx.storage[id].stats.reads++;
+		ctx->storage[id].stats.lastread = ctx->tick;
+		ctx->storage[id].stats.reads++;
 	}
 
 	// Is the buffer in VRAM? If so, update its timestamp and quit
-	if (ctx.storage[id].vram) {
-		ctx.storage[id].tick = ctx.tick;
+	if (ctx->storage[id].vram) {
+		ctx->storage[id].tick = ctx->tick;
 
-		ctx.score += score(SCORE_GPU, write ? SCORE_W : SCORE_R, SCORE_VRAM,
-					ctx.storage[id].size);
+		ctx->score += score(SCORE_GPU, write ? SCORE_W : SCORE_R, SCORE_VRAM,
+					ctx->storage[id].size);
 		return;
 	}
 
 	// It's not. Touch it from RAM.
-	internaltouch(id, write);
+	internaltouch(ctx, id, write);
 }
 
-void cpubuf(const u32 id) {
+void cpubuf(struct vramctx * const ctx, const u32 id) {
 	u8 vram = SCORE_RAM;
-	if (ctx.storage[id].vram)
+	if (ctx->storage[id].vram)
 		vram = SCORE_VRAM;
 
-	ctx.score += score(SCORE_CPU, SCORE_W, vram, ctx.storage[id].size);
+	ctx->score += score(SCORE_CPU, SCORE_W, vram, ctx->storage[id].size);
 
-	ctx.storage[id].stats.cpuops++;
-	ctx.storage[id].stats.lastcpu = ctx.tick;
+	ctx->storage[id].stats.cpuops++;
+	ctx->storage[id].stats.lastcpu = ctx->tick;
 }
 
-void checkfragmentation() {
+void checkfragmentation(const struct vramctx * const ctx) {
 
 	u32 total = 0;
-	total = ctx.holes;
+	total = ctx->holes;
 
 	/*
 	u64 totalsize = 0;
-	struct buf *cur = ctx.vram;
+	struct buf *cur = ctx->vram;
 	while (cur) {
 		if (cur->hole)
 			total++;
@@ -488,8 +497,8 @@ void checkfragmentation() {
 
 	printf("Fragments: %u\n", total);
 /*
-	if (totalsize != ctx.size)
+	if (totalsize != ctx->size)
 		die("VRAM got corrupted, size doesn't match (%llu s/b %llu)\n",
 			(unsigned long long) totalsize,
-			(unsigned long long) ctx.size);*/
+			(unsigned long long) ctx->size);*/
 }

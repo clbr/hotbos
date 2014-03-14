@@ -126,7 +126,7 @@ static int acceptable(const u64 olds[vramelements], const u64 news[vramelements]
 static u8 *destroyed;
 
 static void go(const void * const f, const u32 size, const u8 charbufs, const u64 vram,
-		const u32 maxentries) {
+		const u32 maxentries, struct vramctx * const ctx) {
 
 	entry e;
 	const u8 cb = charbufs ? charbufs : 3;
@@ -149,7 +149,7 @@ static void go(const void * const f, const u32 size, const u8 charbufs, const u6
 			continue;
 
 		if (e.id == ID_CPUOP) {
-			cpubuf(e.buffer);
+			cpubuf(ctx, e.buffer);
 			continue;
 		}
 
@@ -158,13 +158,13 @@ static void go(const void * const f, const u32 size, const u8 charbufs, const u6
 			if (e.size >= vram)
 				return;
 
-			allocbuf(e.buffer, e.size, e.high_prio);
+			allocbuf(ctx, e.buffer, e.size, e.high_prio);
 		} else if (e.id == ID_DESTROY) {
-			destroybuf(e.buffer);
+			destroybuf(ctx, e.buffer);
 
 			destroyed[e.buffer] = 1;
 		} else {
-			touchbuf(e.buffer, e.id == ID_WRITE);
+			touchbuf(ctx, e.buffer, e.id == ID_WRITE);
 		}
 	}
 
@@ -212,17 +212,18 @@ static void simulate(const u32 edge, const u32 datafiles,
 			}
 
 			const u8 charbuf = getcharbuf(buffers);
-			initvram(vramsizes[v] * 1024 * 1024, edge * 1024,
+			struct vramctx * const ctx =
+				initvram(vramsizes[v] * 1024 * 1024, edge * 1024,
 					buffers, net);
 
 			destroyed = xcalloc(buffers);
 
 			go(cache, cachelen, charbuf, vramsizes[v] * 1024 * 1024,
-				maxentries);
+				maxentries, ctx);
 
 			free(destroyed);
 
-			scores[v] += freevram();
+			scores[v] += freevram(ctx);
 
 			// Should we cache it for future runs, or free it?
 			// Cache the big ones, they have the most zlib hit
