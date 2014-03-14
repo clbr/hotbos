@@ -1,4 +1,4 @@
-CFLAGS += -Wall -Wextra -g
+CFLAGS += -Wall -Wextra -g -ffast-math
 CXXFLAGS += -Wall -Wextra -g -fno-exceptions -fno-rtti
 LDFLAGS += -Wl,-O1
 LDFLAGS += -lz
