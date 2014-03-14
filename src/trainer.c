@@ -255,7 +255,10 @@ static void simulate(const u32 edge, const u32 datafiles,
 					base &= ~4095;
 					int ret = madvise((void *) base, cachelen, MADV_MERGEABLE);
 					if (ret == -1 && errno != ENOMEM)
-						printf("\nmadvise error %d\n", errno);
+						printf("\nmadvise ksm error %d\n", errno);
+					ret = madvise((void *) base, cachelen, MADV_SEQUENTIAL);
+					if (ret == -1)
+						printf("\nmadvise seq error %d\n", errno);
 				}
 			}
 		}
