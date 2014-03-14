@@ -235,10 +235,12 @@ static void simulate(const u32 edge, const u32 datafiles,
 					cachedbuffers[i] = buffers;
 
 					if (cachelen > maxentries * 8) {
-						cachedbin[i] = realloc(cache, maxentries * 8);
+						cachedbin[i] = pagerealloc(cache, maxentries * 8);
+					} else {
+						cachedbin[i] = pagerealloc(cache, cachelen);
 					}
 				} else if (cachelen >= 300 * 1024 * 1024 || datafiles < 10) {
-					cachedbin[i] = cache;
+					cachedbin[i] = pagerealloc(cache, cachelen);
 					cachedsizes[i] = cachelen;
 					cachedbuffers[i] = buffers;
 				} else {
