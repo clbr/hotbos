@@ -173,6 +173,7 @@ static void go(const void * const f, const u32 size, const u8 charbufs, const u6
 
 static void **cachedbin = NULL;
 static u32 *cachedsizes = NULL;
+static u32 *cachedbuffers = NULL;
 
 static void simulate(const u32 edge, const u32 datafiles,
 			struct dirent * const * const namelist,
@@ -192,10 +193,23 @@ static void simulate(const u32 edge, const u32 datafiles,
 				namelist[i]->d_name);
 			fflush(stdout);
 
-			void * const f = gzbinopen(namelist[i]->d_name);
-
 			u32 buffers;
-			sgzread((char *) &buffers, 4, f);
+
+			// Cache it; is it already cached?
+			char *cache;
+			u32 cachelen;
+			if (!cachedbin[i]) {
+				void * const f = gzbinopen(namelist[i]->d_name);
+				sgzread((char *) &buffers, 4, f);
+
+				bincache(f, &cache, &cachelen);
+
+				gzclose(f);
+			} else {
+				cache = cachedbin[i];
+				cachelen = cachedsizes[i];
+				buffers = cachedbuffers[i];
+			}
 
 			const u8 charbuf = getcharbuf(buffers);
 			initvram(vramsizes[v] * 1024 * 1024, edge * 1024,
@@ -203,22 +217,11 @@ static void simulate(const u32 edge, const u32 datafiles,
 
 			destroyed = xcalloc(buffers);
 
-			// Cache it; is it already cached?
-			char *cache;
-			u32 cachelen;
-			if (!cachedbin[i]) {
-				bincache(f, &cache, &cachelen);
-			} else {
-				cache = cachedbin[i];
-				cachelen = cachedsizes[i];
-			}
-
 			go(cache, cachelen, charbuf, vramsizes[v] * 1024 * 1024,
 				maxentries);
 
 			free(destroyed);
 
-			gzclose(f);
 			scores[v] += freevram();
 
 			// Should we cache it for future runs, or free it?
@@ -229,6 +232,7 @@ static void simulate(const u32 edge, const u32 datafiles,
 				if (maxentries < UINT_MAX) {
 					cachedbin[i] = cache;
 					cachedsizes[i] = cachelen;
+					cachedbuffers[i] = buffers;
 
 					if (cachelen > maxentries * 8) {
 						cachedbin[i] = realloc(cache, maxentries * 8);
@@ -236,6 +240,7 @@ static void simulate(const u32 edge, const u32 datafiles,
 				} else if (cachelen >= 300 * 1024 * 1024 || datafiles < 10) {
 					cachedbin[i] = cache;
 					cachedsizes[i] = cachelen;
+					cachedbuffers[i] = buffers;
 				} else {
 					free(cache);
 				}
@@ -475,6 +480,7 @@ int main(int argc, char **argv) {
 
 	cachedbin = xcalloc(datafiles * sizeof(void *));
 	cachedsizes = xcalloc(datafiles * sizeof(u32));
+	cachedbuffers = xcalloc(datafiles * sizeof(u32));
 
 	// Do baseline simulation
 	u64 basescores[vramelements], scores[vramelements], lastscores[vramelements];
@@ -686,6 +692,7 @@ int main(int argc, char **argv) {
 	free(namelist);
 	free(cachedbin);
 	free(cachedsizes);
+	free(cachedbuffers);
 
 	close(pwd);
 
