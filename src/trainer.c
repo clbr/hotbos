@@ -123,10 +123,8 @@ static int acceptable(const u64 olds[vramelements], const u64 news[vramelements]
 	return 1;
 }
 
-static u8 *destroyed;
-
 static void go(const void * const f, const u32 size, const u8 charbufs, const u64 vram,
-		const u32 maxentries, struct vramctx * const ctx) {
+		const u32 maxentries, struct vramctx * const ctx, u8 * const destroyed) {
 
 	entry e;
 	const u8 cb = charbufs ? charbufs : 3;
@@ -216,10 +214,10 @@ static void simulate(const u32 edge, const u32 datafiles,
 				initvram(vramsizes[v] * 1024 * 1024, edge * 1024,
 					buffers, net);
 
-			destroyed = xcalloc(buffers);
+			u8 * const destroyed = xcalloc(buffers);
 
 			go(cache, cachelen, charbuf, vramsizes[v] * 1024 * 1024,
-				maxentries, ctx);
+				maxentries, ctx, destroyed);
 
 			free(destroyed);
 
