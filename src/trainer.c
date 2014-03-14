@@ -260,7 +260,7 @@ static void simulate(const u32 edge, const u32 datafiles,
 					if (ret == -1 && errno != ENOMEM)
 						printf("\nmadvise ksm error %d\n", errno);
 					ret = madvise((void *) base, cachelen, MADV_SEQUENTIAL);
-					if (ret == -1)
+					if (ret == -1 && maxentries == UINT_MAX)
 						printf("\nmadvise seq error %d\n", errno);
 				}
 			}
