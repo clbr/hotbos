@@ -184,7 +184,7 @@ static void simulate(const u32 edge, const u32 datafiles,
 	u32 i, v;
 	for (v = 0; v < vramelements; v++) {
 		u32 itot = 0;
-		#pragma omp parallel for private(i) schedule(guided)
+		#pragma omp parallel for private(i) schedule(dynamic)
 		for (i = 0; i < datafiles; i++) {
 			#pragma omp atomic
 			itot++;
@@ -233,7 +233,6 @@ static void simulate(const u32 edge, const u32 datafiles,
 			// Cache the big ones, they have the most zlib hit
 			// Can't cache everything, it would take > 11gb,
 			// I don't have that much RAM...
-			#pragma omp critical
 			if (!cachedbin[i]) {
 				if (maxentries < UINT_MAX) {
 					cachedbin[i] = cache;
