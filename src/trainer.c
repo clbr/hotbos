@@ -229,10 +229,6 @@ static void simulate(const u32 edge, const u32 datafiles,
 			#pragma omp atomic
 			scores[v] += freevram(ctx);
 
-			// Already cached? Skip the mutex then
-			if (cachedbin[i])
-				continue;
-
 			// Should we cache it for future runs, or free it?
 			// Cache the big ones, they have the most zlib hit
 			// Can't cache everything, it would take > 11gb,
