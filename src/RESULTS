@@ -15,6 +15,21 @@ score = buffer size
 
 Total: Score went from 64663321679772655 to 75342024840824085 - -16.5% worse
 
+score = buffer size
+if (high prio or written) score += 1M
+
+   64: Score went from 11373443721800562 to 18010554017514779 - -58.4% worse
+  128: Score went from 8457631614472705 to 12577697644749924 - -48.7% worse
+  256: Score went from 6823682679644306 to 9137927189575000 - -33.9% worse
+  384: Score went from 6366782903587257 to 7263447277600270 - -14.1% worse
+  512: Score went from 6103944126818047 to 6623802317164296 - -8.52% worse
+ 1024: Score went from 5889442175382210 to 5931098741081818 - -0.707% worse
+ 1536: Score went from 6091687353267279 to 6096107585125601 - -0.0726% worse
+ 2048: Score went from 6788258883170870 to 6787296407179671 - 0.0142% improvement
+ 4096: Score went from 6768448221629419 to 6776754684101154 - -0.123% worse
+
+Total: Score went from 64663321679772655 to 79204685864092513 - -22.5% worse
+
 AI
 --
 
