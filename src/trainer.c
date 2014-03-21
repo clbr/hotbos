@@ -617,7 +617,7 @@ int main(int argc, char **argv) {
 				// The score is wrong, but copy something
 				memcpy(lastscores, scores, sizeof(u64) * vramelements);
 			} else {
-				puts("Initial round done");
+				printf("Initial round done, avg to best %.3f\n", rel);
 			}
 
 			oldbest = pop[0].score;
