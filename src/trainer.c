@@ -51,11 +51,13 @@ static void usage(const char name[]) {
 		"\n"
 		"	-m --max-entries [N] Only run up to this many entries (def 100k)\n"
 		"	-p --pop-max N	Use N as the population size\n"
+		"	-n --no-cache	Don't cache anything\n"
 		"\n"
 		, name);
 }
 
 static u8 quit = 0;
+static u8 nocache = 0;
 
 static void signaller(int num __attribute__((unused))) {
 
@@ -234,7 +236,9 @@ static void simulate(const u32 edge, const u32 datafiles,
 			// Can't cache everything, it would take > 11gb,
 			// I don't have that much RAM...
 			if (!cachedbin[i]) {
-				if (maxentries < UINT_MAX) {
+				if (nocache) {
+					free(cache);
+				} else if (maxentries < UINT_MAX) {
 					cachedbin[i] = cache;
 					cachedsizes[i] = cachelen;
 					cachedbuffers[i] = buffers;
@@ -406,10 +410,11 @@ int main(int argc, char **argv) {
 		{"genetic", 0, 0, 'g'},
 		{"max-entries", 2, 0, 'm'},
 		{"pop-max", 1, 0, 'p'},
+		{"no-cache", 0, 0, 'n'},
 		{0, 0, 0, 0}
 	};
 
-	const char optstr[] = "brefhgm::p:";
+	const char optstr[] = "brefhgm::p:n";
 
 	enum {
 		BENCH = 0,
@@ -450,6 +455,9 @@ int main(int argc, char **argv) {
 			break;
 			case 'p':
 				popmax = atoi(optarg);
+			break;
+			case 'n':
+				nocache = 1;
 			break;
 			case 'h':
 			default:
