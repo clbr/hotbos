@@ -32,8 +32,8 @@ struct buf {
 	struct buf *prev;
 	u64 tick;
 	u64 size;
+	u64 score;
 	u32 id;
-	u32 score;
 	u8 hole;
 	u8 vram;
 	u8 highprio;
