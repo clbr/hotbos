@@ -19,6 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "lrtypes.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct bucket;
 
 struct bucket *initbuckets(const u32 bufs);
@@ -29,5 +33,9 @@ void delbucket(struct bucket *b, const u32 id);
 void updatebucket(struct bucket *b, const u32 id, const u32 score);
 
 u32 getlowestbucket(const struct bucket *b);
+
+#ifdef __cplusplus
+} // extern C
+#endif
 
 #endif
