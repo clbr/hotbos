@@ -505,15 +505,38 @@ int main(int argc, char **argv) {
 	printf("Doing baseline simulation.\n");
 
 	// Pre-calculated base scores
-	basescores[0] =	11373443721800562ULL;
-	basescores[1] = 8457631614472705ULL;
-	basescores[2] = 6823682679644306ULL;
-	basescores[3] = 6366782903587257ULL;
-	basescores[4] = 6103944126818047ULL;
-	basescores[5] = 5889442175382210ULL;
-	basescores[6] = 6091687353267279ULL;
-	basescores[7] = 6788258883170870ULL;
-	basescores[8] = 6768448221629419ULL;
+	u32 i;
+	for (i = 0; i < vramelements; i++) {
+		switch (vramsizes[i]) {
+			case 64:
+				basescores[i] =	11373443721800562ULL;
+			break;
+			case 128:
+				basescores[i] = 8457631614472705ULL;
+			break;
+			case 256:
+				basescores[i] = 6823682679644306ULL;
+			break;
+			case 384:
+				basescores[i] = 6366782903587257ULL;
+			break;
+			case 512:
+				basescores[i] = 6103944126818047ULL;
+			break;
+			case 1024:
+				basescores[i] = 5889442175382210ULL;
+			break;
+			case 1536:
+				basescores[i] = 6091687353267279ULL;
+			break;
+			case 2048:
+				basescores[i] = 6788258883170870ULL;
+			break;
+			case 4096:
+				basescores[i] = 6768448221629419ULL;
+			break;
+		}
+	}
 
 //	if (mode == BENCH)
 //		simulate(0, datafiles, namelist, NULL, basescores, "", maxentries);
@@ -526,7 +549,7 @@ int main(int argc, char **argv) {
 	}
 
 	struct critter pop[popmax];
-	u32 i, j;
+	u32 j;
 	if (mode == GENETIC) {
 		for (i = 0; i < popmax; i++) {
 			for (j = 0; j < NEURAL_VARS; j++) {
