@@ -549,6 +549,7 @@ int main(int argc, char **argv) {
 	}
 
 	struct critter pop[popmax];
+	u8 beststore[NEURAL_VARS];
 	u32 j;
 	if (mode == GENETIC) {
 		for (i = 0; i < popmax; i++) {
@@ -560,6 +561,7 @@ int main(int argc, char **argv) {
 
 		// Insert the current best AI as one critter
 		ai2genome(&bestai, pop[0].genome);
+		memcpy(beststore, pop[0].genome, NEURAL_VARS);
 	}
 
 	u32 iters = 0;
@@ -649,6 +651,12 @@ int main(int argc, char **argv) {
 				memcpy(lastscores, scores, sizeof(u64) * vramelements);
 			} else {
 				printf("Initial round done, avg to best %.3f\n", rel);
+
+				if (memcmp(pop[0].genome, beststore, NEURAL_VARS)) {
+					printf("Yay, initial bested best\n");
+					improved = 1;
+					genome2ai(pop[0].genome, &lastai);
+				}
 			}
 
 			oldbest = pop[0].score;
