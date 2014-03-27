@@ -489,7 +489,7 @@ int main(int argc, char **argv) {
 	// Read up current values
 	struct network ai, lastai, bestai;
 	readhdr(&ai, "magic.h");
-	readhdr(&bestai, "wg2_magic.h");
+	readhdr(&bestai, "xono2_magic.h");
 	lastai = ai;
 
 	const int pwd = open(".", O_RDONLY);
