@@ -28,9 +28,9 @@ struct bucket;
 struct bucket *initbuckets(const u32 bufs);
 void freebuckets(struct bucket *b);
 
-void addbucket(struct bucket *b, const u32 id, const u32 score);
+void addbucket(struct bucket *b, const u32 id, const u64 score);
 void delbucket(struct bucket *b, const u32 id);
-void updatebucket(struct bucket *b, const u32 id, const u32 score);
+void updatebucket(struct bucket *b, const u32 id, const u64 score);
 
 u32 getlowestbucket(const struct bucket *b);
 

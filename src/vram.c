@@ -32,8 +32,8 @@ struct buf {
 	struct buf *prev;
 	u64 tick;
 	u64 size;
+	u64 score;
 	u32 id;
-	u32 score;
 	u8 hole;
 	u8 vram;
 	u8 highprio;
@@ -437,7 +437,10 @@ void touchbuf(struct vramctx * const ctx, const u32 id, const u8 write) {
 		float inputs[INPUT_NEURONS];
 		stats2inputs(ctx, &ctx->storage[id], inputs);
 
-		ctx->storage[id].score = calculate_score(inputs, ctx->net);
+		const u32 score = calculate_score(inputs, ctx->net);
+		// Consider one tick 10 us, score in nanoseconds
+		const u64 now = ctx->tick * 10000;
+		ctx->storage[id].score = now + score;
 
 		if (ctx->storage[id].vram)
 			updatebucket(ctx->bucket, id, ctx->storage[id].score);

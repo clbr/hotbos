@@ -281,7 +281,7 @@ static void simulate(const u32 edge, const u32 datafiles,
 					} else {
 						cachedbin[i] = pagerealloc(cache, cachelen);
 					}
-				} else if (cachelen >= 300 * 1024 * 1024 || datafiles < 10) {
+				} else if (cachelen >= 400 * 1024 * 1024 || datafiles < 10) {
 					cachedbin[i] = pagerealloc(cache, cachelen);
 					cachedsizes[i] = cachelen;
 					cachedbuffers[i] = buffers;
@@ -522,7 +522,7 @@ int main(int argc, char **argv) {
 	// Read up current values
 	struct network ai, lastai, bestai;
 	readhdr(&ai, "magic.h");
-	readhdr(&bestai, "ov4_magic.h");
+	readhdr(&bestai, "xono2_magic.h");
 	lastai = ai;
 
 	const int pwd = open(".", O_RDONLY);
