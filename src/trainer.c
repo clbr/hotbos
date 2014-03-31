@@ -330,7 +330,12 @@ static float gene2f(const u8 gene) {
 	return out;
 }
 
+static float clampf(const float in, const float min, const float max) {
+	return in > max ? max : in < min ? min : in;
+}
+
 static u8 f2gene(float val) {
+	val = clampf(val, -1, 1);
 	val += 1;
 	val *= 127.5f;
 	u8 out = roundf(val);
