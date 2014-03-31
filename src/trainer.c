@@ -359,7 +359,7 @@ static void mutate(struct network * const ai, const float minchange,
 }
 
 static float gene2f(const u8 gene) {
-	float out = gene / 127.5f - 1;
+	float out = gene / 42.5f - 3;
 	return out;
 }
 
@@ -368,9 +368,9 @@ static float clampf(const float in, const float min, const float max) {
 }
 
 static u8 f2gene(float val) {
-	val = clampf(val, -1, 1);
-	val += 1;
-	val *= 127.5f;
+	val = clampf(val, -3, 3);
+	val += 3;
+	val *= 42.5f;
 	u8 out = roundf(val);
 	return out;
 }
