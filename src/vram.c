@@ -95,7 +95,7 @@ static void stats2inputs(const struct vramctx * const ctx,
 	inputs[3] = clampf((ctx->tick - in->stats.lastread) / 2400.0f, 0, 1);
 	inputs[4] = clampf((ctx->tick - in->stats.lastwrite) / 2400.0f, 0, 1);
 	inputs[5] = clampf(in->stats.reads / 500.0f, 0, 1);
-	inputs[6] = clampf(in->stats.writes / 500.0f, 0, 1);
+	inputs[6] = clampf(in->stats.writes / 50.0f, 0, 1);
 	inputs[7] = clampf((ctx->tick - in->stats.lastcpu) / 2400.0f, 0, 1);
 	inputs[8] = clampf(in->stats.cpuops / 500.0f, 0, 1);
 }
