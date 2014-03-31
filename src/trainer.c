@@ -90,39 +90,6 @@ static u64 sumscore(const u64 arr[vramelements]) {
 	return sum;
 }
 
-static void normalizescore(u64 arr[vramelements]) {
-
-	u32 i;
-	for (i = 0; i < vramelements; i++) {
-		switch (vramsizes[i]) {
-			case 64:
-				arr[i] /= 1.68036f;
-			break;
-			case 128:
-				arr[i] /= 1.24957f;
-			break;
-			case 256:
-			break;
-			case 384:
-				arr[i] /= 0.940656;
-			break;
-			case 512:
-				arr[i] /= 0.901823f;
-			break;
-			case 1024:
-				arr[i] /= 0.870132f;
-			break;
-			case 1536:
-				arr[i] /= 0.900012f;
-			break;
-			case 2048:
-			break;
-			case 4096:
-			break;
-		}
-	}
-}
-
 static void printscores(const u64 olds[vramelements], const u64 news[vramelements]) {
 
 	u32 i;
@@ -652,7 +619,6 @@ int main(int argc, char **argv) {
 			snprintf(tmp, 80, "Critter %u/%u ", i + 1, popmax);
 
 			simulate(512, datafiles, namelist, &ai, scores, tmp, maxentries);
-			normalizescore(scores);
 			pop[i].score = sumscore(scores);
 		}
 
