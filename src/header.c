@@ -137,7 +137,7 @@ void writehdr(const struct network * const in) {
 			i, in->input[i].bias);
 	}
 
-	for (i = 0; i < INPUT_NEURONS; i++) {
+	for (i = 0; i < HIDDEN_NEURONS; i++) {
 		for (j = 0; j < INPUT_NEURONS; j++) {
 			fprintf(f, "#define hidden%uw%u %f\n",
 				i, j, in->hidden[i].weights[j]);
@@ -146,7 +146,7 @@ void writehdr(const struct network * const in) {
 			i, in->hidden[i].bias);
 	}
 
-	for (i = 0; i < INPUT_NEURONS; i++) {
+	for (i = 0; i < HIDDEN_NEURONS; i++) {
 		fprintf(f, "#define outputw%u %f\n",
 			i, in->output.weights[i]);
 	}

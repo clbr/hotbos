@@ -39,7 +39,7 @@ uint32_t calculate_score(const float inputs[INPUT_NEURONS],
 				const struct network * const net) {
 
 	uint32_t i, j;
-	float input_results[INPUT_NEURONS], hidden_results[INPUT_NEURONS];
+	float input_results[INPUT_NEURONS], hidden_results[HIDDEN_NEURONS];
 
 	/* Input layer */
 	for (i = 0; i < INPUT_NEURONS; i++) {
@@ -48,7 +48,7 @@ uint32_t calculate_score(const float inputs[INPUT_NEURONS],
 	}
 
 	/* Hidden layer */
-	for (i = 0; i < INPUT_NEURONS; i++) {
+	for (i = 0; i < HIDDEN_NEURONS; i++) {
 		float weighted_sum = net->hidden[i].bias;
 		for (j = 0; j < INPUT_NEURONS; j++) {
 			weighted_sum += net->hidden[i].weights[j] * input_results[j];
@@ -58,7 +58,7 @@ uint32_t calculate_score(const float inputs[INPUT_NEURONS],
 
 	/* Output layer */
 	float weighted_sum = net->output.bias;
-	for (i = 0; i < INPUT_NEURONS; i++) {
+	for (i = 0; i < HIDDEN_NEURONS; i++) {
 		weighted_sum += net->output.weights[i] * hidden_results[i];
 	}
 

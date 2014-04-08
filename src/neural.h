@@ -27,8 +27,9 @@
 
 #include <stdint.h>
 
-#define INPUT_NEURONS 9
-#define NEURAL_VARS 118
+#define INPUT_NEURONS 3
+#define HIDDEN_NEURONS 8
+#define NEURAL_VARS 47
 
 struct input_neuron {
 	float weight;
@@ -40,10 +41,15 @@ struct neuron {
 	float bias;
 };
 
+struct output_neuron {
+	float weights[HIDDEN_NEURONS];
+	float bias;
+};
+
 struct network {
 	struct input_neuron input[INPUT_NEURONS];
-	struct neuron hidden[INPUT_NEURONS];
-	struct neuron output;
+	struct neuron hidden[HIDDEN_NEURONS];
+	struct output_neuron output;
 };
 
 uint32_t calculate_score(const float inputs[INPUT_NEURONS],

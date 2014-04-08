@@ -89,15 +89,9 @@ static float clampf(const float in, const float min, const float max) {
 static void stats2inputs(const struct vramctx * const ctx,
 	const struct buf * const in, float inputs[INPUT_NEURONS]) {
 
-	inputs[0] = 0; // size
-	inputs[1] = clampf(ctx->size / (1024.0f * 1024 * 1024 * 10), 0, 1);
-	inputs[2] = 0; // highprio
-	inputs[3] = 0; // time since read
-	inputs[4] = 0; // time since write
-	inputs[5] = 0; // number of reads
-	inputs[6] = clampf(in->stats.writes / 500.0f, 0, 1);
-	inputs[7] = 0; // time since last cpu
-	inputs[8] = clampf(in->stats.cpuops / 500.0f, 0, 1);
+	inputs[0] = clampf(ctx->size / (1024.0f * 1024 * 1024 * 10), 0, 1);
+	inputs[1] = clampf(in->stats.writes / 500.0f, 0, 1);
+	inputs[2] = clampf(in->stats.cpuops / 500.0f, 0, 1);
 }
 
 static void genholelist(struct vramctx * const ctx) {
