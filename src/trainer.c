@@ -383,7 +383,7 @@ static void genome2ai(const u8 genome[NEURAL_VARS], struct network * const ai) {
 		ai->input[i].bias = gene2f(genome[g++]);
 	}
 
-	for (i = 0; i < INPUT_NEURONS; i++) {
+	for (i = 0; i < HIDDEN_NEURONS; i++) {
 		u32 w;
 		for (w = 0; w < INPUT_NEURONS; w++)
 			ai->hidden[i].weights[w] = gene2f(genome[g++]);
@@ -391,7 +391,7 @@ static void genome2ai(const u8 genome[NEURAL_VARS], struct network * const ai) {
 		ai->hidden[i].bias = gene2f(genome[g++]);
 	}
 
-	for (i = 0; i < INPUT_NEURONS; i++) {
+	for (i = 0; i < HIDDEN_NEURONS; i++) {
 		ai->output.weights[i] = gene2f(genome[g++]);
 	}
 	ai->output.bias = gene2f(genome[g++]);
@@ -407,7 +407,7 @@ static void ai2genome(const struct network * const ai, u8 genome[NEURAL_VARS]) {
 		genome[g++] = f2gene(ai->input[i].bias);
 	}
 
-	for (i = 0; i < INPUT_NEURONS; i++) {
+	for (i = 0; i < HIDDEN_NEURONS; i++) {
 		u32 w;
 		for (w = 0; w < INPUT_NEURONS; w++)
 			genome[g++] = f2gene(ai->hidden[i].weights[w]);
@@ -415,7 +415,7 @@ static void ai2genome(const struct network * const ai, u8 genome[NEURAL_VARS]) {
 		genome[g++] = f2gene(ai->hidden[i].bias);
 	}
 
-	for (i = 0; i < INPUT_NEURONS; i++) {
+	for (i = 0; i < HIDDEN_NEURONS; i++) {
 		genome[g++] = f2gene(ai->output.weights[i]);
 	}
 	genome[g++] = f2gene(ai->output.bias);
